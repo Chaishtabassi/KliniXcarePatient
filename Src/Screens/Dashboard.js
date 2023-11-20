@@ -30,8 +30,10 @@ const Dashboard = ({navigation}) => {
   const callApi = async () => {
     const access_token = await AsyncStorage.getItem('access_token');
     const bearerToken = access_token;
+    console.log(access_token)
 
-    const storeuserid = await AsyncStorage.getItem('userid');
+    const storeuserid = await AsyncStorage.getItem('fetchuserid');
+    console.log(storeuserid)
 
     try {
       const api = `http://teleforceglobal.com/doctor/api/v1/user/fetchPatientAppointment`;
@@ -56,6 +58,8 @@ const Dashboard = ({navigation}) => {
         if (response.status === 200) {
           const responseText = await response.text();
           const parsed_res = JSON.parse(responseText);
+
+          console.log(parsed_res.data)
           setApiDat(parsed_res.data);
           return parsed_res.data;
         } else {
@@ -69,7 +73,12 @@ const Dashboard = ({navigation}) => {
     }
   };
 
+  const details=(id)=>{
+    navigation.navigate('appointmentdetails',{ id: id })
+  }
+
   const Item = ({item}) => (
+    <TouchableOpacity onPress={() => details(item.id)}>
     <View style={styles.cardContainer}>
       <View style={styles.cardContent}>
         <Image
@@ -94,6 +103,7 @@ const Dashboard = ({navigation}) => {
         </View>
       </View>
     </View>
+    </TouchableOpacity>
   );
 
   const [apiData, setApiData] = useState([]);
@@ -102,9 +112,9 @@ const Dashboard = ({navigation}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const access_token = await AsyncStorage.getItem('access_token');
+        const access_token = await AsyncStorage.getItem('get_token');
         const bearerToken = access_token;
-        console.log(bearerToken);
+        console.log('heloooooooooooooooooo',bearerToken);
 
         const response = await fetch(
           'http://teleforceglobal.com/doctor/api/v1/user/fetch-department',
@@ -197,7 +207,7 @@ const Dashboard = ({navigation}) => {
             resizeMode="contain"
             source={require('../Assets/dashboard.jpg')}
           /> */}
-               <View style={{}}>
+               {/* <View style={{}}>
             <Text style={styles.bottomText}>Diagnostics & tests</Text>
             <FlatList
               data={Homediagnos}
@@ -206,8 +216,8 @@ const Dashboard = ({navigation}) => {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
             />
-          </View>
-          <View style={{height: apiDat.length > 0 ? '30%' : '10%'}}>
+          </View> */}
+          <View style={{height: apiDat.length > 0 ? '40%' : '10%'}}>
             <Text style={styles.bottomText}>My Appointments</Text>
             {apiDat.length > 0 ? (
               <FlatList

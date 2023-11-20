@@ -95,6 +95,11 @@ const Pinscreen = ({navigation,route}) => {
           const access_token = responseData.data.access_token;
           console.log(responseData.data.access_token);
           await AsyncStorage.setItem('access_token', access_token);
+
+
+          const get_token=responseData.data.access_token;
+          await AsyncStorage.setItem('get_token', get_token);
+
   
           console.log('Response Data:', responseData);
   

@@ -3,6 +3,7 @@ import React,{useEffect,useState} from 'react';
 import Backbutton from '../Component/Backbutton';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Profilescreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
@@ -48,7 +49,7 @@ const Profilescreen = ({navigation}) => {
   };
 
     const personal =()=>{
-        navigation.navigate('personalinfo')
+        // navigation.navigate('personalinfo')
     }
 
     const appointment =()=>{
@@ -76,7 +77,8 @@ const Profilescreen = ({navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={{flex:1,backgroundColor:'white'}}>
+   <View style={styles.container}>
       <View style={styles.header}>
         <Backbutton />
         <Text style={styles.title}>My Profile</Text>
@@ -89,19 +91,19 @@ const Profilescreen = ({navigation}) => {
         </View>
       </View>
 
-   <TouchableOpacity onPress={personal}>
+   {/* <TouchableOpacity onPress={personal}>
       <View style={styles.bottomContainer}>
           <View style={styles.leftContainer}>
             {/* <Image source={require('../Assets/user.png')} style={styles.leftImage} /> */}
-            <Text style={styles.leftText}>Personal Info</Text>
+            {/* <Text style={styles.leftText}>Personal Info</Text>
           </View>
           <TouchableOpacity style={styles.rightContainer}>
           <Icon name="chevron-right" size={25} color="black" />
           </TouchableOpacity>
         </View>
-   </TouchableOpacity>
+   </TouchableOpacity>  */}
 
-        <View style={styles.separator}></View>
+        {/* <View style={styles.separator}></View> */}
 
    <TouchableOpacity onPress={appointment}>
       <View style={styles.bottomContainer}>
@@ -115,19 +117,19 @@ const Profilescreen = ({navigation}) => {
         </View>
    </TouchableOpacity>
 
-        <View style={styles.separator}></View>
+        {/* <View style={styles.separator}></View> */}
 
-       <TouchableOpacity onPress={doctor}>
+       {/* <TouchableOpacity onPress={doctor}>
         <View style={styles.bottomContainer}>
           <View style={styles.leftContainer}>
             {/* <Image source={require('../Assets/doctor.png')} style={styles.leftImage} /> */}
-            <Text style={styles.leftText}>My Doctors</Text>
+            {/* <Text style={styles.leftText}>My Doctors</Text>
           </View>
           <TouchableOpacity style={styles.rightContainer}>
           <Icon name="chevron-right" size={25} color="black" />
           </TouchableOpacity>
         </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={styles.separator}></View>
 
@@ -158,20 +160,20 @@ const Profilescreen = ({navigation}) => {
         </View>
        </TouchableOpacity>
        
-       <View style={styles.separator}></View>
+       {/* <View style={styles.separator}></View>
 
 
        <TouchableOpacity onPress={test}>
        <View style={styles.bottomContainer}>
           <View style={styles.leftContainer}>
             {/* <Image source={require('../Assets/blood.png')} style={styles.leftImage} /> */}
-            <Text style={styles.leftText}>My tests & diagnostics</Text>
+            {/* <Text style={styles.leftText}>My tests & diagnostics</Text>
           </View>
           <TouchableOpacity style={styles.rightContainer}>
           <Icon name="chevron-right" size={25} color="black" />
           </TouchableOpacity>
         </View>
-       </TouchableOpacity>
+       </TouchableOpacity> */}
 
         <View style={styles.separator}></View>
 
@@ -188,6 +190,7 @@ const Profilescreen = ({navigation}) => {
        </TouchableOpacity>
 
     </View>
+    </ScrollView>
   );
 };
 

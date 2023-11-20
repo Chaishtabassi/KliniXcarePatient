@@ -12,9 +12,9 @@ const Confirmrest = ({navigation}) => {
       <View style={styles.content}>
         <Image source={require('../Assets/reset.png')} style={styles.image} />
         <Text style={styles.heading}>Your Registration has Been Done</Text>
-        <Text style={styles.description}>
+        {/* <Text style={styles.description}>
           Qui ex aute ipsum duis. Incididunt adipisicing voluptate laborum
-        </Text>
+        </Text> */}
       </View>
       <TouchableOpacity style={styles.button} onPress={Confirm}>
         <Text style={styles.buttonText}>Done</Text>
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', 
     alignItems: 'center',
     padding: 20,
+    backgroundColor:'white'
   },
   content: {
     flex: 1, 

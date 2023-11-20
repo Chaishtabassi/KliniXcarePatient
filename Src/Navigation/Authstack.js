@@ -31,6 +31,7 @@ import Specialistscreen from '../Specialistscreen';
 import Messagescreen from '../Messagescreen';
 import Doctorprofile from '../Screens/Doctors/Doctorprofile';
 import Notificationscreen from '../Screens/Notificationscreen';
+import Appointmentdetails from '../Appointmentdetails';
 
 const Auth=createStackNavigator();
 
@@ -223,6 +224,14 @@ const Authstack = () => {
                         <Auth.Screen
             name='filter'
             component={Filterscreen}
+            options={{
+                headerShown:false,
+                ...TransitionPresets.RevealFromBottomAndroid
+            }}
+            />
+                        <Auth.Screen
+            name='appointmentdetails'
+            component={Appointmentdetails}
             options={{
                 headerShown:false,
                 ...TransitionPresets.RevealFromBottomAndroid

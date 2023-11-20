@@ -74,7 +74,7 @@ const Doctorprofile = ({navigation, route}) => {
   }, []);
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView style={{flex: 1,backgroundColor:'white'}}>
       <View style={styles.container}>
         <View>
           <Image

@@ -54,7 +54,7 @@ const Signupscreen = ({navigation, route}) => {
     countriesdata();
   }, []);
 
-  const citiesdata = async (e:any) => {
+  const citiesdata = async (e) => {
 
     const access_token = await AsyncStorage.getItem('access_token');
 
@@ -203,8 +203,8 @@ const Signupscreen = ({navigation, route}) => {
           const responseText = await response.text();
           console.log('Response Text:', responseText);
 
-          const LoggedUser = JSON.parse(responseText).data;
-          await AsyncStorage.setItem('savedetails', LoggedUser.fullname);
+          // const LoggedUser = JSON.parse(responseText).data;
+          // await AsyncStorage.setItem('savedetails', LoggedUser.fullname);
 
           return responseText;
         } else {

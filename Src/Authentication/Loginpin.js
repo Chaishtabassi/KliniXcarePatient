@@ -89,18 +89,24 @@ const Loginpin = ({navigation}) => {
         if (response) {
           if (response.status == 200) {
             const id = response.data.data.id;
+            console.log('userid',id.toString())
             await AsyncStorage.setItem('userid', id.toString());
+            await AsyncStorage.setItem('fetchuserid', id.toString());
+
     
             const responseData = response.data;
+            // const access_token = responseData.data.access_token;
+            // console.log(responseData.data.access_token);
+            // await AsyncStorage.setItem('access_token', access_token);
+
+            console.log('Response Data:', responseData);
     
             if (responseData.message == 'Logged In Succesfully Take Care of bearer token !') {
               navigation.navigate('bottom');
 
             } else {
-              navigation.navigate('SignUpScreen', {
-                phoneNumber: storedPhoneNumber,
-                pin: enteredPin,
-              });
+              // navigation.navigate('bottom');
+
             }
           } else {
             console.error('Non-200 status code:', response.status);

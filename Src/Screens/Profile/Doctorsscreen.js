@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Doctorsscreen = ({navigation}) => {
 
+  const [loading, setLoading] = useState(true);
+
   const [apiData, setApiData] = useState([]); 
   useEffect(() => {
     callApi();
@@ -33,7 +35,9 @@ const Doctorsscreen = ({navigation}) => {
       formData.append('doctor_id', storedoctorid);
       // formData.append('status', 0);
 
-      formData.append('status', 0);
+      // formData.append('status', 0);
+
+      console.log(formData)
 
       const response = await fetch(api, {
         method: 'POST',
@@ -46,23 +50,36 @@ const Doctorsscreen = ({navigation}) => {
 
       if (response) {
         if (response.status === 200) {
-
           const responseText = await response.text();
           const parsed_res = JSON.parse(responseText);
-         
-        console.log('Response Text:', parsed_res.data[0].doctor);
-        setApiData([parsed_res.data[0].doctor]);
-        return parsed_res.data[0].doctor;
+
+          console.log('Response Text:', parsed_res.data);
+
+          if (parsed_res.data && parsed_res.data.length > 0) {
+            const firstDoctor = parsed_res.data[0].doctor;
+
+            if (firstDoctor) {
+              console.log('First Doctor:', firstDoctor);
+              setApiData([firstDoctor]);
+            } else {
+              console.error('No doctor found in the response');
+            }
+          } else {
+            console.error('No data found in the response');
+          }
+
+          setLoading(false);
         } else {
           console.error('Non-200 status code:', response.status);
+          setLoading(false);
         }
       } else {
         console.error('Response is undefined');
+        setLoading(false);
       }
-
-    
     } catch (error) {
-      console.error('erorrr',error);
+      console.error('Error:', error);
+      setLoading(false);
     }
   };
 
@@ -112,14 +129,18 @@ const Doctorsscreen = ({navigation}) => {
         <Text style={styles.title}>My Doctors</Text>
         </View>
         <View style={{paddingBottom: 65}}>
-        <FlatList
-        data={apiData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()} 
-        ItemSeparatorComponent={() => (
-          <View style={styles.separator} />
+        {loading ? (
+          <Text>Loading...</Text>
+        ) : apiData.length > 0 ? (
+          <FlatList
+            data={apiData}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+          />
+        ) : (
+          <Text style={{fontSize:18,margin:15}}>No doctors found</Text>
         )}
-      />
         </View>
     </View>
   )

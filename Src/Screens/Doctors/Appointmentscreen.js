@@ -72,13 +72,17 @@ const Appointmentscreen = ({route, navigation}) => {
         if (response.status === 200) {
           const responseText = await response.text();
           const parsed_res = JSON.parse(responseText);
-          // const id = parsed_res.data.slots[0].id; // Access the "id" from the first object
-          // console.log('slotid', id);
-          // await AsyncStorage.setItem('slotid', id.toString());
 
-          console.log('Response Text:', parsed_res.data);
+          if (parsed_res.data && parsed_res.data.length > 0) {
+            const firstSlotId = parsed_res.data[0].id;
+            console.log('First Slot ID:', firstSlotId);
+
+            await AsyncStorage.setItem('firstSlotId', String(firstSlotId));
+          } else {
+            // console.error('No slots found in the response');
+          }
+  
           setSlots(parsed_res.data);
-          // return parsed_res.data.slots;
         } else {
           console.error('Non-200 status code:', response.status);
         }
@@ -86,7 +90,7 @@ const Appointmentscreen = ({route, navigation}) => {
         console.error('Response is undefined');
       }
     } catch (error) {
-      console.error('erorrr', error);
+      console.error('Error:', error);
     }
   };
 
@@ -98,9 +102,20 @@ const Appointmentscreen = ({route, navigation}) => {
     const storeuserid = await AsyncStorage.getItem('userid');
     const storedoctorid = selectedDoctor.id;
     const storedserviceamount = await AsyncStorage.getItem('serviceamount');
-    const storedslotid = await AsyncStorage.getItem('slotid');
+    const storedslotid = await AsyncStorage.getItem('firstSlotId');
+    console.log('firstSlotId',storedslotid);
 
     try {
+      if (selectedTime==undefined || selectedType=='' || problemDescription==undefined) {
+        Toast.show({
+          type: 'error',
+          text1: 'Validation Error',
+          text2: 'All fields must be filled in.',
+        });
+        return; 
+      }
+
+      else{
       const api = `http://teleforceglobal.com/doctor/api/v1/user/addNewAppointment`;
 
       const authToken = bearerToken;
@@ -143,6 +158,8 @@ const Appointmentscreen = ({route, navigation}) => {
       if (response) {
         if (response.status === 200) {
           const responseText = await response.text();
+          console.log(responseText)
+
           return responseText;
         } else {
           console.error('Non-200 status code:', response.status);
@@ -150,33 +167,39 @@ const Appointmentscreen = ({route, navigation}) => {
       } else {
         console.error('Response is undefined');
       }
+    }
     } catch (error) {
       console.error('erorrr', error);
     }
   };
 
   const Payment = async () => {
-    // callApi();
+    if( problemDescription == ''){
+      Toast.show({
+        text1: 'Please fill all the details',
+        type: 'error',
+      });
+      return;
+    }
     try {
       const Response = await callApi();
       console.log('-------------------------', Response);
       const apiResponse = JSON.parse(Response);
-      if (
-        apiResponse &&
-        apiResponse.message === 'Appointment placed successfully'
-      ) {
-        const userIdentity = apiResponse.data.identity;
-        const userDeviceToken = apiResponse.data.device_token;
-
+  
+      if (apiResponse && apiResponse.message) {
         Toast.show({
-          text1: 'Your Appointment is Booked',
-          type: 'error',
+          text1: apiResponse.message,
+          type: apiResponse.message === 'Appointment placed successfully' ? 'success' : 'error',
         });
-
-        navigation.navigate('bottom');
+  
+        if (apiResponse.message === 'Appointment placed successfully') {
+          const userIdentity = apiResponse.data.identity;
+          const userDeviceToken = apiResponse.data.device_token;
+          navigation.navigate('bottom');
+        }
       } else {
         Toast.show({
-          text1: 'This slot alredy full, Please select other slot!',
+          text1: 'Unexpected response from the server',
           type: 'error',
         });
       }
@@ -184,6 +207,7 @@ const Appointmentscreen = ({route, navigation}) => {
       console.error('heloooooooooooooooooo', error);
     }
   };
+  
 
   const monthNames = [
     'Jan',
@@ -442,7 +466,7 @@ const [day, setDay] = useState('');
         </View>
 
         <View style={{flexDirection: 'row', padding: 10}}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => setSelectedType('Online')}
             style={[
               styles.appoContainer,
@@ -457,7 +481,7 @@ const [day, setDay] = useState('');
               ]}>
               Online
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => setSelectedType('At Clinic')}
             style={[

@@ -13,7 +13,8 @@ const Dashboardheader = ({navigation}) => {
   
     const savedetails = async () => {
       try {
-        const access_token = await AsyncStorage.getItem('access_token');
+        const access_token = await AsyncStorage.getItem('get_token');
+        console.log(access_token)
     
         if (!access_token) {
           return; // Handle this error case as needed
@@ -63,13 +64,13 @@ const Dashboardheader = ({navigation}) => {
          
               </View>
         <Text style={{fontSize:15,fontWeight:'300',color:'white'}}>How are you doing well?</Text>
-        <TextInput
+        {/* <TextInput
             placeholder="Search for doctors"
             style={styles.searchInput}
             value={searchQuery}
             placeholderTextColor={'white'}
             onChangeText={(text) => setSearchQuery(text)}
-          />
+          /> */}
             </View>
    
         </View>
