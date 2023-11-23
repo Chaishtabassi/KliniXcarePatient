@@ -45,7 +45,7 @@ const Bottomnavigation = () => {
                 )
             }}
             />
-               <Clienttab.Screen
+               {/* <Clienttab.Screen
             name='inbox'
             component={Inboxscreen}
             options={{
@@ -56,7 +56,7 @@ const Bottomnavigation = () => {
 
                 )
             }}
-            />
+            /> */}
                  <Clienttab.Screen
             name='profile'
             component={Profilescreen}

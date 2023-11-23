@@ -89,21 +89,23 @@ const Siigninscreen = ({navigation}) => {
 
    
   const handlePhoneNumberVerification = async () => {
+
+    
+    if (username === '') {
+      // Show a toast message when the phone number is empty
+      Toast.show({
+        text1: 'Please enter your phone number',
+        type: 'error',
+      });
+      return;
+    }
+
     // navigation.navigate('otp');
 
     if (!/^[0-9]{10}$/.test(username)) {
       // Show a toast message when the phone number is not 10 numeric characters
       Toast.show({
         text1: 'Please enter a valid 10-digit phone number',
-        type: 'error',
-      });
-      return;
-    }
-
-    if (username === '') {
-      // Show a toast message when the phone number is empty
-      Toast.show({
-        text1: 'Please enter a valid phone number',
         type: 'error',
       });
       return;
@@ -150,7 +152,11 @@ const Siigninscreen = ({navigation}) => {
           navigation.navigate('otp')        
           // navigation.navigate('otp', { verificationId: confirmation.verificationId, phoneNumber });
         } else {
-          navigation.navigate('loginpin');
+          Toast.show({
+            text1: 'User alredy register Sign In to continue',
+            type: 'success',
+          });
+          navigation.navigate('SignInScreen');
         }
       } else {
         console.error('API request failed with status:', response.status);

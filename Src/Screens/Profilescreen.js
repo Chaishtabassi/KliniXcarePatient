@@ -4,13 +4,18 @@ import Backbutton from '../Component/Backbutton';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
+import {useFocusEffect} from '@react-navigation/native';
+
 
 const Profilescreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
 
-  useEffect(() => {
-    savedetails();
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      savedetails();
+    }, []),
+  );
+  
 
   const savedetails = async () => {
     try {
@@ -48,8 +53,13 @@ const Profilescreen = ({navigation}) => {
     }
   };
 
-    const personal =()=>{
-        // navigation.navigate('personalinfo')
+    const personal = async ()=>{
+      const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
+      const storedPin = await AsyncStorage.getItem('userPin');
+          navigation.navigate('personalinfo' ,{
+          phoneNumber: storedPhoneNumber,
+          pin: storedPin,
+        })
     }
 
     const appointment =()=>{
@@ -79,31 +89,30 @@ const Profilescreen = ({navigation}) => {
   return (
     <ScrollView style={{flex:1,backgroundColor:'white'}}>
    <View style={styles.container}>
-      <View style={styles.header}>
-        <Backbutton />
-        <Text style={styles.title}>My Profile</Text>
-      </View>
+      <View style={{ backgroundColor: '#4a87d7',alignItems:'center' }}>
+    <Text style={styles.bottomText}>My Profile</Text>
+  </View>
 
       <View style={styles.profileContainer}>
-        <Image source={require('../Assets/profileimage.png')} style={styles.profileImage} />
+        <Image source={require('../Assets/personalinfo.png')} style={styles.profileImage} />
         <View style={styles.profileInfo}>
           <Text style={styles.profileName}>{userName.fullname}</Text>
         </View>
       </View>
 
-   {/* <TouchableOpacity onPress={personal}>
+   <TouchableOpacity onPress={personal}>
       <View style={styles.bottomContainer}>
           <View style={styles.leftContainer}>
             {/* <Image source={require('../Assets/user.png')} style={styles.leftImage} /> */}
-            {/* <Text style={styles.leftText}>Personal Info</Text>
+           <Text style={styles.leftText}>Personal Info</Text>
           </View>
           <TouchableOpacity style={styles.rightContainer}>
           <Icon name="chevron-right" size={25} color="black" />
           </TouchableOpacity>
         </View>
-   </TouchableOpacity>  */}
+   </TouchableOpacity> 
 
-        {/* <View style={styles.separator}></View> */}
+        <View style={styles.separator}></View>
 
    <TouchableOpacity onPress={appointment}>
       <View style={styles.bottomContainer}>
@@ -205,6 +214,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 40,
+  },
+  bottomText: {
+    margin: 10,
+    fontSize:18,
+    color:'white',
+    fontFamily:'Domine-Bold'
   },
   title: {
     flex: 1,

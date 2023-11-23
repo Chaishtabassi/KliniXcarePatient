@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,23 +6,24 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import {Dropdown} from 'react-native-element-dropdown';
-import {TextInput} from 'react-native-paper';
-import {Checkbox} from 'react-native-paper';
+import { Dropdown } from 'react-native-element-dropdown';
+import { ProgressBar, TextInput } from 'react-native-paper';
+import { Checkbox } from 'react-native-paper';
 import DocumentPicker from 'react-native-document-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const Personalinfoscreen = ({navigation, route}) => {
-  // const {phoneNumber, pin} = route.params;
+const Personalinfoscreen = ({ navigation, route }) => {
+  const { phoneNumber, storedPin } = route.params;
 
-  const [name, setname] = useState('');
-  const [lastname, setlastname] = useState('');
-  const [middlename, setmiddlename] = useState('');
+  const [name, setname] = useState();
+  const [lastname, setlastname] = useState();
+  const [middlename, setmiddlename] = useState();
   const [height, setheight] = useState('');
   const [width, setwidth] = useState('');
   const [email, setemail] = useState('');
@@ -46,6 +47,9 @@ const Personalinfoscreen = ({navigation, route}) => {
   const [otherMedicalHistory, setOtherMedicalHistory] = useState('');
 
   const [countries, setCountries] = useState([]);
+
+  const [loading, setloading] = useState(false);
+
   const [cities, setCities] = useState([]);
 
   useEffect(() => {
@@ -53,34 +57,51 @@ const Personalinfoscreen = ({navigation, route}) => {
   }, []);
 
 
-  
+
   useEffect(() => {
     savedetails();
   }, [])
   const savedetails = async () => {
     try {
+      setloading(true);
       const access_token = await AsyncStorage.getItem('get_token');
 
-      console.log(access_token )
-  
+      console.log(access_token)
+
       if (!access_token) {
         return; // Handle this error case as needed
       }
-  
+
       const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchMyUserDetails';
-  
+
       const response = await fetch(api, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${access_token}`,
         },
       });
-  
+
       if (response) {
         if (response.status === 200) {
           const responseData = await response.text();
           console.log(JSON.parse(responseData).data)
-        //  setUserName(JSON.parse(responseData).data)
+          setlastname(JSON.parse(responseData).data.last_name);
+          setname(JSON.parse(responseData).data.first_name);
+          setAge(JSON.parse(responseData).data.age)
+          setDay(JSON.parse(responseData).data.dob)
+          setSelectedGender(JSON.parse(responseData).data.gender)
+          setSelectmarital(JSON.parse(responseData).data.marital_status)
+          setreason(JSON.parse(responseData).data.patient_address)
+          setIsInsured(JSON.parse(responseData).data.insurance);
+
+          setSelectedOptions(JSON.parse(responseData).data.post_medical_history)
+
+          setemergencyname(JSON.parse(responseData).data.emergency_contact_name)
+          setemergencyphone(JSON.parse(responseData).data.emergency_contact_phone)
+          setrelationship(JSON.parse(responseData).data.emergency_contact_relation)
+          setcity(JSON.parse(responseData).data.city);
+          setloading(false);
+
         } else {
           console.error('Non-200 status code:', response.status);
           // Handle the error appropriately
@@ -109,7 +130,7 @@ const Personalinfoscreen = ({navigation, route}) => {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization:`Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: formData,
     })
@@ -131,10 +152,10 @@ const Personalinfoscreen = ({navigation, route}) => {
 
   const countriesdata = async () => {
     const access_token = await AsyncStorage.getItem('access_token');
-  
+
     const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/getAllCountries';
     const bearerToken = access_token;
-  
+
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -142,12 +163,12 @@ const Personalinfoscreen = ({navigation, route}) => {
           Authorization: `Bearer ${bearerToken}`,
         },
       });
-  
+
       if (response.status === 200) {
         const data = await response.json();
         setCountries(data.data);
         // SetCountry('PHL');
-        citiesdata({"iso3": 'PHL'});
+        citiesdata({ "iso3": 'PHL' });
       } else {
         throw new Error('Request failed with status ' + response.status);
       }
@@ -155,8 +176,8 @@ const Personalinfoscreen = ({navigation, route}) => {
       console.error('Error:', error);
     }
   };
-  
-  
+
+
 
   const handleCheckboxChange = value => {
     if (selectedOptions.includes(value)) {
@@ -180,133 +201,139 @@ const Personalinfoscreen = ({navigation, route}) => {
     const access_token = await AsyncStorage.getItem('access_token');
 
     try {
-      if (name ==undefined ||lastname==undefined || selectedGender=='' || day==undefined || month==undefined || year==undefined || age ==undefined|| width==undefined || Selectmarital=='' || reason==undefined || city=='') {
+      if (name == undefined || lastname == undefined || selectedGender == '' || day == undefined || month == undefined || year == undefined || age == undefined || width == undefined || Selectmarital == '' || reason == undefined || city == '') {
         Toast.show({
           type: 'error',
           text1: 'Validation Error',
           text2: 'All fields must be filled in.',
         });
-        return; 
+        return;
       }
-      else{
+      else {
         const api =
-        `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd&identity=` +
-        `${phoneNumber}` +
-        '&is_verify=1&password=' +
-        `${pin}`;
+          `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd&identity=` +
+          `${phoneNumber}` +
+          '&is_verify=1&password=' +
+          `${storedPin}`;
 
-      const authToken = access_token
+        const authToken = access_token
 
-      const formData = new FormData();
-      if (selectedImage) {
-        formData.append('image', {
-          uri: selectedImage.path,
-          type: 'image/jpeg',
-          name: 'image.jpg',
-        });
-      }
-
-      formData.append('first_name', lastname);
-      formData.append('last_name', name);
-      formData.append('country_code', '91');
-      formData.append('gender', Number(selectedGender['label']));
-      formData.append('dob', `${day}-${month}-${year}`);
-      formData.append('age', age);
-      formData.append('landline_number', width);
-      formData.append('is_notification', 1);
-      formData.append('marital_status', Selectmarital['label']);
-      formData.append('patient_address', reason);
-      formData.append('city', city['name']);
-      if (isInsured) {
-        formData.append('insurance', insurence);
-      }
-      formData.append('post_medical_history', selectedOptions.join(','));
-      formData.append('other_medical_history', otherMedicalHistory);
-      formData.append('emergency_contact_name', emergencyname);
-      formData.append('emergency_contact_phone', emergencyphone);
-      formData.append('emergency_contact_relation', relationship['label']);
-      formData.append('phone_number', height);
-
-      console.log('hello', formData);
-
-      const response = await fetch(api, {
-        method: 'POST',
-        headers: {
-          // 'Content-Type': 'multipart/form-data',
-          'Authorization':`Bearer ${authToken}`,
-        },
-        // body: JSON.stringify(),
-        body: formData,
-      });
-
-      if (response) {
-        if (response.status === 200) {
-          const responseText = await response.text();
-          console.log('Response Text:', responseText);
-
-          const LoggedUser = JSON.parse(responseText).data;
-          await AsyncStorage.setItem('savedetails', LoggedUser);
-
-          return responseText;
-        } else {
-          console.error('Non-200 status code:', response.status);
+        const formData = new FormData();
+        if (selectedImage) {
+          formData.append('image', {
+            uri: selectedImage.path,
+            type: 'image/jpeg',
+            name: 'image.jpg',
+          });
         }
-      } else {
-        console.error('Response is undefined');
-      }
+
+        formData.append('first_name', lastname);
+        formData.append('last_name', name);
+        formData.append('country_code', '91');
+        formData.append('gender', Number(selectedGender['label']));
+        formData.append('dob', `${day}-${month}-${year}`);
+        formData.append('age', age);
+        formData.append('landline_number', width);
+        formData.append('is_notification', 1);
+        formData.append('marital_status', Selectmarital['label']);
+        formData.append('patient_address', reason);
+        formData.append('city', city['name']);
+        formData.append('insurance', isInsured);
+
+        if (isInsured) {
+          formData.append('insurance', isInsured);
+        }
+        formData.append('post_medical_history', selectedOptions);
+        formData.append('other_medical_history', otherMedicalHistory);
+        formData.append('emergency_contact_name', emergencyname);
+        formData.append('emergency_contact_phone', emergencyphone);
+        formData.append('emergency_contact_relation', relationship['label']);
+        formData.append('phone_number', height);
+
+        console.log('hello', formData);
+
+        const response = await fetch(api, {
+          method: 'POST',
+          headers: {
+            // 'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${authToken}`,
+          },
+          // body: JSON.stringify(),
+          body: formData,
+        });
+
+        if (response) {
+          if (response.status === 200) {
+            const responseText = await response.text();
+            console.log('Response Text:', responseText);
+
+            const LoggedUser = JSON.parse(responseText).data;
+            await AsyncStorage.setItem('updateddetails', JSON.stringify(LoggedUser));
+
+            return responseText;
+          } else {
+            console.error('Non-200 status code:', response.status);
+          }
+        } else {
+          console.error('Response is undefined');
+        }
 
       }
     } catch (error) {
-      console.error('erorrr',error);
+      console.error('erorrr', error);
     }
   };
 
   const Dashboard = async () => {
     try {
       const Response = await callApi();
-      console.log('-------------------------',Response);
+      console.log('-------------------------', Response);
       const apiResponse = JSON.parse(Response);
       if (apiResponse && apiResponse.message === 'user details updated successfully') {
         const userIdentity = apiResponse.data.identity;
         const userDeviceToken = apiResponse.data.device_token;
 
-        navigation.navigate('confirmreg')
+        Toast.show({
+          text1: 'Your Profile is updated',
+          type: 'success',
+        });
+        navigation.navigate('bottom')
       } else {
       }
     } catch (error) {
-      console.error('heloooooooooooooooooo',error);
+      console.error('heloooooooooooooooooo', error);
     }
   };
 
   // Gender options
   const genderOptions = [
-    {label: '0', value: 'Male'},
-    {label: '1', value: 'Female'},
-    {label: '2', value: 'Other'},
+    { label: '1', value: 'Male' },
+    { label: '0', value: 'Female' },
+    { label: '2', value: 'Other' },
   ];
 
   const Materialoptions = [
-    {label: 'Single', value: 'Single'},
-    {label: 'Married', value: 'Married'},
-    {label: 'Divorced', value: 'Divorced'},
-    {label: 'Widow', value: 'Widow'},
-    {label: 'Other', value: 'Other'},
+    { label: 'Single', value: 'Single' },
+    { label: 'Married', value: 'Married' },
+    { label: 'Divorced', value: 'Divorced' },
+    { label: 'Widow', value: 'Widow' },
+    { label: 'Other', value: 'Other' },
   ];
 
   const relationshipdata = [
-    {label: 'Mother', value: 'Mother'},
-    {label: 'Father', value: 'Father'},
-    {label: 'Spouse', value: 'Spouse'},
-    {label: 'Other', value: 'Other'},
+    { label: 'Mother', value: 'Mother' },
+    { label: 'Father', value: 'Father' },
+    { label: 'Spouse', value: 'Spouse' },
+    { label: 'Other', value: 'Other' },
   ];
 
   const checkboxOptions = [
-    {label: 'COVID-19', value: 'COVID-19'},
-    {label: 'Chickenpox', value: 'Chickenpox'},
-    {label: 'Diabetis', value: 'Diabetis'},
-    {label: 'Dengue', value: 'Dengue'},
-    {label: 'Flu', value: 'Flu'},
-    {label: 'Other', value: 'Other'},
+    { label: 'COVID-19', value: 'COVID-19' },
+    { label: 'Chickenpox', value: 'Chickenpox' },
+    { label: 'Diabetis', value: 'Diabetis' },
+    { label: 'Dengue', value: 'Dengue' },
+    { label: 'Flu', value: 'Flu' },
+    { label: 'Other', value: 'Other' },
   ];
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -337,11 +364,11 @@ const Personalinfoscreen = ({navigation, route}) => {
     }
   };
 
-  
 
-  const [showDatePicker, setShowDatePicker] = useState(false); 
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  
+
   const handleDateChange = (event, date) => {
     if (date) {
       setShowDatePicker(false);
@@ -352,12 +379,12 @@ const Personalinfoscreen = ({navigation, route}) => {
       setYear(selectedYear.toString());
       setMonth(selectedMonth.toString().padStart(2, '0'));
       setDay(selectedDay.toString().padStart(2, '0'));
-  
+
       // Calculate age immediately when DOB is entered
       calculateAge(selectedYear, selectedMonth, selectedDay);
     }
   };
-  
+
   const calculateAge = (selectedYear, selectedMonth, selectedDay) => {
     if (selectedDay && selectedMonth && selectedYear) {
       // Convert the month to be zero-based
@@ -365,21 +392,21 @@ const Personalinfoscreen = ({navigation, route}) => {
       const dob = new Date(selectedYear, monthIndex, selectedDay);
       const today = new Date();
       let age = today.getFullYear() - dob.getFullYear();
-  
+
       // Check if the birthday has already occurred this year
       if (today < new Date(today.getFullYear(), monthIndex, selectedDay)) {
         age--;
       }
-  
+
       setAge(age.toString()); // Update the age state
     }
   };
-  
+
   const showDatepicker = () => {
     setShowDatePicker(true);
   };
 
-  
+
   const handleBackButtonPress = () => {
     navigation.goBack();
   };
@@ -387,7 +414,8 @@ const Personalinfoscreen = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-       <View
+      
+      <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -396,19 +424,28 @@ const Personalinfoscreen = ({navigation, route}) => {
         }}>
         <TouchableOpacity
           onPress={handleBackButtonPress}
-          style={{marginLeft: 10}}>
-          <Icon name="arrow-left" size={30} color="white" />
+          style={{ marginLeft: 10 }}>
+          <Icon name="chevron-left" size={30} color="white" />
         </TouchableOpacity>
-        <View style={{flex: 1, alignItems: 'center'}}>
-          <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
             EDIT PROFILE
           </Text>
         </View>
       </View>
-      <View style={{margin:10}}>
-      {selectedImage && (
+      <ScrollView>
+      {loading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#478ffd" />
+          </View>
+        )}
+
+        {/* Actual content */}
+        {!loading && (
+        <View style={{ margin: 10 }}>
+          {selectedImage && (
             <Image
-              source={{uri: selectedImage.path}}
+              source={{ uri: selectedImage.path }}
               style={{
                 width: 100,
                 height: 100,
@@ -427,7 +464,7 @@ const Personalinfoscreen = ({navigation, route}) => {
             Enter Patient Name*:
           </Text>
 
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <TextInput
               style={styles.input}
               label="Last Name"
@@ -435,27 +472,27 @@ const Personalinfoscreen = ({navigation, route}) => {
               outlineColor="#e4efff"
               onChangeText={setlastname}
               value={lastname}
-              theme={{colors: {primary: '#478ffd'}}}
+              theme={{ colors: { primary: '#478ffd' } }}
             />
           </View>
           <TextInput
-              label="First Name"
-              style={styles.input}
-              mode="outlined"
-              outlineColor="#e4efff"
-              onChangeText={setname}
-              value={name}
-              theme={{colors: {primary: '#478ffd'}}}
-            />
+            label="First Name"
+            style={styles.input}
+            mode="outlined"
+            outlineColor="#e4efff"
+            onChangeText={setname}
+            value={name}
+            theme={{ colors: { primary: '#478ffd' } }}
+          />
           <TextInput
-              label="Middle Name"
-              style={styles.input}
-              mode="outlined"
-              outlineColor="#e4efff"
-              onChangeText={setmiddlename}
-              value={middlename}
-              theme={{colors: {primary: '#478ffd'}}}
-            />
+            label="Middle Name"
+            style={styles.input}
+            mode="outlined"
+            outlineColor="#e4efff"
+            onChangeText={setmiddlename}
+            value={middlename}
+            theme={{ colors: { primary: '#478ffd' } }}
+          />
 
           <Text
             style={{
@@ -530,29 +567,29 @@ const Personalinfoscreen = ({navigation, route}) => {
           </Text>
 
           <View style={styles.dateContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Date"
-            value={`${year}-${month}-${day}`}
-            onFocus={() => setShowDatePicker(true)}
-            editable={false}
-          />
-          {showDatePicker && (
-            <DateTimePicker
-              value={selectedDate}
-              mode="date"
-              display="calendar"
-              onChange={handleDateChange}
-              maximumDate={new Date()} 
+            <TextInput
+              style={styles.input}
+              placeholder="Date"
+              value={`${year}-${month}-${day}`}
+              onFocus={() => setShowDatePicker(true)}
+              editable={false}
             />
-          )}
-          <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={() => setShowDatePicker(true)}
-          >
-            <Icon name="calendar" size={25} color="black" />
-          </TouchableOpacity>
-        </View>
+            {showDatePicker && (
+              <DateTimePicker
+                value={selectedDate}
+                mode="date"
+                display="calendar"
+                onChange={handleDateChange}
+                maximumDate={new Date()}
+              />
+            )}
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Icon name="calendar" size={25} color="black" />
+            </TouchableOpacity>
+          </View>
 
           <Text
             style={{
@@ -618,10 +655,10 @@ const Personalinfoscreen = ({navigation, route}) => {
             label="Street Address"
             onChangeText={setreason}
             value={reason}
-            theme={{colors: {primary: '#478ffd'}}}
+            theme={{ colors: { primary: '#478ffd' } }}
           />
 
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Dropdown
               style={styles.input2}
               placeholderStyle={{
@@ -677,8 +714,8 @@ const Personalinfoscreen = ({navigation, route}) => {
             Insurance*:
           </Text>
 
-          <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
                 style={{
                   fontSize: 16,
@@ -694,7 +731,7 @@ const Personalinfoscreen = ({navigation, route}) => {
               />
             </View>
 
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
                 style={{
                   fontSize: 16,
@@ -719,7 +756,7 @@ const Personalinfoscreen = ({navigation, route}) => {
               outlineColor="#e4efff"
               onChangeText={setinsurence}
               value={insurence}
-              theme={{colors: {primary: '#478ffd'}}}
+              theme={{ colors: { primary: '#478ffd' } }}
             />
           )}
 
@@ -751,30 +788,30 @@ const Personalinfoscreen = ({navigation, route}) => {
               outlineColor="#e4efff"
               onChangeText={setOtherMedicalHistory}
               value={otherMedicalHistory}
-              theme={{colors: {primary: '#478ffd'}}}
+              theme={{ colors: { primary: '#478ffd' } }}
             />
           )}
 
-<View style={{top:5}}>
+          <View style={{ top: 5 }}>
 
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-            }}>
-            Emergency Contact Details*:
-          </Text>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+                fontFamily: 'NunitoSans_7pt-Regular',
+              }}>
+              Emergency Contact Details*:
+            </Text>
 
-          <TextInput
-            style={styles.input}
-            label="Name"
-            mode="outlined"
-            outlineColor="#e4efff"
-            onChangeText={setemergencyname}
-            value={emergencyname}
-            theme={{colors: {primary: '#478ffd'}}}
-          />
+            <TextInput
+              style={styles.input}
+              label="Name"
+              mode="outlined"
+              outlineColor="#e4efff"
+              onChangeText={setemergencyname}
+              value={emergencyname}
+              theme={{ colors: { primary: '#478ffd' } }}
+            />
           </View>
 
           <TextInput
@@ -786,7 +823,7 @@ const Personalinfoscreen = ({navigation, route}) => {
             value={emergencyphone}
             maxLength={10}
             keyboardType="numeric"
-            theme={{colors: {primary: '#478ffd'}}}
+            theme={{ colors: { primary: '#478ffd' } }}
           />
 
           <Dropdown
@@ -810,10 +847,11 @@ const Personalinfoscreen = ({navigation, route}) => {
           />
 
           <TouchableOpacity style={styles.button} onPress={Dashboard}>
-            <Text style={styles.buttonText}>Sign up</Text>
+            <Text style={styles.buttonText}>Done</Text>
           </TouchableOpacity>
-      </View>
-      
+        </View>
+          )}
+      </ScrollView>
     </View>
   )
 }
@@ -837,29 +875,29 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'absolute',
-    top: 10, 
-    right: 10, 
+    top: 10,
+    right: 10,
   },
   input: {
     width: '100%',
     // marginBottom: 15,
-    marginVertical:8,
+    marginVertical: 8,
     backgroundColor: '#e4efff',
     borderRadius: 8,
-    marginVertical:8,
-    height:40
+    marginVertical: 8,
+    height: 40
   },
   input1: {
     width: '48%',
     marginBottom: 15,
     borderRadius: 10,
-    marginVertical:8,
+    marginVertical: 8,
     backgroundColor: '#e4efff',
     zIndex: 0,
   },
   input2: {
     width: '48%',
-    marginVertical:8,
+    marginVertical: 8,
     borderRadius: 10,
     backgroundColor: '#e4efff',
     zIndex: 0,
@@ -881,7 +919,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     width: '100%',
-    top:5
+    top: 5
   },
   buttonText: {
     color: 'white',

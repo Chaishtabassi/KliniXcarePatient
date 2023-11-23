@@ -89,6 +89,16 @@ const Siigninscreen = ({navigation}) => {
 
   const handlePhoneNumberVerification = async () => {
 
+    
+    if (username === '') {
+      // Show a toast message when the phone number is empty
+      Toast.show({
+        text1: 'Please enter your phone number',
+        type: 'error',
+      });
+      return;
+    }
+
     if (!/^[0-9]{10}$/.test(username)) {
       // Show a toast message when the phone number is not 10 numeric characters
       Toast.show({
@@ -98,15 +108,6 @@ const Siigninscreen = ({navigation}) => {
       return;
     }
     // navigation.navigate('otp');
-
-    if (username === '') {
-      // Show a toast message when the phone number is empty
-      Toast.show({
-        text1: 'Please enter a valid phone number',
-        type: 'error',
-      });
-      return;
-    }
 
     try {
       // Construct the request URL
@@ -148,6 +149,10 @@ const Siigninscreen = ({navigation}) => {
 
         if (responseData.is_new) {
           navigation.navigate('signupphone')
+          Toast.show({
+            text1: 'Please Sign Up to Continue',
+            type: 'success',
+          });
           // navigation.navigate('otp', { verificationId: confirmation.verificationId, phoneNumber });
           // navigation.navigate('pin');
         } else {

@@ -2,6 +2,7 @@ import { StyleSheet, Text, View ,Image,TouchableOpacity,FlatList} from 'react-na
 import React,{useEffect, useState} from 'react'
 import Backbutton from '../../Component/Backbutton'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/EvilIcons';
 
 const Appointment = ({navigation}) => {
 
@@ -99,12 +100,31 @@ const Appointment = ({navigation}) => {
     </View>
 );
 
+const handleBackButtonPress = () => {
+  navigation.goBack();
+};
+
 
   return (
     <View style={styles.container}>
-       <View style={styles.header}>
-      <Backbutton/>
-      <Text style={styles.title}>My Appointment</Text>
+       <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: '#4989d9',
+          padding:10
+          // height: '5%',
+        }}>
+        <TouchableOpacity
+          onPress={handleBackButtonPress}
+          style={{marginLeft: 10}}>
+          <Icon name="chevron-left" size={30} color="white" />
+        </TouchableOpacity>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
+           My Appointment
+          </Text>
+        </View>
     </View>
  
     {/* <View style={{margin:15}}>

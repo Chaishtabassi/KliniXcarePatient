@@ -9,7 +9,7 @@ import {
   ScrollView,
   Dimensions
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Doctorprofile = ({navigation, route}) => {
@@ -85,7 +85,7 @@ const Doctorprofile = ({navigation, route}) => {
           <TouchableOpacity
             onPress={handleBackButtonPress}
             style={styles.backButton}>
-            <Icon name="long-arrow-left" size={20} color="black" />
+            <Icon name="chevron-left" size={30} color="black" />
           </TouchableOpacity>
         </View>
         <View style={{margin: 15}}>
@@ -100,13 +100,12 @@ const Doctorprofile = ({navigation, route}) => {
               </Text>
             </View>
             <View style={{flexDirection: 'row', top: 10}}>
-              <Icon name="stethoscope" size={20} color="black" />
+              {/* <Icon name="stethoscope" size={20} color="black" /> */}
               <Text
                 style={{
                   color: '#6d97c1',
                   fontSize: 16,
                   fontWeight: '600',
-                  marginLeft: 10,
                 }}>
                 {apiData.designation}
               </Text>
@@ -117,7 +116,7 @@ const Doctorprofile = ({navigation, route}) => {
                 backgroundColor: '#f7f7f7',
                 top: 10,
                 height: 50,
-                width: '35%',
+                // width: '35%',
                 borderRadius: 5,
                 justifyContent: 'center',
               }}>

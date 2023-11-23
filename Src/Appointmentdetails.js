@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity,Image } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -68,7 +68,7 @@ const Appointmentdetails = ({ navigation, route }) => {
           height: '7%',
         }}>
         <TouchableOpacity onPress={handleBackButtonPress} style={{ marginLeft: 10 }}>
-          <Icon name="arrowleft" size={20} color="white" />
+          <Icon name="chevron-left" size={30} color="white" />
         </TouchableOpacity>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
@@ -154,10 +154,10 @@ const Appointmentdetails = ({ navigation, route }) => {
 
 
       </View>
-
+{/* 
       <View style={{alignItems:'center',justifyContent:'center',marginLeft:70}}>
         <Image style={{height:150,width:150}} source={require('../Src/Assets/details.png')}/>
-      </View>
+      </View> */}
 </View>
      
 </View>

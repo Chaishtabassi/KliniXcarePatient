@@ -12,7 +12,7 @@ import {
 import React, {useState, useEffect} from 'react';
 import Backbutton from '../../Component/Backbutton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 import {phonecall} from 'react-native-communications';
@@ -20,6 +20,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Appointmentscreen = ({route, navigation}) => {
   const selectedDoctor = route.params ? route.params.selectedDoctor : null;
+  console.log(selectedDoctor)
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -330,7 +331,7 @@ const [day, setDay] = useState('');
         <TouchableOpacity
           onPress={handleBackButtonPress}
           style={{marginLeft: 10}}>
-          <Icon name="arrowleft" size={20} color="white" />
+          <Icon name="chevron-left" size={30} color="white" />
         </TouchableOpacity>
         <View style={{flex: 1, alignItems: 'center'}}>
           <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
@@ -347,7 +348,11 @@ const [day, setDay] = useState('');
           />
           <View style={{flexDirection: 'column', marginLeft: 15}}>
             <Text style={styles.doctorName}>{selectedDoctor.name}</Text>
+            <Text style={styles.specialty}>{selectedDoctor.degrees}</Text>
             <Text style={styles.specialty}>{selectedDoctor.designation}</Text>
+            <Text style={styles.specialty}>{selectedDoctor.experience_year} Years Experience</Text>
+
+
           </View>
         </View>
       )}
@@ -376,7 +381,7 @@ const [day, setDay] = useState('');
           <TouchableOpacity
                 style={{ marginRight: 7}}
                 onPress={() => setShowDatePicker(true)}>
-                <Icon name="calendar" size={23} color="black" />
+                <Icon name="calendar" size={30} color="black" />
               </TouchableOpacity>
           <Text style={{fontSize: 15, fontFamily: 'NunitoSans_7pt-Light'}}>
             {monthNames[currentMonth - 1]} {currentYear}
@@ -534,7 +539,7 @@ const [day, setDay] = useState('');
         }}
         onPress={openImagePicker}
       >
-        <Icon name="plus" size={25} color="black" />
+        <Icon name="plus" size={30} color="black" />
       </TouchableOpacity>
 
       {selectedImageUri && (

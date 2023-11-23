@@ -172,7 +172,7 @@ const Dashboard = ({navigation}) => {
 
   // Slicing the data when it changes
   useEffect(() => {
-    setSlicedApiData(apiData.slice(0, 4)); // Slice the first 4 items
+    setSlicedApiData(apiData.slice(0, 6)); // Slice the first 4 items
   }, [apiData]);
 
   const specialist =()=>{

@@ -172,6 +172,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily:'NunitoSans_7pt-Bold',
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 18,
   },
 });

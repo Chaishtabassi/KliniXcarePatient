@@ -1,15 +1,18 @@
 import { StyleSheet, Text, View ,TextInput, TouchableOpacity,Image} from 'react-native'
 import React,{useState,useEffect} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Dashboardheader = ({navigation}) => {
     const [userName, setUserName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
 
-    useEffect(() => {
+  useFocusEffect(
+    React.useCallback(() => {
       savedetails();
-    }, [])
+    }, []),
+  );
   
     const savedetails = async () => {
       try {

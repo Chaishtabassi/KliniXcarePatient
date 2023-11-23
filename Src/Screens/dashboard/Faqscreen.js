@@ -4,7 +4,6 @@ import Backbutton from '../../Component/Backbutton'
 import Icon from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const Faqscreen = () => {
 
   const [apiData, setApiData] = useState([]);
@@ -62,11 +61,30 @@ const Faqscreen = () => {
         </View>
       );
 
+      const handleBackButtonPress = () => {
+        navigation.goBack();
+      };
+
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-            <Backbutton />
-            <Text style={styles.title}>FAQ</Text>
+        <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: '#4989d9',
+          padding:10
+          // height: '5%',
+        }}>
+        <TouchableOpacity
+          onPress={handleBackButtonPress}
+          style={{marginLeft: 10}}>
+          <Icon name="chevron-left" size={30} color="white" />
+        </TouchableOpacity>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
+           FAQ
+          </Text>
+        </View>
        </View>
        <FlatList
       data={apiData}

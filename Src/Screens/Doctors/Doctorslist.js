@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Backbutton from '../../Component/Backbutton';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import Doctorsdata from '../../Data/Doctorsdata';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Sortingmodal from '../../Component/Sortingmodal';
@@ -106,7 +106,7 @@ const Doctorslist = ({navigation, route}) => {
                 }}>
                 {item.name}
               </Text>
-              <Icon name="staro" size={25} color="black" />
+              <Icon name="star" size={25} color="black" />
             </View>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -199,7 +199,7 @@ const Doctorslist = ({navigation, route}) => {
         <TouchableOpacity
           onPress={handleBackButtonPress}
           style={{marginLeft: 10}}>
-          <Icon name="arrowleft" size={20} color="white" />
+          <Icon name="chevron-left" size={30} color="white" />
         </TouchableOpacity>
         <View style={{flex: 1, alignItems: 'center'}}>
           <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>

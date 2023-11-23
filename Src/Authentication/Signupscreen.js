@@ -135,10 +135,26 @@ const Signupscreen = ({navigation, route}) => {
     setIsNotInsured(true);
   };
 
+  const isValidPhoneNumber = () => {
+    // Use a regular expression to check if the phone number is valid
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(emergencyphone);
+  };
+
   const callApi = async () => {
     const access_token = await AsyncStorage.getItem('access_token');
 
     try {
+
+      if (!isValidPhoneNumber()) {
+        Toast.show({
+          type: 'error',
+          text1: 'Validation Error',
+          text2: 'Please enter a valid phone number.',
+        });
+        return;
+      }
+      
       if (name ==undefined ||lastname==undefined || selectedGender=='' || day==undefined || month==undefined || year==undefined || age ==undefined|| width==undefined || Selectmarital=='' || reason==undefined || city=='') {
         Toast.show({
           type: 'error',
@@ -169,22 +185,24 @@ const Signupscreen = ({navigation, route}) => {
       formData.append('last_name', name);
       formData.append('country_code', '91');
       formData.append('gender', Number(selectedGender['label']));
-      formData.append('dob', `${day}-${month}-${year}`);
+      formData.append('dob', `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+
       formData.append('age', age);
       formData.append('landline_number', width);
       formData.append('is_notification', 1);
       formData.append('marital_status', Selectmarital['label']);
       formData.append('patient_address', reason);
-      formData.append('city', city['name']);
+      formData.append('city', city.name);
+      formData.append('insurance', isInsured);
+
       if (isInsured) {
-        formData.append('insurance', insurence);
+        formData.append('insurance', isInsured);
       }
-      formData.append('post_medical_history', selectedOptions.join(','));
+      formData.append('post_medical_history', selectedOptions);
       formData.append('other_medical_history', otherMedicalHistory);
       formData.append('emergency_contact_name', emergencyname);
       formData.append('emergency_contact_phone', emergencyphone);
       formData.append('emergency_contact_relation', relationship['label']);
-      formData.append('phone_number', height);
 
       console.log('hello', formData);
 
@@ -386,7 +404,11 @@ const Signupscreen = ({navigation, route}) => {
               label="Last Name"
               mode="outlined"
               outlineColor="#e4efff"
-              onChangeText={setlastname}
+              onChangeText={(text) => {
+                // Ensure that the entered value contains only alphabets
+                const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
+                setlastname(alphabetsOnly);
+              }}
               value={lastname}
               theme={{colors: {primary: '#478ffd'}}}
             />
@@ -396,7 +418,11 @@ const Signupscreen = ({navigation, route}) => {
               style={styles.input}
               mode="outlined"
               outlineColor="#e4efff"
-              onChangeText={setname}
+              onChangeText={(text) => {
+                // Ensure that the entered value contains only alphabets
+                const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
+                setname(alphabetsOnly);
+              }}
               value={name}
               theme={{colors: {primary: '#478ffd'}}}
             />
@@ -405,7 +431,11 @@ const Signupscreen = ({navigation, route}) => {
               style={styles.input}
               mode="outlined"
               outlineColor="#e4efff"
-              onChangeText={setmiddlename}
+              onChangeText={(text) => {
+                // Ensure that the entered value contains only alphabets
+                const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
+                setmiddlename(alphabetsOnly);
+              }}
               value={middlename}
               theme={{colors: {primary: '#478ffd'}}}
             />
@@ -574,7 +604,7 @@ const Signupscreen = ({navigation, route}) => {
             theme={{colors: {primary: '#478ffd'}}}
           />
 
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
             <Dropdown
               style={styles.input2}
               placeholderStyle={{
@@ -615,12 +645,14 @@ const Signupscreen = ({navigation, route}) => {
               labelField="name"
               search
               searchPlaceholder="Search..."
-              valueField="iso3"
+              valueField="wikiDataId"
               placeholder="City"
               value={city}
-              onChange={value => setcity(value)}
+              onChange={value => {
+                setcity(value);
+              }}
             />
-          </View>
+          {/* </View> */}
           <Text
             style={{
               color: 'black',
@@ -724,7 +756,11 @@ const Signupscreen = ({navigation, route}) => {
             label="Name"
             mode="outlined"
             outlineColor="#e4efff"
-            onChangeText={setemergencyname}
+            onChangeText={(text) => {
+              // Ensure that the entered value contains only alphabets
+              const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
+              setemergencyname(alphabetsOnly);
+            }}
             value={emergencyname}
             theme={{colors: {primary: '#478ffd'}}}
           />
@@ -811,7 +847,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   input2: {
-    width: '48%',
+    // width: '48%',
     marginVertical:8,
     borderRadius: 10,
     backgroundColor: '#e4efff',

@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View,ScrollView } from 'react-native'
+import { StyleSheet, Text, View,ScrollView ,TouchableOpacity} from 'react-native'
 import Backbutton from '../../Component/Backbutton'
 import { useEffect, useState } from 'react'
+import Icon from 'react-native-vector-icons/EvilIcons';
 
 const Privacyscreen = () => {
 
@@ -28,11 +29,31 @@ const Privacyscreen = () => {
     fetchData();
   }, []); 
 
+  const handleBackButtonPress = () => {
+    navigation.goBack();
+  };
+
   return (
     <ScrollView>
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Backbutton />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: '#4989d9',
+          padding:10
+          // height: '5%',
+        }}>
+        <TouchableOpacity
+          onPress={handleBackButtonPress}
+          style={{marginLeft: 10}}>
+          <Icon name="chevron-left" size={30} color="white" />
+        </TouchableOpacity>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
+            Privacy Policy
+          </Text>
+        </View>
       </View>
       <View style={{ padding: 10 }}>
         <Text style={{ fontSize: 18, fontFamily: 'Domine-Bold', color: 'black' }}>Privacy Policy</Text>
