@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Drawernavigation from '../Navigation/Drawernavigation';
 import { useNavigation, useIsFocused } from '@react-navigation/native'; 
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Header = () => {
   const navigation = useNavigation();
@@ -21,13 +22,22 @@ const Header = () => {
     navigation.navigate('profile');
   }
 
+  
+  const notification =()=>{
+    navigation.navigate('notification');
+    // navigation.navigate('profilenew')
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleDrawerToggle}>
         <Image source={require('../Assets/header.png')} />
       </TouchableOpacity>
       <TouchableOpacity onPress={profile}>
-      <Image style={{height:30,width:30,borderRadius:50}} source={require('../Assets/profileimage.png')} />
+      <TouchableOpacity onPress={notification}>
+            {/* <Image style={{height:50,width:40}} source={require('../Assets/personheader.png')}/> */}
+            <Icon name='notifications' size={22}/> 
+            </TouchableOpacity>
       </TouchableOpacity>
       {isDrawerOpen && (
         <Drawernavigation onClose={handleDrawerToggle} navigation={navigation} />

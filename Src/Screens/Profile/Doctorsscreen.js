@@ -33,9 +33,6 @@ const Doctorsscreen = ({navigation}) => {
 
       formData.append('user_id', storeuserid);
       formData.append('doctor_id', storedoctorid);
-      // formData.append('status', 0);
-
-      // formData.append('status', 0);
 
       console.log(formData)
 
@@ -122,12 +119,32 @@ const Doctorsscreen = ({navigation}) => {
     
       );
 
+      
+  const handleBackButtonPress = () => {
+    navigation.goBack();
+  };
+
   return (
     <View>
-      <View style={styles.header}>
-        <Backbutton/>
-        <Text style={styles.title}>My Doctors</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: '#4989d9',
+          padding: 10
+          // height: '5%',
+        }}>
+        <TouchableOpacity
+          onPress={handleBackButtonPress}
+          style={{ marginLeft: 10 }}>
+          <Icon name="chevron-left" size={30} color="white" />
+        </TouchableOpacity>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
+          My Doctors
+          </Text>
         </View>
+      </View>
         <View style={{paddingBottom: 65}}>
         {loading ? (
           <Text>Loading...</Text>

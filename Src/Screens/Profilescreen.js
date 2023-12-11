@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React,{useEffect,useState} from 'react';
-import Backbutton from '../Component/Backbutton';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -54,12 +53,13 @@ const Profilescreen = ({navigation}) => {
   };
 
     const personal = async ()=>{
-      const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
-      const storedPin = await AsyncStorage.getItem('userPin');
-          navigation.navigate('personalinfo' ,{
-          phoneNumber: storedPhoneNumber,
-          pin: storedPin,
-        })
+      navigation.navigate('profilenew')
+      // const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
+      // const storedPin = await AsyncStorage.getItem('userPin');
+      //     navigation.navigate('personalinfo' ,{
+      //     phoneNumber: storedPhoneNumber,
+      //     pin: storedPin,
+      //   })
     }
 
     const appointment =()=>{

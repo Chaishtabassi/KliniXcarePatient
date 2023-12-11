@@ -52,7 +52,9 @@ const Dashboardheader = ({navigation}) => {
     };
 
     const notification =()=>{
-      navigation.navigate('notification');
+      // navigation.navigate('notification');
+      // navigation.navigate('profilenew')
+      navigation.navigate('profile')
     }
 
   return (
@@ -62,11 +64,12 @@ const Dashboardheader = ({navigation}) => {
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <Text style={{fontSize:20,fontWeight:'700',color:'white'}}>Hello, {userName.fullname}</Text>
             <TouchableOpacity onPress={notification}>
-            <Image style={{height:30,width:30}} source={require('../Assets/notification.png')}/>
+            <Image style={{height:35,width:35}} source={require('../Assets/bottomprofile.png')}/>
+            {/* <Image style={{height:30,width:30}} source={require('../Assets/notification.png')}/> */}
             </TouchableOpacity>
          
               </View>
-        <Text style={{fontSize:15,fontWeight:'300',color:'white'}}>How are you doing well?</Text>
+        <Text style={{fontSize:15,fontWeight:'300',color:'white'}}>How are you doing?</Text>
         {/* <TextInput
             placeholder="Search for doctors"
             style={styles.searchInput}

@@ -1,23 +1,23 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { Image, StyleSheet, Text, View, TouchableOpacity,Dimensions } from 'react-native'
 import React from 'react'
 
 const Confirmrest = ({navigation}) => {
 
     const Confirm = ()=>{
-        navigation.navigate('SignInScreen');
+        navigation.navigate('bottom');
     }
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Image source={require('../Assets/reset.png')} style={styles.image} />
-        <Text style={styles.heading}>Your Registration has Been Done</Text>
+        <Image source={require('../Assets/Logo.png')} style={styles.image} />
+        <Text style={styles.heading}>Congratulations, your registration has been successfully completed</Text>
         {/* <Text style={styles.description}>
           Qui ex aute ipsum duis. Incididunt adipisicing voluptate laborum
         </Text> */}
       </View>
       <TouchableOpacity style={styles.button} onPress={Confirm}>
-        <Text style={styles.buttonText}>Done</Text>
+        <Text style={styles.buttonText}>Book Appointment</Text>
       </TouchableOpacity>
     </View>
   )
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between', 
-    alignItems: 'center',
+    // alignItems: 'center',
     padding: 20,
     backgroundColor:'white'
   },
@@ -37,19 +37,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 150, 
-    height: 150,
-    resizeMode: 'contain',
-    marginBottom: 20, 
+    width: Dimensions.get('window').width * 0.8,
+    height: Dimensions.get('window').height * 0.2,
   },
   heading: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  description: {
-    fontSize: 16,
+    // marginBottom: 10,
     textAlign: 'center',
   },
   button: {
@@ -64,6 +58,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 16,
+    letterSpacing:1
   },
 })
 

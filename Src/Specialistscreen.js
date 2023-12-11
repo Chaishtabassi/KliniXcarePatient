@@ -2,7 +2,6 @@ import { StyleSheet, Text, View ,FlatList,TouchableOpacity,Image} from 'react-na
 import React,{useState,useEffect} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const Specialistscreen = ({navigation}) => {
   const [apiData, setApiData] = useState([]);
 
@@ -84,8 +83,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
       image: {
-        width: 40,
-        height: 40,
+        width: 50,
+        height: 50,
         resizeMode: 'cover',
       },
       text1: {

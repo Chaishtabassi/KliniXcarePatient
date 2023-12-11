@@ -8,6 +8,7 @@ import Inboxscreen from '../Screens/Inboxscreen';
 import Specialistscreen from '../Specialistscreen';
 import Profilescreen from '../Screens/Profilescreen';
 import Icon from 'react-native-vector-icons/FontAwesome6';
+import Bookappointment from '../Screens/Bookappointment';
 
 
 const Clienttab = createBottomTabNavigator();
@@ -16,7 +17,7 @@ const Bottomnavigation = () => {
     return(
         <Clienttab.Navigator
         screenOptions={({ route }) => ({
-            tabBarStyle: { backgroundColor: '#4a87d7' },
+            tabBarStyle: { backgroundColor: '#4a87d7',height:60 },
             tabBarInactiveTintColor: 'white',
             tabBarActiveTintColor:'white',
             tabBarLabelStyle: { fontSize: 13 },
@@ -29,46 +30,46 @@ const Bottomnavigation = () => {
                 headerShown:false,
                 tabBarLabel:'Dashboard',
                 tabBarIcon:({color,size})=>(
-                   <Image style={{height:30,width:30}} source={require('../Assets/dashboard.png')}/>
+                   <Image style={{height:27,width:27}} source={require('../Assets/image-removebg.png')}/>
                 )
             }}
             />
               <Clienttab.Screen
-            name='specialist'
-            component={Specialistscreen}
+            name='bookappointment'
+            component={Bookappointment}
             options={{
                 headerShown:false,
-                tabBarLabel:'specialist',
+                tabBarLabel:'Book Appointment',
                 tabBarIcon:({color,size})=>(
-                    <Image source={require('../Assets/search.png')}/>
+                   <Icon name='calendar' color='white' size={22}/>
 
                 )
             }}
             />
-               {/* <Clienttab.Screen
+               <Clienttab.Screen
             name='inbox'
             component={Inboxscreen}
             options={{
                 headerShown:false,
-                tabBarLabel:'Inbox',
+                tabBarLabel:'Messages',
                 tabBarIcon:({color,size})=>(
-                    <Image style={{height:30,width:30}} source={require('../Assets/inbox.png')}/>
-
-                )
-            }}
-            /> */}
-                 <Clienttab.Screen
-            name='profile'
-            component={Profilescreen}
-            options={{
-                headerShown:false,
-                tabBarLabel:'profile',
-                tabBarIcon:({color,size})=>(
-                    <Icon name="user" size={20} color="white" />
+                    <Image style={{height:27,width:27}} source={require('../Assets/bottommessage.png')}/>
 
                 )
             }}
             />
+                 {/* <Clienttab.Screen
+            name='profile'
+            component={Profilescreen}
+            options={{
+                headerShown:false,
+                tabBarLabel:'Profile',
+                tabBarIcon:({color,size})=>(
+                    <Image style={{height:27,width:27}} source={require('../Assets/bottomprofile.png')}/>
+
+                )
+            }}
+            /> */}
             
         </Clienttab.Navigator>
     )

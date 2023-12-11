@@ -3,8 +3,6 @@ import React, { useEffect, useRef, useState }  from 'react'
 import Slides from '../Data/Slides';
 
 const Crousalitem = ({item ,scrollto, currentIndex}) => {
-
-    const [currentindex, setcurrentindex] = useState(0);
     const{width}=useWindowDimensions();
 
     const renderDots = () => {
@@ -24,7 +22,7 @@ const Crousalitem = ({item ,scrollto, currentIndex}) => {
   return (
     <View style={[styles.container,{width}]}>
          <Text style={styles.title}>{item.title}</Text>
-      <Image source={item.image} style={[ styles.image],{width, resizeMode:'contain'}}/>
+      <Image source={item.image} style={[styles.image, { width, resizeMode: 'contain' }]}/>
       <View style={styles.dotsContainer}>{renderDots()}</View>
       <View style={{flex:0.5,marginTop:15}}>
         <Text style={styles.description}>{item.description}</Text>

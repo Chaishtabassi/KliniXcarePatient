@@ -68,6 +68,8 @@ const Pinscreen = ({navigation,route}) => {
   
   const callapi = async () => {
     const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
+    const phonenumbercountry= await AsyncStorage.getItem('phoneNumbercountry');
+    console.log(storedPhoneNumber)
   
     try {
       // Construct the request URL with query parameters
@@ -99,13 +101,12 @@ const Pinscreen = ({navigation,route}) => {
 
           const get_token=responseData.data.access_token;
           await AsyncStorage.setItem('get_token', get_token);
-
   
           console.log('Response Data:', responseData);
   
           if (responseData.message == 'User regiser succesfully!') {
             navigation.navigate('SignUpScreen', {
-              phoneNumber: storedPhoneNumber,
+              phoneNumber: phonenumbercountry,
               pin: enteredPin,
             });
           } else {
@@ -173,7 +174,7 @@ const Pinscreen = ({navigation,route}) => {
       </View> */}
       <View style={styles.textContainer}>
         <View style={{bottom:30,alignItems:'center'}}>
-        <Text style={styles.centeredText}>Please enter your 4-digit Pin.</Text>
+        <Text style={styles.centeredText}>Please enter your new 4-digit Pin.</Text>
 
           <View style={styles.pinInputContainer}>
             <OTPTextView
@@ -187,7 +188,7 @@ const Pinscreen = ({navigation,route}) => {
         </View>
 
       <View style={{alignItems:'center'}}>
-      <Text style={styles.centeredText1}>Please Confirm your 4-digit Pin.</Text>
+      <Text style={styles.centeredText1}>Please confirm your new 4-digit Pin.</Text>
 
           <View style={styles.pinInputContainer1}>
             <OTPTextView
@@ -224,9 +225,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomEndRadius:20,
-    borderBottomLeftRadius:20,
-    backgroundColor:'#49B2E9',
+    // borderBottomEndRadius:20,
+    // borderBottomLeftRadius:20,
+    backgroundColor:'#4a87d7',
     height:'8%'
   },
   title: {
@@ -279,7 +280,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#49b2e9',
+    backgroundColor: '#4a87d7',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,

@@ -6,25 +6,24 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-  Modal,
+  ActivityIndicator
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import Backbutton from '../../Component/Backbutton';
-import Icon from 'react-native-vector-icons/EvilIcons';
-import Doctorsdata from '../../Data/Doctorsdata';
+import React, { useState, useEffect } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Sortingmodal from '../../Component/Sortingmodal';
+import { Rating } from 'react-native-ratings';
 
-const Doctorslist = ({navigation, route}) => {
-  const [sortingModalVisible, setSortingModalVisible] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-
-  const {title, id} = route.params;
+const Doctorslist = ({ navigation, route }) => {
+  const { title, id } = route.params;
   console.log(id);
 
+
   const Appointment = doctor => {
-    navigation.navigate('doctorprofile',{selectedDoctor: doctor});
-    // navigation.navigate('appointment', {selectedDoctor: doctor});
+    navigation.navigate('appointment', { selectedDoctor: doctor });
+  };
+
+  const Viewprofile = doctor => {
+    navigation.navigate('doctorprofile', { selectedDoctor: doctor });
   };
 
   const [apiData, setApiData] = useState([]);
@@ -83,105 +82,90 @@ const Doctorslist = ({navigation, route}) => {
     fetchDoctorData();
   }, [id]);
 
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       {item && (
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image
-            style={{height: 80, width: 80}}
-            source={require('../../Assets/profileimage.png')}
-          />
-          <View style={{marginLeft: 15, flex: 1}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 17,
-                  fontFamily: 'NunitoSans_7pt-Bold',
-                  color: 'black',
-                }}>
-                {item.name}
-              </Text>
-              <Icon name="star" size={25} color="black" />
-            </View>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontFamily: 'NunitoSans_7pt-Light',
-                  color: 'grey',
-                }}>
-                {item.designation}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 13,
-                  fontFamily: 'NunitoSans_7pt-Bold',
-                  color: 'black',
-                }}>
-                {'$' + item.consultation_fee}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image source={require('../../Assets/clock.png')} />
-                {item.created_at ? (
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: 'NunitoSans_7pt-Light',
-                      color: 'grey',
-                    }}>
-                    {new Date(item.created_at).toLocaleString()}
+        <>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              style={{ height: 80, width: 80 }}
+              source={require('../../Assets/doctor.jpg')}
+            />
+            <View style={{ marginLeft: 15, }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <View style={{}}>
+                  <Text style={{ fontSize: 17, fontFamily: 'NunitoSans_7pt-Bold', color: 'black' }}>
+                    {item.name}
                   </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: 'NunitoSans_7pt-Light',
-                      color: 'grey',
-                    }}>
-                    No Date Available
+                  <View style={{ alignItems: 'flex-start', top: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Rating
+                      imageSize={15}
+                      startingValue={parseFloat(item.rating)}
+                      readonly
+                    />
+                    {/* {item.reviews && (
+                      <Text style={{ fontSize: 12, color: 'grey' }}>  {item.reviews.length} reviews</Text>
+                    )} */}
+
+                  </View>
+                  <Text style={{ fontSize: 14, fontFamily: 'NunitoSans_7pt-Light', color: 'grey', top: 10 }}>
+                    {item.designation}
                   </Text>
-                )}
+                </View>
+              </View>
+              <View style={{ top: 13 }}>
+                <Text>{item.experience_year} years experience</Text>
               </View>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                top: 10,
-                justifyContent: 'space-evenly',
-              }}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => Appointment(item)}>
-                <Text style={styles.buttonText}>Book Appointment</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button1}
-                onPress={() => Appointment(item)}>
-                <Text style={styles.buttonText}>Previous Document</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
+
+          <View style={{ flexDirection: 'row', marginTop: 20 }}>
+            <Text style={{ fontSize: 15, fontWeight: '600', color: 'black' }}>Specialization:</Text>
+          </View>
+
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            {item.expertise.map((expertise, index) => (
+              <View key={index} style={{ marginRight: 10, marginBottom: 10, backgroundColor: '#fffbf6' ,padding:8}}>
+                <Text style={{ fontSize: 14, fontWeight: '500', color: '#ecb360' }}>
+                  {expertise.title}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          <View style={{ flexDirection: 'row', marginTop: 8 }}>
+            <Text style={{ fontSize: 15, fontWeight: '600', color: 'black' }}>Slots available:</Text>
+            {/* <Text style={{ color: 'black' }}> Today</Text> */}
+          </View>
+
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            {item.today_slots.length > 0 ? (
+              item.today_slots.map((slot, index) => (
+                <View key={index} style={{ marginRight: 10, marginBottom: 10, borderWidth: 1, width: 'auto', borderColor: '#e3e1da', padding: 6, marginTop: 8 }}>
+                  <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>{slot.time_range}</Text>
+                </View>
+              ))
+            ) : (
+              <View style={{ borderWidth: 1, width: '58%', borderColor: '#e3e1da', padding: 6, marginTop: 8 }}>
+                <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>No slots available today</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.separator} />
+
+          <View style={{ flexDirection: 'row', marginTop: 8, justifyContent: 'space-between' }}>
+            <TouchableOpacity style={styles.button} onPress={() => Appointment(item)}>
+              <Text style={styles.buttonText1}>Book</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button1} onPress={() => Viewprofile(item)}>
+              <Text style={styles.buttonText}>View</Text>
+            </TouchableOpacity>
+          </View>
+        </>
       )}
     </View>
   );
-
-  const filter = () => {
-    navigation.navigate('filter');
-  };
 
   const handleBackButtonPress = () => {
     navigation.goBack();
@@ -198,19 +182,21 @@ const Doctorslist = ({navigation, route}) => {
         }}>
         <TouchableOpacity
           onPress={handleBackButtonPress}
-          style={{marginLeft: 10}}>
-          <Icon name="chevron-left" size={30} color="white" />
+          style={{ marginLeft: 10 }}>
+          <Icon name="chevron-left" size={15} color="white" />
         </TouchableOpacity>
-        <View style={{flex: 1, alignItems: 'center'}}>
-          <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
             {title}
           </Text>
         </View>
       </View>
 
-      <View style={{paddingBottom: 65}}>
+      <View style={{ paddingBottom: 65 }}>
         {loading ? (
-          <Text>Loading...</Text>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#478ffd" />
+          </View>
         ) : (
           <>
             {apiData.length > 0 ? (
@@ -218,11 +204,11 @@ const Doctorslist = ({navigation, route}) => {
                 data={apiData}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
+              // ItemSeparatorComponent={() => <View style={styles.separator} />}
               />
             ) : (
-              <View style={{margin: 15}}>
-                <Text style={{fontSize: 18}}>No doctors found.</Text>
+              <View style={{ margin: 15 }}>
+                <Text style={{ fontSize: 18 }}>No doctors found.</Text>
               </View>
             )}
           </>
@@ -240,10 +226,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
+    // alignItems: 'center',
+    padding: 12,
+    borderRadius: 8, // Add border radius for a card-like appearance
+    borderWidth: 1,
+    borderColor: '#ddd', // Add border color
+    backgroundColor: '#fff', // Add background color
+    shadowColor: '#7aa8e6', // Add shadow color
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+    margin: 8, // Add margin bottom for space between items
   },
+
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -261,27 +260,43 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: '#e3e1da',
+    top: 5
   },
   button: {
     justifyContent: 'center',
-    backgroundColor: '#49b2e9',
+    backgroundColor: 'white',
     alignItems: 'center',
-    borderRadius: 5,
-    width: Dimensions.get('window').width * 0.28,
-    height: 52,
+    // borderRadius: 10,
+    width: Dimensions.get('window').width * 0.45,
+    height: 30,
+    borderWidth: 1,
+    borderColor: '#e3e1da',
+    borderBottomWidth: 0,
+    borderTopWidth: 0,
+    borderLeftWidth: 0
   },
   buttonText: {
-    color: 'white',
+    color: '#4989d9',
     fontFamily: 'NunitoSans_7pt-Bold',
     textAlign: 'center',
-    fontSize: 13,
+    fontSize: 15,
+  },
+  buttonText1: {
+    color: '#4989d9',
+    fontFamily: 'NunitoSans_7pt-Bold',
+    textAlign: 'center',
+    fontSize: 15,
   },
   button1: {
     justifyContent: 'center',
-    backgroundColor: '#888888',
+    // backgroundColor: '#888888',
     alignItems: 'center',
-    borderRadius: 5,
-    width: Dimensions.get('window').width * 0.28,
-    height: 50,
+    width: Dimensions.get('window').width * 0.45,
+    height: 30,
+    borderWidth: 1,
+    borderColor: '#e3e1da',
+    borderBottomWidth: 0,
+    borderTopWidth: 0,
+    borderRightWidth: 0
   },
 });

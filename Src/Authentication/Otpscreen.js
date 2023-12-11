@@ -83,9 +83,9 @@ const Otpscreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Verify</Text>
         </TouchableOpacity>
         <View style={{ flexDirection: 'row' ,top:10}}>
-          <Text style={{fontFamily:'NunitoSans_7pt-Regular',fontSize:14}}> Donot receive OTP?</Text>
+          <Text style={{fontFamily:'NunitoSans_7pt-Regular',fontSize:14}}> Haven't receive the verification code?</Text>
           <TouchableOpacity onPress={resendOTP }>
-              <Text style={{ color: '#49b2e9', fontWeight: '500' ,fontFamily:'NunitoSans_7pt-Regular'}}> Resend</Text>
+              <Text style={{ color: '#4a87d7', fontWeight: '500' ,fontFamily:'NunitoSans_7pt-Regular'}}> Resend</Text>
           </TouchableOpacity>
       </View>
       </View>
@@ -111,9 +111,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomEndRadius:20,
-    borderBottomLeftRadius:20,
-    backgroundColor:'#49B2E9',
+    // borderBottomEndRadius:20,
+    // borderBottomLeftRadius:20,
+    backgroundColor:'#4a87d7',
     height:'8%'
   },
   title: {
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#49b2e9',
+    backgroundColor: '#4a87d7',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,

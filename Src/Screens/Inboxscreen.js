@@ -4,7 +4,7 @@ import React from 'react'
 const Inboxscreen = () => {
   return (
     <View>
-      <Text>Inboxscreen</Text>
+      <Text>Messagesscreen</Text>
     </View>
   )
 }

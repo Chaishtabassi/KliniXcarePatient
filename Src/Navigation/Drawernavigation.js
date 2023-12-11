@@ -46,6 +46,10 @@ const Drawernavigation = ({navigation, visible, onClose }) => {
         if (response.status === 200) {
           const responseData = await response.text();
           console.log(JSON.parse(responseData).data)
+
+          const fullname=JSON.parse(responseData).data.fullname;
+          await AsyncStorage.setItem('fullname', fullname);
+
          setUserName(JSON.parse(responseData).data)
         } else {
           console.error('Non-200 status code:', response.status);
@@ -74,7 +78,15 @@ const Drawernavigation = ({navigation, visible, onClose }) => {
   }
 
   const profile =()=>{
-    navigation.navigate('profile');
+    navigation.navigate('profilenew');
+  }
+
+  const appointment =()=>{
+    navigation.navigate('appoitmentprofile')
+  }
+
+  const doctors =()=>{
+    navigation.navigate('doctorslist')
   }
 
   return (
@@ -98,26 +110,64 @@ const Drawernavigation = ({navigation, visible, onClose }) => {
                 />
                 <View style={styles.profileInfo}>
                   <Text style={styles.profileName}>{userName.fullname}</Text>
+                  <Text style={{fontSize:13,color:'white',fontFamily:'NunitoSans_7pt-Bold',}}>View and edit profile</Text>
                 </View>
+                <View>
+                <Icon name="chevron-right" size={30} color="white" />
+              </View>
               </View>
           </TouchableOpacity>
 
           <View style={styles.horizontalLine} />
 
-          <TextInput
-            placeholder="Search..."
-            style={styles.searchInput}
-            value={searchQuery}
-            onChangeText={(text) => setSearchQuery(text)}
-          />
+
+          <TouchableOpacity onPress={appointment}>
+          <View style={styles.itemContainer}>
+            <View>
+              <Image style={{height:25,width:25}} source={require('../Assets/drawer/appointment.png')}/>
+            </View>
+            <View style={styles.textContainer}>
+                <Text style={styles.text1}>Appointments</Text>
+              </View>
+          
+              <View style={styles.imageContainer}>
+                <Icon name="chevron-right" size={25} color="#bcbbc2" />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.separator} ></View>
+
+
+          <TouchableOpacity onPress={doctors}>
+          <View style={styles.itemContainer}>
+            <View>
+              <Image style={{height:25,width:25}} source={require('../Assets/drawer/doctor.png')}/>
+            </View>
+            <View style={styles.textContainer}>
+                <Text style={styles.text1}>My Doctors</Text>
+              </View>
+          
+              <View style={styles.imageContainer}>
+                <Icon name="chevron-right" size={25} color="#bcbbc2" />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+
+          <View style={styles.horizontalLine} />
          
          <TouchableOpacity onPress={faq}>
           <View style={styles.itemContainer}>
-              <View style={styles.textContainer}>
+            <View>
+              <Image style={{height:25,width:25}} source={require('../Assets/drawer/faq.png')}/>
+            </View>
+            <View style={styles.textContainer}>
                 <Text style={styles.text1}>FAQ</Text>
               </View>
+          
               <View style={styles.imageContainer}>
-                <Icon name="chevron-right" size={25} color="black" />
+                <Icon name="chevron-right" size={25} color="#bcbbc2" />
               </View>
             </View>
           </TouchableOpacity>
@@ -128,11 +178,14 @@ const Drawernavigation = ({navigation, visible, onClose }) => {
             onPress={privacy}
             >
             <View style={styles.itemContainer}>
+            <View>
+              <Image style={{height:25,width:25}} source={require('../Assets/drawer/privacy.png')}/>
+            </View>
               <View style={styles.textContainer}>
                 <Text style={styles.text1}>Privacy Policy</Text>
               </View>
               <View style={styles.imageContainer}>
-                <Icon name="chevron-right" size={25} color="black" />
+                <Icon name="chevron-right" size={25} color="#bcbbc2" />
               </View>
             </View>
             </TouchableOpacity>
@@ -143,11 +196,15 @@ const Drawernavigation = ({navigation, visible, onClose }) => {
              onPress={help}
              >
             <View style={styles.itemContainer}>
+            <View>
+              <Image style={{height:25,width:25}} source={require('../Assets/drawer/help.png')}/>
+            </View>
               <View style={styles.textContainer}>
+             
                 <Text style={styles.text1}>Help & Supoort</Text>
               </View>
               <View style={styles.imageContainer}>
-                <Icon name="chevron-right" size={25} color="black" />
+                <Icon name="chevron-right" size={25} color="#bcbbc2" />
               </View>
             </View>
             </TouchableOpacity>
@@ -176,31 +233,35 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 35,
-    margin: 10,
+    // paddingTop: 30,
+    // margin: 10,
+    height:100,
+    justifyContent:'space-between',
+    backgroundColor:'#4a87d7'
   },
   profileImage: {
-    width: 50,
-    height: 50,
+    width: 55,
+    height: 55,
     borderRadius: 50,
+    marginLeft:10,
+    backgroundColor:'white'
   },
   separator: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0, 0, 0, 0.2)',
-    marginHorizontal: 20,
+    // marginHorizontal: 20,
   },
   textContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  profileInfo: {
-    marginLeft: 20,
+    marginLeft:15
   },
   profileName: {
-    fontSize: 18,
-    fontFamily:'NunitoSans_7pt-Bold'
+    fontSize: 19,
+    fontFamily:'NunitoSans_7pt-Bold',
+    color:'white'
   },
   name: {
     fontSize: 15,
@@ -209,14 +270,15 @@ const styles = StyleSheet.create({
   horizontalLine: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0, 0, 0, 0.2)',
-    marginHorizontal: 20,
-    paddingTop: 20,
+    // marginHorizontal: 20,
+    paddingTop: 7,
+    backgroundColor:'#eeeeee'
   },
   contentContainer: {
     padding: 20,
   },
   itemContainer: {
-    padding: 20,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -224,7 +286,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 10,
-    marginRight: 10,
   },
   image: {
     width: 30,

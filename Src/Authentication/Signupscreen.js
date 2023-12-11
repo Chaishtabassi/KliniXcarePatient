@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,18 +9,19 @@ import {
 } from 'react-native';
 import Backbutton from '../Component/Backbutton';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import {Dropdown} from 'react-native-element-dropdown';
-import {TextInput} from 'react-native-paper';
-import {Checkbox} from 'react-native-paper';
+import { Dropdown } from 'react-native-element-dropdown';
+import { TextInput } from 'react-native-paper';
+import { Checkbox } from 'react-native-paper';
 import DocumentPicker from 'react-native-document-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {useRoute} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const Signupscreen = ({navigation, route}) => {
-  const {phoneNumber, pin} = route.params;
+const Signupscreen = ({ navigation, route }) => {
+  const { phoneNumber, pin } = route.params;
+  console.log(route)
 
   const [name, setname] = useState('');
   const [lastname, setlastname] = useState('');
@@ -68,7 +69,7 @@ const Signupscreen = ({navigation, route}) => {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization:`Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: formData,
     })
@@ -80,7 +81,6 @@ const Signupscreen = ({navigation, route}) => {
         }
       })
       .then(data => {
-        // console.log(data.data);
         setCities(data.data);
       })
       .catch(error => {
@@ -90,10 +90,10 @@ const Signupscreen = ({navigation, route}) => {
 
   const countriesdata = async () => {
     const access_token = await AsyncStorage.getItem('access_token');
-  
+
     const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/getAllCountries';
     const bearerToken = access_token;
-  
+
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -101,12 +101,12 @@ const Signupscreen = ({navigation, route}) => {
           Authorization: `Bearer ${bearerToken}`,
         },
       });
-  
+
       if (response.status === 200) {
         const data = await response.json();
         setCountries(data.data);
         // SetCountry('PHL');
-        citiesdata({"iso3": 'PHL'});
+        citiesdata({ "iso3": 'PHL' });
       } else {
         throw new Error('Request failed with status ' + response.status);
       }
@@ -114,8 +114,8 @@ const Signupscreen = ({navigation, route}) => {
       console.error('Error:', error);
     }
   };
-  
-  
+
+
 
   const handleCheckboxChange = value => {
     if (selectedOptions.includes(value)) {
@@ -141,118 +141,126 @@ const Signupscreen = ({navigation, route}) => {
     return phoneRegex.test(emergencyphone);
   };
 
+  const [isValidEmail, setIsValidEmail] = useState(true);
+
+  const validateEmail = (text) => {
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setIsValidEmail(emailRegex.test(text));
+    setemail(text);
+  };
+
   const callApi = async () => {
     const access_token = await AsyncStorage.getItem('access_token');
 
     try {
 
-      if (!isValidPhoneNumber()) {
-        Toast.show({
-          type: 'error',
-          text1: 'Validation Error',
-          text2: 'Please enter a valid phone number.',
-        });
-        return;
-      }
-      
-      if (name ==undefined ||lastname==undefined || selectedGender=='' || day==undefined || month==undefined || year==undefined || age ==undefined|| width==undefined || Selectmarital=='' || reason==undefined || city=='') {
-        Toast.show({
-          type: 'error',
-          text1: 'Validation Error',
-          text2: 'All fields must be filled in.',
-        });
-        return; 
-      }
-      else{
+      // if (!validateEmail()) {
+      //   Toast.show({
+      //     type: 'error',
+      //     text1: 'Validation Error',
+      //     text2: 'Please enter a valid Email.',
+      //   });
+      //   return;
+      // }
+
+      // if (name == undefined || lastname == undefined || selectedGender == '' || day == undefined || month == undefined || year == undefined  || Selectmarital == '' || reason == undefined || city == '') {
+      //   Toast.show({
+      //     type: 'error',
+      //     text1: 'Validation Error',
+      //     text2: 'All fields must be filled in.',
+      //   });
+      //   return;
+      // }
+      // else {
         const api =
-        `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd&identity=` +
-        `${phoneNumber}` +
-        '&is_verify=1&password=' +
-        `${pin}`;
+          `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd&identity=` +
+          `${phoneNumber}` +
+          '&is_verify=1&password=' +
+          `${pin}`;
 
-      const authToken = access_token
+        const authToken = access_token
 
-      const formData = new FormData();
-      if (selectedImage) {
-        formData.append('image', {
-          uri: selectedImage.path,
-          type: 'image/jpeg',
-          name: 'image.jpg',
-        });
-      }
-
-      formData.append('first_name', lastname);
-      formData.append('last_name', name);
-      formData.append('country_code', '91');
-      formData.append('gender', Number(selectedGender['label']));
-      formData.append('dob', `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
-
-      formData.append('age', age);
-      formData.append('landline_number', width);
-      formData.append('is_notification', 1);
-      formData.append('marital_status', Selectmarital['label']);
-      formData.append('patient_address', reason);
-      formData.append('city', city.name);
-      formData.append('insurance', isInsured);
-
-      if (isInsured) {
-        formData.append('insurance', isInsured);
-      }
-      formData.append('post_medical_history', selectedOptions);
-      formData.append('other_medical_history', otherMedicalHistory);
-      formData.append('emergency_contact_name', emergencyname);
-      formData.append('emergency_contact_phone', emergencyphone);
-      formData.append('emergency_contact_relation', relationship['label']);
-
-      console.log('hello', formData);
-
-      const response = await fetch(api, {
-        method: 'POST',
-        headers: {
-          // 'Content-Type': 'multipart/form-data',
-          'Authorization':`Bearer ${authToken}`,
-        },
-        // body: JSON.stringify(),
-        body: formData,
-      });
-
-      if (response) {
-        if (response.status === 200) {
-          const responseText = await response.text();
-          console.log('Response Text:', responseText);
-
-          // const LoggedUser = JSON.parse(responseText).data;
-          // await AsyncStorage.setItem('savedetails', LoggedUser.fullname);
-
-          return responseText;
-        } else {
-          console.error('Non-200 status code:', response.status);
+        const formData = new FormData();
+        if (selectedImage) {
+          formData.append('image', {
+            uri: selectedImage.path,
+            type: 'image/jpeg',
+            name: 'image.jpg',
+          });
         }
-      } else {
-        console.error('Response is undefined');
-      }
 
-      }
+        formData.append('first_name', lastname);
+        formData.append('last_name', name);
+        formData.append('country_code', '91');
+        formData.append('gender', Number(selectedGender['label']));
+        formData.append('dob', `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+
+        formData.append('age', age);
+        formData.append('landline_number', width);
+        formData.append('is_notification', 1);
+        formData.append('marital_status', Selectmarital['label']);
+        formData.append('patient_address', reason);
+        formData.append('city', city.name);
+        formData.append('insurance', '1');
+
+        if (isInsured) {
+          formData.append('insurance', isInsured);
+        }
+        formData.append('post_medical_history', 'covid-19');
+        formData.append('other_medical_history', otherMedicalHistory);
+        formData.append('emergency_contact_name', 'sunita');
+        formData.append('emergency_contact_phone', '1234567898');
+        formData.append('emergency_contact_relation', 'brother');
+
+        console.log('hello', formData);
+
+        const response = await fetch(api, {
+          method: 'POST',
+          headers: {
+            // 'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${authToken}`,
+          },
+          // body: JSON.stringify(),
+          body: formData,
+        });
+
+        if (response) {
+          if (response.status === 200) {
+            const responseText = await response.text();
+            console.log('Response Text:', responseText);
+
+            // const LoggedUser = JSON.parse(responseText).data;
+            // await AsyncStorage.setItem('savedetails', LoggedUser.fullname);
+
+            return responseText;
+          } else {
+            console.error('Non-200 status code:', response.status);
+          }
+        } else {
+          console.error('Response is undefined');
+        }
+
+      // }
     } catch (error) {
-      console.error('erorrr',error);
+      console.error('erorrr', error);
     }
   };
 
   const Dashboard = async () => {
     try {
       const Response = await callApi();
-      console.log('-------------------------',Response);
+      console.log('-------------------------', Response);
       const apiResponse = JSON.parse(Response);
       if (apiResponse && apiResponse.message === 'user details updated successfully') {
         const userIdentity = apiResponse.data.identity;
         const userDeviceToken = apiResponse.data.device_token;
 
-        // navigation.navigate('SignInScreen');
         navigation.navigate('confirmreg')
       } else {
       }
     } catch (error) {
-      console.error('heloooooooooooooooooo',error);
+      console.error('heloooooooooooooooooo', error);
     }
   };
 
@@ -262,33 +270,33 @@ const Signupscreen = ({navigation, route}) => {
 
   // Gender options
   const genderOptions = [
-    {label: '0', value: 'Male'},
-    {label: '1', value: 'Female'},
-    {label: '2', value: 'Other'},
+    { label: '1', value: 'Male' },
+    { label: '0', value: 'Female' },
+    { label: '2', value: 'Other' },
   ];
 
   const Materialoptions = [
-    {label: 'Single', value: 'Single'},
-    {label: 'Married', value: 'Married'},
-    {label: 'Divorced', value: 'Divorced'},
-    {label: 'Widow', value: 'Widow'},
-    {label: 'Other', value: 'Other'},
+    { label: 'Single', value: 'Single' },
+    { label: 'Married', value: 'Married' },
+    { label: 'Divorced', value: 'Divorced' },
+    { label: 'Widow', value: 'Widow' },
+    { label: 'Other', value: 'Other' },
   ];
 
   const relationshipdata = [
-    {label: 'Mother', value: 'Mother'},
-    {label: 'Father', value: 'Father'},
-    {label: 'Spouse', value: 'Spouse'},
-    {label: 'Other', value: 'Other'},
+    { label: 'Other', value: 'Other' },
+    { label: 'Mother', value: 'Mother' },
+    { label: 'Father', value: 'Father' },
+    { label: 'Spouse', value: 'Spouse' },
   ];
 
   const checkboxOptions = [
-    {label: 'COVID-19', value: 'COVID-19'},
-    {label: 'Chickenpox', value: 'Chickenpox'},
-    {label: 'Diabetis', value: 'Diabetis'},
-    {label: 'Dengue', value: 'Dengue'},
-    {label: 'Flu', value: 'Flu'},
-    {label: 'Other', value: 'Other'},
+    { label: 'COVID-19', value: 'COVID-19' },
+    { label: 'Chickenpox', value: 'Chickenpox' },
+    { label: 'Diabetes ', value: 'Diabetes ' },
+    { label: 'Dengue', value: 'Dengue' },
+    { label: 'Flu', value: 'Flu' },
+    { label: 'Other', value: 'Other' },
   ];
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -319,9 +327,9 @@ const Signupscreen = ({navigation, route}) => {
     }
   };
 
-  const [showDatePicker, setShowDatePicker] = useState(false); 
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  
+
   const handleDateChange = (event, date) => {
     if (date) {
       setShowDatePicker(false);
@@ -332,12 +340,12 @@ const Signupscreen = ({navigation, route}) => {
       setYear(selectedYear.toString());
       setMonth(selectedMonth.toString().padStart(2, '0'));
       setDay(selectedDay.toString().padStart(2, '0'));
-  
+
       // Calculate age immediately when DOB is entered
-      calculateAge(selectedYear, selectedMonth, selectedDay);
+      // calculateAge(selectedYear, selectedMonth, selectedDay);
     }
   };
-  
+
   const calculateAge = (selectedYear, selectedMonth, selectedDay) => {
     if (selectedDay && selectedMonth && selectedYear) {
       // Convert the month to be zero-based
@@ -345,32 +353,45 @@ const Signupscreen = ({navigation, route}) => {
       const dob = new Date(selectedYear, monthIndex, selectedDay);
       const today = new Date();
       let age = today.getFullYear() - dob.getFullYear();
-  
+
       // Check if the birthday has already occurred this year
       if (today < new Date(today.getFullYear(), monthIndex, selectedDay)) {
         age--;
       }
-  
+
       setAge(age.toString()); // Update the age state
     }
   };
-  
+
   const showDatepicker = () => {
     setShowDatePicker(true);
   };
 
+
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={{justifyContent: 'space-between', backgroundColor: 'white'}}>
-        <View style={{marginTop: 10}}>
-          <Backbutton />
+    // <ScrollView style={styles.container}>
+      <View style={{ backgroundColor: 'white',flex:1 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: '#4989d9',
+            height: '6%',
+          }}>
+
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
+              Profile
+            </Text>
+          </View>
         </View>
 
-        <View style={{justifyContent: 'space-between', margin: 15}}>
-          <View style={{alignItems: 'center', bottom: 10}}>
+        <View style={{ justifyContent: 'space-between', margin: 15,flex:1}}>
+          {/* <View style={{alignItems: 'center', bottom: 10}}>
             <Text style={styles.title}>Sign up.</Text>
-          </View>
-{/* 
+          </View> */}
+          {/* 
           <TouchableOpacity
             style={{justifyContent: 'center', alignItems: 'center', margin: 10}}
             onPress={pickImage}>
@@ -379,7 +400,7 @@ const Signupscreen = ({navigation, route}) => {
 
           {selectedImage && (
             <Image
-              source={{uri: selectedImage.path}}
+              source={{ uri: selectedImage.path }}
               style={{
                 width: 100,
                 height: 100,
@@ -398,10 +419,9 @@ const Signupscreen = ({navigation, route}) => {
             Enter Patient Name*:
           </Text>
 
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TextInput
               style={styles.input}
-              label="Last Name"
+              placeholder="Last Name"
               mode="outlined"
               outlineColor="#e4efff"
               onChangeText={(text) => {
@@ -410,35 +430,35 @@ const Signupscreen = ({navigation, route}) => {
                 setlastname(alphabetsOnly);
               }}
               value={lastname}
-              theme={{colors: {primary: '#478ffd'}}}
+              theme={{ colors: { primary: '#478ffd' } }}
             />
-          </View>
+
           <TextInput
-              label="First Name"
-              style={styles.input}
-              mode="outlined"
-              outlineColor="#e4efff"
-              onChangeText={(text) => {
-                // Ensure that the entered value contains only alphabets
-                const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
-                setname(alphabetsOnly);
-              }}
-              value={name}
-              theme={{colors: {primary: '#478ffd'}}}
-            />
+            placeholder="First Name"
+            style={styles.input}
+            mode="outlined"
+            outlineColor="#e4efff"
+            onChangeText={(text) => {
+              // Ensure that the entered value contains only alphabets
+              const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
+              setname(alphabetsOnly);
+            }}
+            value={name}
+            theme={{ colors: { primary: '#478ffd' } }}
+          />
           <TextInput
-              label="Middle Name"
-              style={styles.input}
-              mode="outlined"
-              outlineColor="#e4efff"
-              onChangeText={(text) => {
-                // Ensure that the entered value contains only alphabets
-                const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
-                setmiddlename(alphabetsOnly);
-              }}
-              value={middlename}
-              theme={{colors: {primary: '#478ffd'}}}
-            />
+            placeholder="Middle Name"
+            style={styles.input}
+            mode="outlined"
+            outlineColor="#e4efff"
+            onChangeText={(text) => {
+              // Ensure that the entered value contains only alphabets
+              const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
+              setmiddlename(alphabetsOnly);
+            }}
+            value={middlename}
+            theme={{ colors: { primary: '#478ffd' } }}
+          />
 
           <Text
             style={{
@@ -453,7 +473,7 @@ const Signupscreen = ({navigation, route}) => {
           <Dropdown
             style={styles.input}
             placeholderStyle={{
-              paddingHorizontal: 10,
+              paddingHorizontal: 15,
               fontWeight: '400',
               color: 'black',
             }}
@@ -470,7 +490,7 @@ const Signupscreen = ({navigation, route}) => {
             onChange={value => setSelectedGender(value)}
           />
 
-          {/* <Text
+          <Text
             style={{
               color: 'black',
               fontSize: 16,
@@ -481,15 +501,35 @@ const Signupscreen = ({navigation, route}) => {
 
           <TextInput
             style={styles.input}
-            label="Phone Number"
+            placeholder="Phone Number"
             mode="outlined"
             outlineColor="#e4efff"
             onChangeText={setheight}
-            value={height}
-            maxLength={10}
+            value={phoneNumber}
+            editable={false}
             keyboardType="numeric"
-            theme={{colors: {primary: '#478ffd'}}}
-          /> */}
+            theme={{ colors: { primary: '#478ffd' } }}
+          />
+
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 16,
+              fontFamily: 'NunitoSans_7pt-Regular',
+            }}>
+            Email Address*:
+          </Text>
+
+          <TextInput
+        style={styles.input}
+        placeholder="Email Address"
+        mode="outlined"
+        outlineColor="#e4efff"
+        onChangeText={validateEmail}
+        value={email}
+        keyboardType="email-address" // Use 'email-address' for a better keyboard
+        theme={{ colors: { primary: '#478ffd' } }}
+      />
 
           {/* <TextInput
             style={styles.input}
@@ -503,7 +543,7 @@ const Signupscreen = ({navigation, route}) => {
             theme={{colors: {primary: '#478ffd'}}}
           /> */}
 
-          <Text
+          {/* <Text
             style={{
               color: 'black',
               fontSize: 16,
@@ -513,31 +553,31 @@ const Signupscreen = ({navigation, route}) => {
           </Text>
 
           <View style={styles.dateContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Date"
-            value={`${year}-${month}-${day}`}
-            onFocus={() => setShowDatePicker(true)}
-            editable={false}
-          />
-          {showDatePicker && (
-            <DateTimePicker
-              value={selectedDate}
-              mode="date"
-              display="calendar"
-              onChange={handleDateChange}
-              maximumDate={new Date()} 
+            <TextInput
+              style={styles.input}
+              placeholder="Date"
+              value={`${year}-${month}-${day}`}
+              onFocus={() => setShowDatePicker(true)}
+              editable={false}
             />
-          )}
-          <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={() => setShowDatePicker(true)}
-          >
-            <Icon name="calendar" size={25} color="black" />
-          </TouchableOpacity>
-        </View>
+            {showDatePicker && (
+              <DateTimePicker
+                value={selectedDate}
+                mode="date"
+                display="calendar"
+                onChange={handleDateChange}
+                maximumDate={new Date()}
+              />
+            )}
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Icon name="calendar" size={33} color="black" />
+            </TouchableOpacity>
+          </View> */}
 
-          <Text
+          {/* <Text
             style={{
               color: 'black',
               fontSize: 16,
@@ -554,8 +594,8 @@ const Signupscreen = ({navigation, route}) => {
             value={age}
             editable={false}
             theme={{ colors: { primary: '#478ffd' } }}
-          />
-          <Text
+          /> */}
+          {/* <Text
             style={{
               color: 'black',
               fontSize: 16,
@@ -568,12 +608,12 @@ const Signupscreen = ({navigation, route}) => {
           <Dropdown
             style={styles.input}
             placeholderStyle={{
-              paddingHorizontal: 10,
+              paddingHorizontal: 15,
               fontWeight: '400',
               color: 'black',
             }}
             selectedTextStyle={{
-              paddingHorizontal: 10,
+              paddingHorizontal: 15,
               fontWeight: '400',
               color: 'black',
             }}
@@ -601,209 +641,67 @@ const Signupscreen = ({navigation, route}) => {
             label="Street Address"
             onChangeText={setreason}
             value={reason}
-            theme={{colors: {primary: '#478ffd'}}}
-          />
+            theme={{ colors: { primary: '#478ffd' } }}
+          /> */}
 
           {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
-            <Dropdown
-              style={styles.input2}
-              placeholderStyle={{
-                paddingHorizontal: 10,
-                fontWeight: '400',
-                color: 'black',
-              }}
-              selectedTextStyle={{
-                paddingHorizontal: 10,
-                fontWeight: '400',
-                color: 'black',
-              }}
-              data={countries}
-              labelField="name"
-              valueField="iso3"
-              search
-              searchPlaceholder="Search..."
-              placeholder="Philippines"
-              value={country}
-              onChange={value => {
-                SetCountry(value.iso3);
-                citiesdata(value)
-              }}
-            />
-            <Dropdown
-              style={styles.input2}
-              placeholderStyle={{
-                paddingHorizontal: 10,
-                fontWeight: '400',
-                color: 'black',
-              }}
-              selectedTextStyle={{
-                paddingHorizontal: 10,
-                fontWeight: '400',
-                color: 'black',
-              }}
-              data={cities}
-              labelField="name"
-              search
-              searchPlaceholder="Search..."
-              valueField="wikiDataId"
-              placeholder="City"
-              value={city}
-              onChange={value => {
-                setcity(value);
-              }}
-            />
-          {/* </View> */}
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-            }}>
-            Insurance*:
-          </Text>
-
-          <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: 'NunitoSans_7pt-Regular',
-                  marginRight: 10,
-                }}>
-                Yes
-              </Text>
-              <Checkbox.Android
-                status={isInsured ? 'checked' : 'unchecked'}
-                onPress={handleInsuranceYes}
-                color="#478ffd"
-              />
-            </View>
-
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: 'NunitoSans_7pt-Regular',
-                  marginRight: 10,
-                }}>
-                No
-              </Text>
-              <Checkbox.Android
-                status={isNotInsured ? 'checked' : 'unchecked'}
-                onPress={handleInsuranceNo}
-                color="#478ffd"
-              />
-            </View>
-          </View>
-
-          {isInsured && (
-            <TextInput
-              style={styles.input}
-              label="Insurance Name"
-              mode="outlined"
-              outlineColor="#e4efff"
-              onChangeText={setinsurence}
-              value={insurence}
-              theme={{colors: {primary: '#478ffd'}}}
-            />
-          )}
-
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-            }}>
-            Post Medical History*:
-          </Text>
-
-          {checkboxOptions.map((option, index) => (
-            <Checkbox.Item
-              key={option.value}
-              label={option.label}
-              status={
-                selectedOptions.includes(option.value) ? 'checked' : 'unchecked'
-              }
-              onPress={() => handleCheckboxChange(option.value)}
-            />
-          ))}
-
-          {selectedOptions.includes('Other') && (
-            <TextInput
-              style={styles.input}
-              label="Specify Other Medical History"
-              mode="outlined"
-              outlineColor="#e4efff"
-              onChangeText={setOtherMedicalHistory}
-              value={otherMedicalHistory}
-              theme={{colors: {primary: '#478ffd'}}}
-            />
-          )}
-
-<View style={{top:5}}>
-
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-            }}>
-            Emergency Contact Details*:
-          </Text>
-
-          <TextInput
-            style={styles.input}
-            label="Name"
-            mode="outlined"
-            outlineColor="#e4efff"
-            onChangeText={(text) => {
-              // Ensure that the entered value contains only alphabets
-              const alphabetsOnly = text.replace(/[^a-zA-Z]/g, '');
-              setemergencyname(alphabetsOnly);
-            }}
-            value={emergencyname}
-            theme={{colors: {primary: '#478ffd'}}}
-          />
-          </View>
-
-          <TextInput
-            style={styles.input}
-            label="Phone Number"
-            mode="outlined"
-            outlineColor="#e4efff"
-            onChangeText={setemergencyphone}
-            value={emergencyphone}
-            maxLength={10}
-            keyboardType="numeric"
-            theme={{colors: {primary: '#478ffd'}}}
-          />
-
-          <Dropdown
-            style={styles.input}
+          {/* <Dropdown
+            style={styles.input2}
             placeholderStyle={{
-              paddingHorizontal: 10,
+              paddingHorizontal: 15,
               fontWeight: '400',
               color: 'black',
             }}
             selectedTextStyle={{
-              paddingHorizontal: 10,
+              paddingHorizontal: 15,
               fontWeight: '400',
               color: 'black',
             }}
-            data={relationshipdata}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Relationship"
-            value={relationship}
-            onChange={value => setrelationship(value)}
+            data={countries}
+            labelField="name"
+            valueField="iso3"
+            search
+            searchPlaceholder="Search..."
+            placeholder="Philippines"
+            value={country}
+            onChange={value => {
+              SetCountry(value.iso3);
+              citiesdata(value)
+            }}
           />
+          <Dropdown
+            style={styles.input2}
+            placeholderStyle={{
+              paddingHorizontal: 15,
+              fontWeight: '400',
+              color: 'black',
+            }}
+            selectedTextStyle={{
+              paddingHorizontal: 15,
+              fontWeight: '400',
+              color: 'black',
+            }}
+            data={cities}
+            labelField="name"
+            search
+            searchPlaceholder="Search..."
+            valueField="wikiDataId"
+            placeholder="City"
+            value={city}
+            onChange={value => {
+              setcity(value);
+            }}
+          /> */}
 
+<View style={{ alignItems:'flex-end'}}>
           <TouchableOpacity style={styles.button} onPress={Dashboard}>
-            <Text style={styles.buttonText}>Sign up</Text>
+            <Text style={styles.buttonText}>Done</Text>
           </TouchableOpacity>
         </View>
+          {/* <View style={{ height: 20 }}></View> */}
+        </View>
       </View>
-    </ScrollView>
+    // </ScrollView>
   );
 };
 
@@ -826,33 +724,31 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'absolute',
-    top: 10, 
-    right: 10, 
+    top: 15,
+    right: 10,
   },
   input: {
     width: '100%',
     // marginBottom: 15,
-    marginVertical:8,
-    backgroundColor: '#e4efff',
-    borderRadius: 8,
-    marginVertical:8,
-    height:40
+    marginVertical: 8,
+    backgroundColor: '#f5f5f5',
+    // borderRadius: 8,
+    marginVertical: 8,
+    height: 40
   },
   input1: {
     width: '48%',
     marginBottom: 15,
-    borderRadius: 10,
-    marginVertical:8,
-    backgroundColor: '#e4efff',
+    marginVertical: 8,
+    backgroundColor: '#f5f5f5',
     zIndex: 0,
   },
   input2: {
     // width: '48%',
-    marginVertical:8,
-    borderRadius: 10,
+    marginVertical: 8,
     backgroundColor: '#e4efff',
     zIndex: 0,
-    borderRadius: 8,
+    height: 43
   },
   dateContainer: {
     flexDirection: 'row',
@@ -865,12 +761,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   button: {
-    backgroundColor: '#49b2e9',
+    backgroundColor: '#4989d9',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
     width: '100%',
-    top:5
+    top: 5,
   },
   buttonText: {
     color: 'white',

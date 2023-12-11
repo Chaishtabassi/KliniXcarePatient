@@ -93,11 +93,16 @@ const Loginpin = ({navigation}) => {
             await AsyncStorage.setItem('userid', id.toString());
             await AsyncStorage.setItem('fetchuserid', id.toString());
 
+
     
             const responseData = response.data;
-            // const access_token = responseData.data.access_token;
-            // console.log(responseData.data.access_token);
-            // await AsyncStorage.setItem('access_token', access_token);
+            
+            const access_token = responseData.data.access_token;
+            console.log(responseData.data.access_token);
+            await AsyncStorage.setItem('Login_access', access_token);
+
+            const get_token=responseData.data.access_token;
+            await AsyncStorage.setItem('get_token', get_token);
 
             console.log('Response Data:', responseData);
     
@@ -232,9 +237,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomEndRadius:20,
-    borderBottomLeftRadius:20,
-    backgroundColor:'#49B2E9',
+    // borderBottomEndRadius:20,
+    // borderBottomLeftRadius:20,
+    backgroundColor:'#4a87d7',
     height:'8%'
   },
   title: {
@@ -287,7 +292,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#49b2e9',
+    backgroundColor: '#4a87d7',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,

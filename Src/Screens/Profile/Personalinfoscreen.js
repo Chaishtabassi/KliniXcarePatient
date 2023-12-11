@@ -94,7 +94,9 @@ const Personalinfoscreen = ({ navigation, route }) => {
           setreason(JSON.parse(responseData).data.patient_address)
           setIsInsured(JSON.parse(responseData).data.insurance);
 
-          setSelectedOptions(JSON.parse(responseData).data.post_medical_history)
+          const medicalHistory = JSON.parse(responseData).data.post_medical_history;
+          setSelectedOptions(Array.isArray(medicalHistory) ? medicalHistory : []);
+          // setSelectedOptions(JSON.parse(responseData).data.post_medical_history)
 
           setemergencyname(JSON.parse(responseData).data.emergency_contact_name)
           setemergencyphone(JSON.parse(responseData).data.emergency_contact_phone)
@@ -402,10 +404,6 @@ const Personalinfoscreen = ({ navigation, route }) => {
     }
   };
 
-  const showDatepicker = () => {
-    setShowDatePicker(true);
-  };
-
 
   const handleBackButtonPress = () => {
     navigation.goBack();
@@ -414,11 +412,12 @@ const Personalinfoscreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      
+
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
+          justifyContent: 'space-between', // Align items and add space between them
           backgroundColor: '#4989d9',
           height: '7%',
         }}>
@@ -427,14 +426,19 @@ const Personalinfoscreen = ({ navigation, route }) => {
           style={{ marginLeft: 10 }}>
           <Icon name="chevron-left" size={30} color="white" />
         </TouchableOpacity>
-        <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={{ alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
-            EDIT PROFILE
+            My Profile
           </Text>
         </View>
+        <TouchableOpacity
+          style={{ marginRight: 10 }}>
+          <Icon name="pencil" size={30} color="white" />
+        </TouchableOpacity>
       </View>
+
       <ScrollView>
-      {loading && (
+        {loading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#478ffd" />
           </View>
@@ -442,89 +446,87 @@ const Personalinfoscreen = ({ navigation, route }) => {
 
         {/* Actual content */}
         {!loading && (
-        <View style={{ margin: 10 }}>
-          {selectedImage && (
-            <Image
-              source={{ uri: selectedImage.path }}
+          <View style={{ margin: 10 }}>
+            {selectedImage && (
+              <Image
+                source={{ uri: selectedImage.path }}
+                style={{
+                  width: 100,
+                  height: 100,
+                  alignSelf: 'center',
+                  borderRadius: 100,
+                }}
+              />
+            )}
+
+            <Text
               style={{
-                width: 100,
-                height: 100,
-                alignSelf: 'center',
-                borderRadius: 100,
-              }}
-            />
-          )}
+                color: 'black',
+                fontSize: 16,
+                fontFamily: 'NunitoSans_7pt-Regular',
+              }}>
+              Enter Patient Name*:
+            </Text>
 
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-            }}>
-            Enter Patient Name*:
-          </Text>
-
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TextInput
+                style={styles.input}
+                label="Last Name"
+                mode="outlined"
+                outlineColor="#e4efff"
+                onChangeText={setlastname}
+                value={lastname}
+                theme={{ colors: { primary: '#478ffd' } }}
+              />
             <TextInput
+              label="First Name"
               style={styles.input}
-              label="Last Name"
               mode="outlined"
               outlineColor="#e4efff"
-              onChangeText={setlastname}
-              value={lastname}
+              onChangeText={setname}
+              value={name}
               theme={{ colors: { primary: '#478ffd' } }}
             />
-          </View>
-          <TextInput
-            label="First Name"
-            style={styles.input}
-            mode="outlined"
-            outlineColor="#e4efff"
-            onChangeText={setname}
-            value={name}
-            theme={{ colors: { primary: '#478ffd' } }}
-          />
-          <TextInput
-            label="Middle Name"
-            style={styles.input}
-            mode="outlined"
-            outlineColor="#e4efff"
-            onChangeText={setmiddlename}
-            value={middlename}
-            theme={{ colors: { primary: '#478ffd' } }}
-          />
+            <TextInput
+              label="Middle Name"
+              style={styles.input}
+              mode="outlined"
+              outlineColor="#e4efff"
+              onChangeText={setmiddlename}
+              value={middlename}
+              theme={{ colors: { primary: '#478ffd' } }}
+            />
 
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-              // bottom: 10,
-            }}>
-            Gender
-          </Text>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+                fontFamily: 'NunitoSans_7pt-Regular',
+                // bottom: 10,
+              }}>
+              Gender
+            </Text>
 
-          <Dropdown
-            style={styles.input}
-            placeholderStyle={{
-              paddingHorizontal: 10,
-              fontWeight: '400',
-              color: 'black',
-            }}
-            selectedTextStyle={{
-              paddingHorizontal: 10,
-              fontWeight: '400',
-              color: 'black',
-            }}
-            data={genderOptions}
-            labelField="value"
-            valueField="label"
-            placeholder="Select Gender"
-            value={selectedGender}
-            onChange={value => setSelectedGender(value)}
-          />
+            <Dropdown
+              style={styles.input}
+              placeholderStyle={{
+                paddingHorizontal: 10,
+                fontWeight: '400',
+                color: 'black',
+              }}
+              selectedTextStyle={{
+                paddingHorizontal: 10,
+                fontWeight: '400',
+                color: 'black',
+              }}
+              data={genderOptions}
+              labelField="value"
+              valueField="label"
+              placeholder="Select Gender"
+              value={selectedGender}
+              onChange={value => setSelectedGender(value)}
+            />
 
-          {/* <Text
+            {/* <Text
             style={{
               color: 'black',
               fontSize: 16,
@@ -545,7 +547,7 @@ const Personalinfoscreen = ({ navigation, route }) => {
             theme={{colors: {primary: '#478ffd'}}}
           /> */}
 
-          {/* <TextInput
+            {/* <TextInput
             style={styles.input}
             label="Enter Landline Number"
             mode="outlined"
@@ -557,117 +559,117 @@ const Personalinfoscreen = ({ navigation, route }) => {
             theme={{colors: {primary: '#478ffd'}}}
           /> */}
 
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-            }}>
-            Enter Date of Birth*:
-          </Text>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+                fontFamily: 'NunitoSans_7pt-Regular',
+              }}>
+              Enter Date of Birth*:
+            </Text>
 
-          <View style={styles.dateContainer}>
+            <View style={styles.dateContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Date"
+                value={`${year}-${month}-${day}`}
+                onFocus={() => setShowDatePicker(true)}
+                editable={false}
+              />
+              {showDatePicker && (
+                <DateTimePicker
+                  value={selectedDate}
+                  mode="date"
+                  display="calendar"
+                  onChange={handleDateChange}
+                  maximumDate={new Date()}
+                />
+              )}
+              <TouchableOpacity
+                style={styles.iconContainer}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Icon name="calendar" size={30} color="black" />
+              </TouchableOpacity>
+            </View>
+
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+                fontFamily: 'NunitoSans_7pt-Regular',
+                // bottom: 10,
+              }}>
+              Age*:
+            </Text>
             <TextInput
               style={styles.input}
-              placeholder="Date"
-              value={`${year}-${month}-${day}`}
-              onFocus={() => setShowDatePicker(true)}
+              label="Age"
+              mode="outlined"
+              outlineColor="#e4efff"
+              value={age}
               editable={false}
+              theme={{ colors: { primary: '#478ffd' } }}
             />
-            {showDatePicker && (
-              <DateTimePicker
-                value={selectedDate}
-                mode="date"
-                display="calendar"
-                onChange={handleDateChange}
-                maximumDate={new Date()}
-              />
-            )}
-            <TouchableOpacity
-              style={styles.iconContainer}
-              onPress={() => setShowDatePicker(true)}
-            >
-              <Icon name="calendar" size={25} color="black" />
-            </TouchableOpacity>
-          </View>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+                fontFamily: 'NunitoSans_7pt-Regular',
+                // bottom: 10,
+              }}>
+              Marital Status*:
+            </Text>
 
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-              // bottom: 10,
-            }}>
-            Age*:
-          </Text>
-          <TextInput
-            style={styles.input}
-            label="Age"
-            mode="outlined"
-            outlineColor="#e4efff"
-            value={age}
-            editable={false}
-            theme={{ colors: { primary: '#478ffd' } }}
-          />
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-              // bottom: 10,
-            }}>
-            Marital Status*:
-          </Text>
-
-          <Dropdown
-            style={styles.input}
-            placeholderStyle={{
-              paddingHorizontal: 10,
-              fontWeight: '400',
-              color: 'black',
-            }}
-            selectedTextStyle={{
-              paddingHorizontal: 10,
-              fontWeight: '400',
-              color: 'black',
-            }}
-            data={Materialoptions}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Marital Status"
-            value={Selectmarital}
-            onChange={value => setSelectmarital(value)}
-          />
-
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-            }}>
-            Patient Address*:
-          </Text>
-
-          <TextInput
-            style={styles.input}
-            mode="outlined"
-            outlineColor="#e4efff"
-            label="Street Address"
-            onChangeText={setreason}
-            value={reason}
-            theme={{ colors: { primary: '#478ffd' } }}
-          />
-
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Dropdown
-              style={styles.input2}
+              style={styles.input}
               placeholderStyle={{
-                paddingHorizontal: 10,
+                paddingHorizontal: 15,
                 fontWeight: '400',
                 color: 'black',
               }}
               selectedTextStyle={{
-                paddingHorizontal: 10,
+                paddingHorizontal: 15,
+                fontWeight: '400',
+                color: 'black',
+              }}
+              data={Materialoptions}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Marital Status"
+              value={Selectmarital}
+              onChange={value => setSelectmarital(value)}
+            />
+
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+                fontFamily: 'NunitoSans_7pt-Regular',
+              }}>
+              Patient Address*:
+            </Text>
+
+            <TextInput
+              style={styles.input}
+              mode="outlined"
+              outlineColor="#e4efff"
+              label="Street Address"
+              onChangeText={setreason}
+              value={reason}
+              theme={{ colors: { primary: '#478ffd' } }}
+            />
+
+            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}> */}
+            <Dropdown
+              style={styles.input2}
+              placeholderStyle={{
+                paddingHorizontal: 15,
+                fontWeight: '400',
+                color: 'black',
+              }}
+              selectedTextStyle={{
+                paddingHorizontal: 15,
                 fontWeight: '400',
                 color: 'black',
               }}
@@ -686,12 +688,12 @@ const Personalinfoscreen = ({ navigation, route }) => {
             <Dropdown
               style={styles.input2}
               placeholderStyle={{
-                paddingHorizontal: 10,
+                paddingHorizontal: 15,
                 fontWeight: '400',
                 color: 'black',
               }}
               selectedTextStyle={{
-                paddingHorizontal: 10,
+                paddingHorizontal: 15,
                 fontWeight: '400',
                 color: 'black',
               }}
@@ -699,68 +701,68 @@ const Personalinfoscreen = ({ navigation, route }) => {
               labelField="name"
               search
               searchPlaceholder="Search..."
-              valueField="iso3"
+              valueField="name"
               placeholder="City"
               value={city}
               onChange={value => setcity(value)}
             />
-          </View>
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontFamily: 'NunitoSans_7pt-Regular',
-            }}>
-            Insurance*:
-          </Text>
+            {/* </View> */}
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+                fontFamily: 'NunitoSans_7pt-Regular',
+              }}>
+              Insurance*:
+            </Text>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: 'NunitoSans_7pt-Regular',
-                  marginRight: 10,
-                }}>
-                Yes
-              </Text>
-              <Checkbox.Android
-                status={isInsured ? 'checked' : 'unchecked'}
-                onPress={handleInsuranceYes}
-                color="#478ffd"
-              />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: 'NunitoSans_7pt-Regular',
+                    marginRight: 10,
+                  }}>
+                  Yes
+                </Text>
+                <Checkbox.Android
+                  status={isInsured ? 'checked' : 'unchecked'}
+                  onPress={handleInsuranceYes}
+                  color="#478ffd"
+                />
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: 'NunitoSans_7pt-Regular',
+                    marginRight: 10,
+                  }}>
+                  No
+                </Text>
+                <Checkbox.Android
+                  status={isNotInsured ? 'checked' : 'unchecked'}
+                  onPress={handleInsuranceNo}
+                  color="#478ffd"
+                />
+              </View>
             </View>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: 'NunitoSans_7pt-Regular',
-                  marginRight: 10,
-                }}>
-                No
-              </Text>
-              <Checkbox.Android
-                status={isNotInsured ? 'checked' : 'unchecked'}
-                onPress={handleInsuranceNo}
-                color="#478ffd"
+            {isInsured && (
+              <TextInput
+                style={styles.input}
+                label="Insurance Name"
+                mode="outlined"
+                outlineColor="#e4efff"
+                onChangeText={setinsurence}
+                value={insurence}
+                theme={{ colors: { primary: '#478ffd' } }}
               />
-            </View>
-          </View>
+            )}
 
-          {isInsured && (
-            <TextInput
-              style={styles.input}
-              label="Insurance Name"
-              mode="outlined"
-              outlineColor="#e4efff"
-              onChangeText={setinsurence}
-              value={insurence}
-              theme={{ colors: { primary: '#478ffd' } }}
-            />
-          )}
-
-          <Text
+            {/* <Text
             style={{
               color: 'black',
               fontSize: 16,
@@ -790,67 +792,67 @@ const Personalinfoscreen = ({ navigation, route }) => {
               value={otherMedicalHistory}
               theme={{ colors: { primary: '#478ffd' } }}
             />
-          )}
+          )} */}
 
-          <View style={{ top: 5 }}>
+            <View style={{ top: 5 }}>
 
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 16,
-                fontFamily: 'NunitoSans_7pt-Regular',
-              }}>
-              Emergency Contact Details*:
-            </Text>
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 16,
+                  fontFamily: 'NunitoSans_7pt-Regular',
+                }}>
+                Emergency Contact Details*:
+              </Text>
+
+              <TextInput
+                style={styles.input}
+                label="Name"
+                mode="outlined"
+                outlineColor="#e4efff"
+                onChangeText={setemergencyname}
+                value={emergencyname}
+                theme={{ colors: { primary: '#478ffd' } }}
+              />
+            </View>
 
             <TextInput
               style={styles.input}
-              label="Name"
+              label="Phone Number"
               mode="outlined"
               outlineColor="#e4efff"
-              onChangeText={setemergencyname}
-              value={emergencyname}
+              onChangeText={setemergencyphone}
+              value={emergencyphone}
+              maxLength={10}
+              keyboardType="numeric"
               theme={{ colors: { primary: '#478ffd' } }}
             />
+
+            <Dropdown
+              style={styles.input}
+              placeholderStyle={{
+                paddingHorizontal: 15,
+                fontWeight: '400',
+                color: 'black',
+              }}
+              selectedTextStyle={{
+                paddingHorizontal: 15,
+                fontWeight: '400',
+                color: 'black',
+              }}
+              data={relationshipdata}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Relationship"
+              value={relationship}
+              onChange={value => setrelationship(value)}
+            />
+
+            <TouchableOpacity style={styles.button} onPress={Dashboard}>
+              <Text style={styles.buttonText}>Done</Text>
+            </TouchableOpacity>
           </View>
-
-          <TextInput
-            style={styles.input}
-            label="Phone Number"
-            mode="outlined"
-            outlineColor="#e4efff"
-            onChangeText={setemergencyphone}
-            value={emergencyphone}
-            maxLength={10}
-            keyboardType="numeric"
-            theme={{ colors: { primary: '#478ffd' } }}
-          />
-
-          <Dropdown
-            style={styles.input}
-            placeholderStyle={{
-              paddingHorizontal: 10,
-              fontWeight: '400',
-              color: 'black',
-            }}
-            selectedTextStyle={{
-              paddingHorizontal: 10,
-              fontWeight: '400',
-              color: 'black',
-            }}
-            data={relationshipdata}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Relationship"
-            value={relationship}
-            onChange={value => setrelationship(value)}
-          />
-
-          <TouchableOpacity style={styles.button} onPress={Dashboard}>
-            <Text style={styles.buttonText}>Done</Text>
-          </TouchableOpacity>
-        </View>
-          )}
+        )}
       </ScrollView>
     </View>
   )
@@ -875,7 +877,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'absolute',
-    top: 10,
+    top: 15,
     right: 10,
   },
   input: {
@@ -883,25 +885,23 @@ const styles = StyleSheet.create({
     // marginBottom: 15,
     marginVertical: 8,
     backgroundColor: '#e4efff',
-    borderRadius: 8,
+    // borderRadius: 8,
     marginVertical: 8,
     height: 40
   },
   input1: {
     width: '48%',
     marginBottom: 15,
-    borderRadius: 10,
     marginVertical: 8,
     backgroundColor: '#e4efff',
     zIndex: 0,
   },
   input2: {
-    width: '48%',
+    // width: '48%',
     marginVertical: 8,
-    borderRadius: 10,
     backgroundColor: '#e4efff',
     zIndex: 0,
-    borderRadius: 8,
+    height: 43
   },
   dateContainer: {
     flexDirection: 'row',

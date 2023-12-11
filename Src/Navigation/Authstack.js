@@ -2,8 +2,6 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import Siigninscreen from '../Authentication/Siigninscreen';
-import Splashscreen from '../Authentication/Splashscreen';
-import Crousalscreen from '../Authentication/Crousalscreen';
 import Forgotpassword from '../Authentication/Forgotpassword';
 import Resetpassword from '../Authentication/Resetpassword';
 import Confirmrest from '../Authentication/Confirmrest';
@@ -32,6 +30,9 @@ import Messagescreen from '../Messagescreen';
 import Doctorprofile from '../Screens/Doctors/Doctorprofile';
 import Notificationscreen from '../Screens/Notificationscreen';
 import Appointmentdetails from '../Appointmentdetails';
+import Profilenew from '../Screens/Profile/Profilenew';
+import Diseasescreen from '../Screens/Diseasescreen';
+import Qrscreen from '../Screens/Qrscreen';
 
 const Auth=createStackNavigator();
 
@@ -165,9 +166,26 @@ const Authstack = () => {
                 ...TransitionPresets.RevealFromBottomAndroid
             }}
             />
+              <Auth.Screen
+            name='disease'
+            component={Diseasescreen}
+            options={{
+                headerShown:false,
+                ...TransitionPresets.RevealFromBottomAndroid
+            }}
+            />
                  <Auth.Screen
             name='pin'
             component={Pinscreen}
+            options={{
+                headerShown:false,
+                ...TransitionPresets.RevealFromBottomAndroid
+            }}
+            />
+
+<Auth.Screen
+            name='qrscreen'
+            component={Qrscreen}
             options={{
                 headerShown:false,
                 ...TransitionPresets.RevealFromBottomAndroid
@@ -254,6 +272,16 @@ const Authstack = () => {
                 ...TransitionPresets.RevealFromBottomAndroid
             }}
             />
+               <Auth.Screen
+            name='profilenew'
+            component={Profilenew}
+            options={{
+                headerShown:false,
+                ...TransitionPresets.RevealFromBottomAndroid
+            }}
+            />
+    
+            
 
             <Auth.Screen
             name='appoitmentprofile'

@@ -58,8 +58,8 @@ const Siigninscreen = ({navigation}) => {
 
   const [visible, setVisible] = useState(false);
   const [country, setCountry] = useState({
-    cca2: 'IN',
-    callingCode: '91',
+    cca2: 'PH',
+    callingCode: '63',
   });
   const [username, setUsername] = useState('');
   const [verificationId, setVerificationId] = useState('');
@@ -120,7 +120,7 @@ const Siigninscreen = ({navigation}) => {
       const requestData = {
         device_token:
           'feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd',
-        identity: country.callingCode + username,
+        identity: username,
       };
 
       // Make the API request using Axios
@@ -142,8 +142,11 @@ const Siigninscreen = ({navigation}) => {
 
         // // Save the verification ID for later use
         // setVerificationId(confirmation.verificationId);
-        const phoneNumber = `+${country.callingCode}${username}`;
+        const phoneNumber = `${username}`;
 
+        const phonenumbercode = `+${country.callingCode}${username}`;
+        console.log(phonenumbercode);
+        await AsyncStorage.setItem('phoneNumbercountry', phonenumbercode);
         // Save user login details in AsyncStorage
         await AsyncStorage.setItem('phoneNumber', phoneNumber);
         await AsyncStorage.setItem('verificationId', verificationId);
@@ -179,7 +182,8 @@ const Siigninscreen = ({navigation}) => {
     style={{
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: '#49B2E9',
+      // backgroundColor: '#49B2E9',
+      backgroundColor:'white'
     }}>
 
     <View
@@ -189,64 +193,65 @@ const Siigninscreen = ({navigation}) => {
         // justifyContent: 'center',
       }}>
 
-      <View style={{ justifyContent: 'center',alignItems:'center' ,height:'23%'}}>
-        <Image source={require('../Assets/Logo.png')} style={styles.logo1}/>
-        <Text style={{fontSize:20,fontWeight:'700'}}>Patient App</Text>
-      </View>
+<View style={{ justifyContent: 'center',alignItems:'center' }}>
+          <Image source={require('../Assets/Logo.png')} style={styles.logo1}/>
+          <Text style={{fontSize:20,fontWeight:'700',bottom:20,color:'black'}}>Patient App</Text>
+        </View>
 
       <Image source={require('../Assets/loginpatient.png')} style={styles.logo}/>
       
-      <View style={{backgroundColor:'white',borderTopRightRadius:40,borderTopLeftRadius:40,alignItems:'center',width:'100%',bottom:0,position:'absolute',height:'34%'}}>
+      <View style={{alignItems:'center',width:'100%',bottom:0,position:'absolute',height:'38%'}}>
 
       <Text style={{fontSize: 15, fontFamily: 'NunitoSans_7pt-Regular',top:5}}>
         Sign Up to continue:
       </Text>
 
-        <View
-          style={{
-            // marginLeft: 10,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            zIndex: 1,
-            paddingHorizontal: 55,
-            paddingTop: 52,
-          }}>
-          <Text style={{fontSize: 14, fontWeight: '500'}}>
-            {`+${country.callingCode}`}
-          </Text>
-        </View>
-        <TextInput
-          value={username}
-          onChangeText={setUsername}
-          placeholder='Enter Phone Number'
-          mode="outlined"
-          keyboardType="number-pad"
-          fontSize={16}
-          maxLength={10}
-          outlineColor="#e4efff"
-          style={{
-            height: 60,
-            top:13,
-            backgroundColor: '#e4efff',
-            zIndex: 0,
-            paddingLeft: 30,
-            width: Dimensions.get('window').width * 0.8,
-          }}
-          theme={{colors: {primary: '#478ffd'}}}
-          dense={true}
-          left={
-            <TextInput.Icon
-              style={{
-                borderRightWidth: 1,
-                borderRadius: 0,
-                alignSelf: 'center',
-              }}
-              icon="chevron-down"
-              onPress={openCountryPicker}
-            />
-          }
-        />
+      <View
+            style={{
+              // marginLeft: 10,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 1,
+              paddingHorizontal: 45,
+              paddingTop: 52,
+            }}>
+            <Text style={{fontSize: 14, fontWeight: '500'}}>
+              {`+${country.callingCode}`}
+            </Text>
+          </View>
+          <TextInput
+            value={username}
+            onChangeText={setUsername}
+            placeholder='Enter Phone Number'
+            mode="outlined"
+            keyboardType="number-pad"
+            fontSize={16}
+            maxLength={10}
+            outlineColor="#e4efff"
+            style={{
+              height: 60,
+              top:13,
+              backgroundColor: '#e4efff',
+              zIndex: 0,
+              paddingHorizontal:20,
+              width: Dimensions.get('window').width * 0.8,
+            }}
+            theme={{colors: {primary: '#478ffd'}}}
+            dense={true}
+            left={
+              <TextInput.Icon
+                style={{
+                  borderRightWidth: 1,
+                  borderRadius: 0,
+                  alignSelf: 'center',
+                marginLeft:35
+                }}
+                icon="chevron-down"
+                onPress={openCountryPicker}
+              />
+            }
+          />
         <CountryPicker
           visible={visible}
           onClose={() => setVisible(false)}
@@ -269,14 +274,14 @@ const Siigninscreen = ({navigation}) => {
         <Text style={styles.buttonText}>Sign Up</Text>
       )}
     </TouchableOpacity>
-      <View style={{flexDirection: 'row', justifyContent: 'center', top: 10}}>
+      <View style={{flexDirection: 'row', justifyContent: 'center', top: 20}}>
         <Text style={{fontFamily: 'NunitoSans_7pt-Regular', fontSize: 14}}>
-        Already have an account?
+        Already have exist?
         </Text>
         <TouchableOpacity onPress={signupphone}>
           <Text
             style={{
-              color: '#49b2e9',
+              color: '#4a87d7',
               fontWeight: '500',
               fontFamily: 'NunitoSans_7pt-Regular',
             }}>
@@ -314,14 +319,13 @@ const styles = StyleSheet.create({
   logo: {
     width: Dimensions.get('window').width * 0.8,
     height: Dimensions.get('window').height * 0.3,
-    top:20
   },
   logo1: {
     width: Dimensions.get('window').width * 0.8,
-    height: Dimensions.get('window').height * 0.1,
+    height: Dimensions.get('window').height * 0.2,
   },
   button: {
-    backgroundColor: '#49b2e9',
+    backgroundColor: '#4a87d7',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
