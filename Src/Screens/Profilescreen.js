@@ -18,7 +18,7 @@ const Profilescreen = ({navigation}) => {
 
   const savedetails = async () => {
     try {
-      const access_token = await AsyncStorage.getItem('access_token');
+      const access_token = await AsyncStorage.getItem('get_token');
   
       if (!access_token) {
         return; // Handle this error case as needed
@@ -86,12 +86,21 @@ const Profilescreen = ({navigation}) => {
     navigation.navigate('privacy')
   }
 
+
+  const handleBackButtonPress = () => {
+    navigation.goBack();
+  };
+
   return (
     <ScrollView style={{flex:1,backgroundColor:'white'}}>
    <View style={styles.container}>
-      <View style={{ backgroundColor: '#4a87d7',alignItems:'center' }}>
-    <Text style={styles.bottomText}>My Profile</Text>
-  </View>
+   <View style={{ backgroundColor: '#4a87d7', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
+  <Text style={{ ...styles.bottomText, textAlign: 'center', flex: 1 }}>My Profile</Text>
+  <TouchableOpacity   onPress={handleBackButtonPress}> 
+  <Image style={{ height: 27, width: 27,marginRight:10 }} source={require('../Assets/image-removebg.png')}/>
+  </TouchableOpacity>
+</View>
+
 
       <View style={styles.profileContainer}>
         <Image source={require('../Assets/personalinfo.png')} style={styles.profileImage} />

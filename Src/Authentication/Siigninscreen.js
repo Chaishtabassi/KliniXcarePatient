@@ -7,16 +7,150 @@ import {
   Dimensions,
   Image,
   KeyboardAvoidingView,
+  AppState
 } from 'react-native';
 import CountryPicker from 'react-native-country-picker-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput, List, Divider, IconButton} from 'react-native-paper';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import messaging from '@react-native-firebase/messaging';
+import firebase from '@react-native-firebase/app';
+import PushNotification from 'react-native-push-notification';
 
 const Siigninscreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
 
+  const [deviceToken, setDeviceToken] = useState('');
+
+  useEffect(() => {
+    getDeviceToken(); 
+  }, []);
+
+  // useEffect(() => {
+  //   // ... (existing code)
+  
+  //   // Listen for background notifications
+  //   const unsubscribeOnBackgroundMessage = messaging().setBackgroundMessageHandler(async remoteMessage => {
+  //     console.log('Background Notification:', remoteMessage);
+  //     // Handle the notification as needed
+  //   });
+  
+  //   return () => {
+  //     unsubscribeOnBackgroundMessage();
+  //   };
+  // }, []);
+  
+
+  const getDeviceToken = async () => {
+    try {
+      let token = await messaging().getToken();
+      
+      if (!token) {
+        // If the token is not available, request a new one
+        token = await messaging().requestPermission();
+      }
+  
+      console.log('Device Token:', token);
+      setDeviceToken(token);
+  
+      // Save the device token in AsyncStorage
+      await AsyncStorage.setItem('deviceToken', token);
+    } catch (error) {
+      console.error('Error getting device token:', error);
+    }
+  };
+  
+
+  // async function requestUserPermission() {
+  //   try {
+  //     const authStatus = await messaging().requestPermission();
+  //     const enabled =
+  //       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  
+  //     if (enabled) {
+  //       console.log('Authorization status:', authStatus);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error requesting FCM permission:', error);
+  //   }
+  // }
+
+  PushNotification.createChannel(
+    {
+      channelId: 'channel-id', // Use a unique channel id
+      channelName: 'Channel Name',
+      channelDescription: 'A channel to categorize your notifications',
+      soundName: 'default', // Optional, you can use a custom sound file
+      importance: 4, // Set the importance level (0 - 4)
+      vibrate: true, // Enable vibration
+    },
+    (created) => console.log(`Channel created: ${created}`),
+  );
+
+  useEffect(() => {
+    let remoteMessage = null; // Declare remoteMessage in the outer scope
+  
+    const handleForegroundNotification = (message) => {
+      console.log('Foreground Notification:', message);
+  
+      PushNotification.localNotification({
+        channelId: 'channel-id',
+        title: message.notification.title,
+        message: message.notification.body,
+      });
+    };
+  
+    const unsubscribeOnMessage = messaging().onMessage(async (message) => {
+      console.log('A new FCM message arrived!', JSON.stringify(message));
+      remoteMessage = message; // Update the outer variable
+      handleForegroundNotification(message);
+    });
+  
+    const appStateChangeHandler = (nextAppState) => {
+      if (nextAppState === 'active') {
+        const notificationOpen = messaging().getInitialNotification();
+        if (notificationOpen) {
+          // navigation.navigate('notification', {
+          //   notificationData: remoteMessage, // Access data from the outer variable
+          // });
+          console.log('Notification caused app to open from quit state:', notificationOpen);
+        }
+      }
+    };
+  
+    const unsubscribeOnAppStateChange = AppState.addEventListener('change', appStateChangeHandler);
+  
+    const unsubscribeOnNotificationOpenedApp = messaging().onNotificationOpenedApp((message) => {
+      console.log('Background Notification:', message);
+  
+      navigation.navigate('notification', {
+        notificationData: message.data,
+      });
+    });
+  
+    messaging()
+      .getInitialNotification()
+      .then((message) => {
+        if (message) {
+          console.log('Initial Notification:', message);
+          remoteMessage = message; // Update the outer variable
+  
+          navigation.navigate('notification', {
+            notificationData: message.data,
+          });
+        }
+      });
+  
+    return () => {
+      unsubscribeOnMessage();
+      unsubscribeOnNotificationOpenedApp();
+      unsubscribeOnAppStateChange.remove();
+    };
+  }, [navigation]);
+  
+  
   const openCountryPicker = () => {
     setVisible(true);
   };
@@ -53,7 +187,7 @@ const Siigninscreen = ({navigation}) => {
   }
 
   const handlePhoneNumberVerification = async () => {
-
+    const storedDeviceToken = await AsyncStorage.getItem('deviceToken');
     
     if (username === '') {
       // Show a toast message when the phone number is empty
@@ -81,8 +215,7 @@ const Siigninscreen = ({navigation}) => {
 
       // Define the request data
       const requestData = {
-        device_token:
-          'feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd',
+        device_token:storedDeviceToken,
         identity: username,
       };
 

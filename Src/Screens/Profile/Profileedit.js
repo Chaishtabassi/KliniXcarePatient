@@ -201,7 +201,9 @@ const Profileedit = ({navigation,route}) => {
     };
   
     const callApi = async () => {
+      // const access_token = await AsyncStorage.getItem('get_token');
       const access_token = await AsyncStorage.getItem('access_token');
+      const storedDeviceToken = await AsyncStorage.getItem('deviceToken');
   
       try {
         if (name == undefined || lastname == undefined || selectedGender == '' || day == undefined || month == undefined || year == undefined || age == undefined || width == undefined || Selectmarital == '' || reason == undefined || city == '') {
@@ -214,10 +216,7 @@ const Profileedit = ({navigation,route}) => {
         }
         else {
           const api =
-            `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd&identity=` +
-            `${phoneNumber}` +
-            '&is_verify=1&password=' +
-            `${storedPin}`;
+          `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=${storedDeviceToken}&identity=${phoneNumber}&is_verify=1&password=${storedPin}`;
   
           const authToken = access_token
   
@@ -234,7 +233,7 @@ const Profileedit = ({navigation,route}) => {
           formData.append('last_name', name);
           formData.append('country_code', '91');
           formData.append('gender', Number(selectedGender['placeholder']));
-          formData.append('dob', `${day}-${month}-${year}`);
+          formData.append('dob', `${month}-${day}-${year}`);
           formData.append('age', age);
           formData.append('landline_number', width);
           formData.append('is_notification', 1);
@@ -542,7 +541,7 @@ const Profileedit = ({navigation,route}) => {
               <TextInput
                 style={styles.input}
                 placeholder="Date"
-                value={`${year}-${month}-${day}`}
+                value={`${month}-${day}-${year}`}
                 onFocus={() => setShowDatePicker(true)}
                 editable={false}
               />

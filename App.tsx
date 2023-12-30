@@ -4,22 +4,21 @@ import Rootnavigator from './Src/Navigation/Rootnavigator'
 import firebase from '@react-native-firebase/app';
 import Toast from 'react-native-toast-message';
 
-// const firebaseConfig = {
-
-//   apiKey: "AIzaSyA5xXkeRYVy08bT9bvDkyrB9OPEQYbO7OE",
-//   authDomain: "klinixkare-2d93c.firebaseapp.com",
-//   // databaseURL: "https://phoneauth-2d93c.firebaseio.com",
-//   projectId: "klinixkare-2d93c",
-//   storageBucket: "klinixkare-2d93c.appspot.com",
-//   messagingSenderId: "657714363965",
-//   appId: "1:657714363965:android:3e6069e40bfa6e2d993454",
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyCx1cP8bAY06QNb00EQiY4pPsm3ZBlmhY8",
+  authDomain: "klinixcarepatient.firebaseapp.com",
+  // databaseURL: "https://klinixcarepatient.firebaseio.com",
+  projectId: "klinixcarepatient",
+  storageBucket: "klinixcarepatient.appspot.com",
+  messagingSenderId: "547184458432",
+  appId: "1:547184458432:android:b232aff2c2f5561d50cb25",
+};
 
 
 export class App extends Component {
-  // componentDidMount() {
-  //   firebase.initializeApp(firebaseConfig);
-  // }
+  componentDidMount() {
+    firebase.initializeApp(firebaseConfig);
+  }
   render() {
     return (
       <View style={{flex:1}}>

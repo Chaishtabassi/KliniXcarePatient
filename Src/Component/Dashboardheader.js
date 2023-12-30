@@ -51,10 +51,13 @@ const Dashboardheader = ({navigation}) => {
       }
     };
 
-    const notification =()=>{
-      // navigation.navigate('notification');
+    const profile =()=>{
       // navigation.navigate('profilenew')
       navigation.navigate('profile')
+    }
+
+    const notification=()=>{
+      navigation.navigate('notification');
     }
 
   return (
@@ -63,10 +66,15 @@ const Dashboardheader = ({navigation}) => {
             <View style={{}}>
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <Text style={{fontSize:20,fontWeight:'700',color:'white'}}>Hello, {userName.fullname}</Text>
-            <TouchableOpacity onPress={notification}>
-            <Image style={{height:35,width:35}} source={require('../Assets/bottomprofile.png')}/>
-            {/* <Image style={{height:30,width:30}} source={require('../Assets/notification.png')}/> */}
+            <View style={{flexDirection:'row',alignItems:'center'}}>
+            <TouchableOpacity onPress={profile} style={{marginRight:10}}>
+            <Image style={{height:30,width:30}} source={require('../Assets/bottomprofile.png')}/>
             </TouchableOpacity>
+            <TouchableOpacity onPress={notification}>
+            <Image style={{height:25,width:25}} source={require('../Assets/noti.png')}/>
+            </TouchableOpacity>
+            </View>
+           
          
               </View>
         <Text style={{fontSize:15,fontWeight:'300',color:'white'}}>How are you doing?</Text>

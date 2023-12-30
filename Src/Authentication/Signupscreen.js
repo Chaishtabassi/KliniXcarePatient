@@ -152,6 +152,7 @@ const Signupscreen = ({ navigation, route }) => {
 
   const callApi = async () => {
     const access_token = await AsyncStorage.getItem('access_token');
+    const storedDeviceToken = await AsyncStorage.getItem('deviceToken');
 
     try {
 
@@ -174,7 +175,7 @@ const Signupscreen = ({ navigation, route }) => {
       // }
       // else {
         const api =
-          `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd&identity=` +
+          `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=${storedDeviceToken}` +
           `${phoneNumber}` +
           '&is_verify=1&password=' +
           `${pin}`;
@@ -194,7 +195,7 @@ const Signupscreen = ({ navigation, route }) => {
         formData.append('last_name', name);
         formData.append('country_code', '91');
         formData.append('gender', Number(selectedGender['label']));
-        formData.append('dob', `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+        formData.append('dob',`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
 
         formData.append('age', age);
         formData.append('landline_number', width);

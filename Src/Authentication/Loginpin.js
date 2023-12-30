@@ -50,7 +50,7 @@ const Loginpin = ({navigation}) => {
       try {
         if (checkpin) {
           if (enteredPin == savedpin) {
-            await savedetails()
+            // await savedetails()
             // navigation.navigate('bottom');
           } else {
             console.error('Incorrect PIN entered.');
@@ -70,11 +70,12 @@ const Loginpin = ({navigation}) => {
     
     const callapi = async () => {
       const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
+    const storedDeviceToken = await AsyncStorage.getItem('deviceToken');
     
       try {
         // Construct the request URL with query parameters
         const apiUrl = `http://teleforceglobal.com/doctor/api/v1/user/registerUser?` +
-          `device_token=feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd` +
+          `device_token=${storedDeviceToken}` +
           `&identity=${storedPhoneNumber}` +
           `&is_verify=1` +
           `&password=${enteredPin}`;
@@ -100,6 +101,8 @@ const Loginpin = ({navigation}) => {
             const access_token = responseData.data.access_token;
             console.log(responseData.data.access_token);
             await AsyncStorage.setItem('Login_access', access_token);
+          // await AsyncStorage.setItem('access_token', access_token);
+
 
             const get_token=responseData.data.access_token;
             await AsyncStorage.setItem('get_token', get_token);

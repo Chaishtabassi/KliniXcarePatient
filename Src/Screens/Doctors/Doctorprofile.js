@@ -278,7 +278,7 @@ const Doctorprofile = ({ navigation, route }) => {
             )}
           </View> */}
           <View style={{ top: 20 }}>
-            <View style={{flexDirection:'row',alignItems:'center'}}>
+            {/* <View style={{flexDirection:'row',alignItems:'center'}}>
             <Text style={{ fontSize: 16, fontWeight: '500', color: 'black' }}>
               SLOTS AVAILABLE:
             </Text>
@@ -298,7 +298,7 @@ const Doctorprofile = ({ navigation, route }) => {
                 <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>No slots available </Text>
               </View>
             )}
-          </View>
+          </View> */}
 
             {/* {apiData.length > 0 ? (
               <View

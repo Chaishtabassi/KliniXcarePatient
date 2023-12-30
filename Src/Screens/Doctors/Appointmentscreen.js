@@ -20,6 +20,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Appointmentscreen = ({ route, navigation }) => {
   const selectedDoctor = route.params ? route.params.selectedDoctor : null;
+  console.log('selectd', selectedDoctor.consultation_fee)
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -43,9 +44,9 @@ const Appointmentscreen = ({ route, navigation }) => {
   const [selectedType, setSelectedType] = useState(null);
   const [problemDescription, setProblemDescription] = useState('');
   const [slots, setSlots] = useState([]);
-  const[slotavail,setslotavail]=useState('')
+  const [slotavail, setslotavail] = useState('')
 
-  const[nslots, setNslots] = useState({})
+  const [nslots, setNslots] = useState({})
 
   const fetchslot = async selectedDate => {
     const access_token = await AsyncStorage.getItem('access_token');
@@ -58,9 +59,9 @@ const Appointmentscreen = ({ route, navigation }) => {
 
       const formData = new FormData();
 
-      formData.append('doctor_id',storedoctorid);
+      formData.append('doctor_id', storedoctorid);
       formData.append('month', selectedDateFormatted);
-
+      console.log(formData)
 
       const authToken = bearerToken;
       const response = await fetch(api, {
@@ -68,18 +69,18 @@ const Appointmentscreen = ({ route, navigation }) => {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-        body: formData, 
+        body: formData,
       });
-      
+
 
       if (response) {
-        if (response.status === 200) {
+        if (response.status == 200) {
           const responseText = await response.text();
           const parsed_res = JSON.parse(responseText);
 
           setNslots(parsed_res.data);
 
-          console.log(parsed_res.data)
+          console.log('slot', parsed_res.data)
 
           setslotavail(JSON.stringify(parsed_res, null, 2));
         } else {
@@ -93,18 +94,20 @@ const Appointmentscreen = ({ route, navigation }) => {
     }
   };
 
-  const slotapi = async selectedDate => {
+  const slotapi = async (selectedDate) => {
     const access_token = await AsyncStorage.getItem('access_token');
     const bearerToken = access_token;
     const storedoctorid = selectedDoctor.id;
+    console.log(storedoctorid)
     try {
       const selectedDateFormatted = `${currentYear}-${String(
         currentMonth,
       ).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
+      console.log(selectedDateFormatted)
 
       const api = `http://teleforceglobal.com/doctor/api/v1/user/fetchDoctorSlotsByDate?doctor_id=${storedoctorid}&date=${selectedDateFormatted}`;
 
-
+      console.log(selectedDateFormatted)
       const authToken = bearerToken;
       const response = await fetch(api, {
         method: 'POST',
@@ -118,17 +121,19 @@ const Appointmentscreen = ({ route, navigation }) => {
         if (response.status === 200) {
           const responseText = await response.text();
           const parsed_res = JSON.parse(responseText);
-
-
+          console.log("================================");
+          console.log(parsed_res);
           if (parsed_res.data && parsed_res.data.length > 0) {
-            const firstSlotId = parsed_res.data[0].id;
+            const firstSlotId = parsed_res.data.id;
+            setSlots(parsed_res.data);
 
-            await AsyncStorage.setItem('firstSlotId', String(firstSlotId));
+            // await AsyncStorage.setItem('firstSlotId', String(firstSlotId)); 
           } else {
+            if(parsed_res.message == "fetch slots successfully") setmsg("No Slots Available");
+            else setmsg(parsed_res.message);
             // console.error('No slots found in the response');
           }
-console.log(parsed_res.data)
-          setSlots(parsed_res.data);
+          console.log(parsed_res.data)
         } else {
           console.error('Non-200 status code:', response.status);
         }
@@ -170,22 +175,43 @@ console.log(parsed_res.data)
 
         const formData = new FormData();
 
+        const serviceAmount = selectedDoctor.consultation_fee;
+        const discountAmount = 0;
+
+        // Calculate subtotal
+        const subtotal = serviceAmount - discountAmount;
+
+        // Assuming total tax amount is 0 for now
+        const totalTaxAmount = 0.0;
+
+        // Calculate payable amount
+        const payableAmount = subtotal + totalTaxAmount;
+        
+        var payment = ''
+        if(selectedType == 'Online'){
+          payment = 'payNow'
+        }
+        else payment = 'payAtClinic'
+        // Append values to formData
         formData.append('user_id', storeuserid);
         formData.append('doctor_id', storedoctorid);
         formData.append('date', selectedDateFormatted);
-        formData.append('time', selectedTime.time_range.split('-')[0].trim());
+        formData.append('time', selectedTime.time_range);
         formData.append('type', selectedType);
         formData.append('order_summary', 'hello');
         formData.append('is_coupon_applied', 0);
-        formData.append('service_amount', storedserviceamount);
-        formData.append('discount_amount', 0);
-        formData.append('subtotal', 15);
-        formData.append('total_tax_amount', 0.0);
-        formData.append('payable_amount', 15);
-        formData.append('payment_method', 'cod');
+        formData.append('service_amount', serviceAmount);
+        formData.append('discount_amount', discountAmount);
+        formData.append('subtotal', subtotal);
+        formData.append('total_tax_amount', totalTaxAmount);
+        formData.append('payable_amount', payableAmount);
+        formData.append('payment_method', payment);
         formData.append('problem', problemDescription);
-        formData.append('slot_id', storedslotid);
+        formData.append('slot_id', slottime);
         formData.append('status', 0);
+
+
+        console.log(formData)
 
 
         const response = await fetch(api, {
@@ -229,35 +255,32 @@ console.log(parsed_res.data)
       const apiResponse = JSON.parse(Response);
 
       if (apiResponse && apiResponse.message) {
-
-        // Toast.show({
-        //   text1: apiResponse.message,
-        //   type: apiResponse.message === 'Appointment placed successfully' ? 'success' : 'error',
-        // });
-
-        if (apiResponse.message === 'Appointment placed successfully') {
-
-          // Toast.show({
-          //   text1: 'Your Appointment booked successfully',
-          //   text2: 'Please wait for the doctor to accept',
-          //   type: 'success',
-          // });
-
+        if (apiResponse.status === true) {
           const qrCodeData = apiResponse.qrCodeData;
-          const appointmentId = apiResponse.data.id; 
+          const appointmentId = apiResponse.data.id;
 
           // navigation.navigate('bottom');
           navigation.navigate('qrscreen', { qrCodeData, appointmentId });
+        } else if (
+          apiResponse.status === false &&
+          apiResponse.message ===
+          'This slot already full, Please select another slot!'
+        ) {
+          Toast.show({
+            text1: 'This slot is already full. Please select another slot.',
+            type: 'error',
+          });
+        } else {
+          Toast.show({
+            text1: 'This slot is already full. Please select another slot',
+            type: 'error',
+          });
         }
-      } else {
-        Toast.show({
-          text1: 'Unexpected response from the server',
-          type: 'error',
-        });
       }
     } catch (error) {
       console.error('heloooooooooooooooooo', error);
     }
+
   };
 
 
@@ -278,7 +301,7 @@ console.log(parsed_res.data)
 
   const [showTimeSelection, setShowTimeSelection] = useState(false);
 
-  const getslots = date => {
+  const getslots = (date) => {
     setSelectedDate(date);
     slotapi(date);
     setShowTimeSelection(true); // Pass the selected date to slotapi
@@ -329,6 +352,7 @@ console.log(parsed_res.data)
   };
 
   const [selectedDatee, setSelectedDatee] = useState(new Date());
+  const [msg, setmsg] = useState('');
 
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
@@ -375,7 +399,7 @@ console.log(parsed_res.data)
 
   const get_number_slots = (date) => {
     const e = currentYear + '-' + currentMonth + '-' + (date < 10 ? '0' + date : date);
-  
+
     if (nslots[e] && nslots[e].length > 0) {
       const numberOfSlots = nslots[e].length;
       return numberOfSlots === 1 ? '1 Slot Available' : `${numberOfSlots} Slots Available`;
@@ -383,7 +407,8 @@ console.log(parsed_res.data)
       return 'No Slots Available';
     }
   }
-  
+
+  const [slottime, setslottime] = useState('')
 
   return (
     <View style={styles.container}>
@@ -410,11 +435,10 @@ console.log(parsed_res.data)
         <View style={styles.selectedDoctorContainer}>
           <Image
             style={{ height: 80, width: 80 }}
-            source={require('../../Assets/profileimage.png')}
+            source={require('../../Assets/doctor.jpg')}
           />
           <View style={{ flexDirection: 'column', marginLeft: 15 }}>
-            <Text style={styles.doctorName}>{selectedDoctor.name}</Text>
-            <Text style={styles.specialty}>{selectedDoctor.degrees}</Text>
+            <Text style={styles.doctorName}>DR {selectedDoctor.name} {selectedDoctor.degrees}</Text>
             <Text style={styles.specialty}>{selectedDoctor.designation}</Text>
             <Text style={styles.specialty}>{selectedDoctor.experience_year} Years Experience</Text>
 
@@ -475,33 +499,33 @@ console.log(parsed_res.data)
                     : { backgroundColor: '#e3e1da' },
                 ]}
               >
-                <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-                <Text
-                  style={[
-                    styles.dateText,
-                    selectedDate === date ? { color: 'white' } : { color: 'black' },
-                  ]}
-                >
-                  {currentDate.getDate() === date ? 'Today' : getDayName(currentYear, currentDate.getMonth(), date)}
-                </Text>
-                <Text
-                  style={[
-                    styles.dateText,
-                    selectedDate === date ? { color: 'white' } : { color: 'black' },
-                  ]}
-                >
-                  {date}
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Text
+                    style={[
+                      styles.dateText,
+                      selectedDate === date ? { color: 'white' } : { color: 'black' },
+                    ]}
+                  >
+                    {currentDate.getDate() === date ? 'Today' : getDayName(currentYear, currentDate.getMonth(), date)}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.dateText,
+                      selectedDate === date ? { color: 'white' } : { color: 'black' },
+                    ]}
+                  >
+                    {date}
+                  </Text>
                 </View>
-               
 
-                <Text  style={[
-                    styles.dateText1,
-                    selectedDate === date ? { color: 'white' } : { color: 'green' },
-                  ]}>
-                {get_number_slots(date)}
+
+                <Text style={[
+                  styles.dateText1,
+                  selectedDate === date ? { color: 'white' } : { color: 'green' },
+                ]}>
+                  {get_number_slots(date)}
                 </Text>
-                
+
               </TouchableOpacity>
             )}
           />
@@ -527,7 +551,11 @@ console.log(parsed_res.data)
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item }) => (
                     <TouchableOpacity
-                      onPress={() => setSelectedTime(item)}
+                      onPress={() => {
+                        console.log(item.id);
+                        setslottime(item.id);
+                        setSelectedTime(item);
+                      }}
                       style={[
                         styles.timeContainer,
                         selectedTime === item
@@ -545,12 +573,18 @@ console.log(parsed_res.data)
                       >
                         {item.time_range}
                       </Text>
+                      {item.is_break === "1" && (
+                        <Text style={{ fontSize: 12, color: 'red' }}>
+                          {item.description}
+                        </Text>
+                      )}
                     </TouchableOpacity>
                   )}
                 />
+
               </View>
             ) : (
-              <Text style={{ marginLeft: 10 }}>No slots available</Text>
+              <Text style={{ marginLeft: 10 }}>{msg}</Text>
             )}
           </View>
         )}
@@ -562,22 +596,22 @@ console.log(parsed_res.data)
         </View>
 
         <View style={{ flexDirection: 'row', padding: 10 }}>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() => setSelectedType('Online')}
             style={[
               styles.appoContainer,
               selectedType === 'Online'
-                ? {backgroundColor: '#49b2e9'}
-                : {backgroundColor: '#e3e1da'},
+                ? { backgroundColor: '#49b2e9' }
+                : { backgroundColor: '#e3e1da' },
             ]}>
             <Text
               style={[
                 styles.dateText,
-                selectedType === 'Online' ? {color: 'white'} : {color: 'black'},
+                selectedType === 'Online' ? { color: 'white' } : { color: 'black' },
               ]}>
               Online
             </Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setSelectedType('At Clinic')}
             style={[
@@ -659,12 +693,12 @@ console.log(parsed_res.data)
 
         <View>
 
-        <View style={{justifyContent:'center',alignItems:'center'}}>
-<TouchableOpacity style={styles.button} onPress={Payment}>
-            <Text style={styles.buttonText}>Book Appointment</Text>
-          </TouchableOpacity>
-</View>
-         
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity style={styles.button} onPress={Payment}>
+              <Text style={styles.buttonText}>Book Appointment</Text>
+            </TouchableOpacity>
+          </View>
+
           {/* <TouchableOpacity onPress={chat}>
           <View style={{backgroundColor:'#69b3fb',height:50,width:50,alignItems:'center',justifyContent:'center',borderRadius:5}}>
           <Icon name="message1" size={20} color="white" />
@@ -679,11 +713,11 @@ console.log(parsed_res.data)
 
         </View>
 
-<View style={{height:30}}></View>
+        <View style={{ height: 30 }}></View>
 
 
       </ScrollView>
-   
+
     </View>
   );
 };
@@ -742,7 +776,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 16,
-    marginLeft:5
+    marginLeft: 5
   },
   appoContainer: {
     alignItems: 'center',
@@ -772,6 +806,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: 'NunitoSans_7pt-Bold',
     color: 'black',
+    textTransform: 'uppercase'
   },
   specialty: {
     fontSize: 14,

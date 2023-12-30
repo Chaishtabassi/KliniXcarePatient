@@ -33,6 +33,9 @@ import Appointmentdetails from '../Appointmentdetails';
 import Profilenew from '../Screens/Profile/Profilenew';
 import Diseasescreen from '../Screens/Diseasescreen';
 import Qrscreen from '../Screens/Qrscreen';
+import Message from '../Screens/Profile/Message';
+import Scanscreen from '../Screens/Profile/Scanscreen';
+import Medicalprescription from '../Screens/Profile/Medicalprescription';
 
 const Auth=createStackNavigator();
 
@@ -161,6 +164,14 @@ const Authstack = () => {
              <Auth.Screen
             name='message'
             component={Messagescreen}
+            options={{
+                headerShown:false,
+                ...TransitionPresets.RevealFromBottomAndroid
+            }}
+            />
+               <Auth.Screen
+            name='messagescreen'
+            component={Message}
             options={{
                 headerShown:false,
                 ...TransitionPresets.RevealFromBottomAndroid
@@ -321,6 +332,23 @@ const Authstack = () => {
                  <Auth.Screen
             name='personalinfo'
             component={Personalinfoscreen}
+            options={{
+                headerShown:false,
+                ...TransitionPresets.RevealFromBottomAndroid
+            }}
+            />
+                     <Auth.Screen
+            name='scan'
+            component={Scanscreen}
+            options={{
+                headerShown:false,
+                ...TransitionPresets.RevealFromBottomAndroid
+            }}
+            />
+
+<Auth.Screen
+            name='medical'
+            component={Medicalprescription}
             options={{
                 headerShown:false,
                 ...TransitionPresets.RevealFromBottomAndroid

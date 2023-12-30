@@ -1,30 +1,29 @@
 {
-    "project_info": {
-      "project_number": "657714363965",
-      "project_id": "klinixkarepatient",
-      "storage_bucket": "klinixkare.appspot.com"
-    },
-    "client": [
-      {
-        "client_info": {
-          "mobilesdk_app_id": "1:657714363965:android:3e6069e40bfa6e2d993454",
-          "android_client_info": {
-            "package_name": "com.klinixkarepatient"
-          }
-        },
-        "oauth_client": [],
-        "api_key": [
-          {
-            "current_key": "AIzaSyA5xXkeRYVy08bT9bvDkyrB9OPEQYbO7OE"
-          }
-        ],
-        "services": {
-          "appinvite_service": {
-            "other_platform_oauth_client": []
-          }
+  "project_info": {
+    "project_number": "547184458432",
+    "project_id": "klinixcarepatient",
+    "storage_bucket": "klinixcarepatient.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547184458432:android:b232aff2c2f5561d50cb25",
+        "android_client_info": {
+          "package_name": "com.klinixkarepatient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx1cP8bAY06QNb00EQiY4pPsm3ZBlmhY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
-    ],
-    "configuration_version": "1"
-  }
-  
+    }
+  ],
+  "configuration_version": "1"
+}

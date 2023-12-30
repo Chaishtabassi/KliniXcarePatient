@@ -35,6 +35,8 @@ const Doctorslist = ({ navigation, route }) => {
         // Retrieve the access_token from AsyncStorage
         const access_token = await AsyncStorage.getItem('access_token');
 
+        console.log(id)
+
         if (access_token) {
           const response = await fetch(
             `http://teleforceglobal.com/doctor/api/v1/user/fetch-doctory-by-department?department_id=${id}`,
@@ -53,6 +55,7 @@ const Doctorslist = ({ navigation, route }) => {
               const doctorid = data.data[0].id;
               const serviceamount = data.data[0].consultation_fee;
               await AsyncStorage.setItem('doctorid', doctorid.toString());
+              console.log('doctorid', doctorid.toString())
               await AsyncStorage.setItem(
                 'serviceamount',
                 serviceamount.toString(),
@@ -86,7 +89,7 @@ const Doctorslist = ({ navigation, route }) => {
     <View style={styles.itemContainer}>
       {item && (
         <>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', }}>
             <Image
               style={{ height: 80, width: 80 }}
               source={require('../../Assets/doctor.jpg')}
@@ -94,28 +97,31 @@ const Doctorslist = ({ navigation, route }) => {
             <View style={{ marginLeft: 15, }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <View style={{}}>
-                  <Text style={{ fontSize: 17, fontFamily: 'NunitoSans_7pt-Bold', color: 'black' }}>
-                    {item.name}
+                  <Text style={{ fontSize: 16, fontFamily: 'NunitoSans_7pt-Bold', color: 'black', textTransform: 'uppercase' }}>
+                    DR {item.name} , {item.degrees}
                   </Text>
-                  <View style={{ alignItems: 'flex-start', top: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                  {/* <View style={{ alignItems: 'flex-start', top: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Rating
                       imageSize={15}
                       startingValue={parseFloat(item.rating)}
                       readonly
-                    />
-                    {/* {item.reviews && (
+                    /> */}
+                  {/* {item.reviews && (
                       <Text style={{ fontSize: 12, color: 'grey' }}>  {item.reviews.length} reviews</Text>
                     )} */}
 
-                  </View>
-                  <Text style={{ fontSize: 14, fontFamily: 'NunitoSans_7pt-Light', color: 'grey', top: 10 }}>
+                  {/* </View> */}
+                  <Text style={{ fontSize: 14, fontFamily: 'NunitoSans_7pt-Light', color: 'grey', top: 5 }}>
                     {item.designation}
+                  </Text>
+                  <Text style={{ fontSize: 14, fontFamily: 'NunitoSans_7pt-Light', color: 'grey', top: 5 }}>
+                    {item.experience_year} years experience
                   </Text>
                 </View>
               </View>
-              <View style={{ top: 13 }}>
+              {/* <View style={{ top: 13 }}>
                 <Text>{item.experience_year} years experience</Text>
-              </View>
+              </View> */}
             </View>
           </View>
 
@@ -125,7 +131,7 @@ const Doctorslist = ({ navigation, route }) => {
 
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {item.expertise.map((expertise, index) => (
-              <View key={index} style={{ marginRight: 10, marginBottom: 10, backgroundColor: '#fffbf6' ,padding:8}}>
+              <View key={index} style={{ marginRight: 10, marginBottom: 10, backgroundColor: '#fffbf6', padding: 8 }}>
                 <Text style={{ fontSize: 14, fontWeight: '500', color: '#ecb360' }}>
                   {expertise.title}
                 </Text>
@@ -134,8 +140,8 @@ const Doctorslist = ({ navigation, route }) => {
           </View>
 
           <View style={{ flexDirection: 'row', marginTop: 8 }}>
-            <Text style={{ fontSize: 15, fontWeight: '600', color: 'black' }}>Slots available:</Text>
-            {/* <Text style={{ color: 'black' }}> Today</Text> */}
+            <Text style={{ fontSize: 15, fontWeight: '600', color: 'black' }}>Slots available: </Text>
+            <Text style={{ color: 'black' }}>Today:</Text>
           </View>
 
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -146,8 +152,26 @@ const Doctorslist = ({ navigation, route }) => {
                 </View>
               ))
             ) : (
-              <View style={{ borderWidth: 1, width: '58%', borderColor: '#e3e1da', padding: 6, marginTop: 8 }}>
-                <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>No slots available today</Text>
+              <View style={{ borderWidth: 1, width: '50%', borderColor: '#e3e1da', padding: 6, marginTop: 8 }}>
+                <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>No slots available</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={{ top: 5 }}>
+            <Text style={{ color: 'black' }}>Tomorrow:</Text>
+          </View>
+
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            {item.tomorrow_slots.length > 0 ? (
+              item.tomorrow_slots.map((slot, index) => (
+                <View key={index} style={{ marginRight: 10, marginBottom: 10, borderWidth: 1, width: 'auto', borderColor: '#e3e1da', padding: 6, marginTop: 8 }}>
+                  <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>{slot.time_range}</Text>
+                </View>
+              ))
+            ) : (
+              <View style={{ borderWidth: 1, width: '50%', borderColor: '#e3e1da', padding: 6, marginTop: 8 }}>
+                <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>No slots available</Text>
               </View>
             )}
           </View>
@@ -158,9 +182,9 @@ const Doctorslist = ({ navigation, route }) => {
             <TouchableOpacity style={styles.button} onPress={() => Appointment(item)}>
               <Text style={styles.buttonText1}>Book</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button1} onPress={() => Viewprofile(item)}>
+            {/* <TouchableOpacity style={styles.button1} onPress={() => Viewprofile(item)}>
               <Text style={styles.buttonText}>View</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </>
       )}
@@ -267,7 +291,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     // borderRadius: 10,
-    width: Dimensions.get('window').width * 0.45,
+    // width: Dimensions.get('window').width * 0.45,
+    width: Dimensions.get('window').width * 0.9,
     height: 30,
     borderWidth: 1,
     borderColor: '#e3e1da',

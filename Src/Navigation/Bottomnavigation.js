@@ -9,6 +9,7 @@ import Specialistscreen from '../Specialistscreen';
 import Profilescreen from '../Screens/Profilescreen';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import Bookappointment from '../Screens/Bookappointment';
+import Appointment from '../Screens/Profile/Appointment';
 
 
 const Clienttab = createBottomTabNavigator();
@@ -34,12 +35,24 @@ const Bottomnavigation = () => {
                 )
             }}
             />
-              <Clienttab.Screen
+              {/* <Clienttab.Screen
             name='bookappointment'
             component={Bookappointment}
             options={{
                 headerShown:false,
                 tabBarLabel:'Book Appointment',
+                tabBarIcon:({color,size})=>(
+                   <Icon name='calendar' color='white' size={22}/>
+
+                )
+            }}
+            /> */}
+                 <Clienttab.Screen
+            name='appoitmentprofile'
+            component={Appointment}
+            options={{
+                headerShown:false,
+                tabBarLabel:'My Appointment',
                 tabBarIcon:({color,size})=>(
                    <Icon name='calendar' color='white' size={22}/>
 

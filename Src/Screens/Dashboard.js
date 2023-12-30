@@ -244,7 +244,7 @@ const Dashboard = ({ navigation }) => {
       <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}>
         <View style={styles.container}>
           <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
+            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
               <TouchableOpacity style={{ width: '32%' }} onPress={vedioscreen}>
                 <View style={{ backgroundColor: '#f1f5ff', borderRadius: 15, alignItems: 'center', }}>
                   <Image style={{ height: 100, width: 100 }} resizeMode='contain' source={require('../Assets/dashboardtop/vedioconsult.png')} />
@@ -269,7 +269,7 @@ const Dashboard = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-            </View>
+            </View> */}
 
           
 
@@ -277,7 +277,7 @@ const Dashboard = ({ navigation }) => {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={styles.bottomText}>Find by Specialties</Text>
                 <TouchableOpacity onPress={specialist}>
-                  <Text style={{ fontSize: 17, fontWeight: '600' }}>View all</Text>
+                  <Text style={{ fontSize: 17, fontWeight: '600',textTransform: 'uppercase'   }}>View all</Text>
                 </TouchableOpacity>
                 {/* <Text style={{fontSize:17,fontWeight:'600'}}>View all</Text> */}
               </View>
@@ -301,7 +301,7 @@ const Dashboard = ({ navigation }) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.bottomText}>Diseases</Text>
               <TouchableOpacity onPress={Disease}>
-                <Text style={{ fontSize: 17, fontWeight: '600' }}>View all</Text>
+                <Text style={{ fontSize: 17, fontWeight: '600',textTransform: 'uppercase'   }}>View all</Text>
               </TouchableOpacity>
               {/* <Text style={{fontSize:17,fontWeight:'600'}}>View all</Text> */}
             </View>
@@ -314,6 +314,10 @@ const Dashboard = ({ navigation }) => {
               showsHorizontalScrollIndicator={false}
             />
           </View>
+
+          {/* <View style={{margin:10}}>
+          <Text style={styles.bottomText}>Health tip of the day</Text>
+          </View> */}
 
           {/* <View style={{ height: apiDat.length > 0 ? '50%' : '10%',margin:10 }}>
             <Text style={styles.bottomText}>My Appointments</Text>
@@ -330,7 +334,7 @@ const Dashboard = ({ navigation }) => {
             )}
           </View> */}
         </View>
-        <View style={{ height: 100 }}></View>
+        {/* <View style={{ height: 20 }}></View> */}
       </ScrollView>
     </View>
   );
@@ -418,6 +422,7 @@ const styles = StyleSheet.create({
   },
   bottomText: {
     // margin: 10,
+    textTransform: 'uppercase' ,
     fontSize: 17,
     color: '#49b2e9',
     fontFamily: 'Domine-Bold',

@@ -29,7 +29,6 @@ const Pinscreen = ({navigation,route}) => {
   };
 
   const Done = async () => {
-    const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
     try {
       if (enteredPin.length === 4 && pin.length === 4) {
         if (enteredPin == pin) {
@@ -70,15 +69,17 @@ const Pinscreen = ({navigation,route}) => {
     const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
     const phonenumbercountry= await AsyncStorage.getItem('phoneNumbercountry');
     console.log(storedPhoneNumber)
-  
+    const storedDeviceToken = await AsyncStorage.getItem('deviceToken');
+    console.log(storedDeviceToken)
+
     try {
       // Construct the request URL with query parameters
       const apiUrl = `http://teleforceglobal.com/doctor/api/v1/user/registerUser?` +
-        `device_token=feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd` +
+        `device_token=${storedDeviceToken}` +
         `&identity=${storedPhoneNumber}` +
         `&is_verify=1` +
         `&password=${enteredPin}`;
-  
+
       console.log(apiUrl);
   
       const response = await axios.post(apiUrl, null, {
@@ -86,7 +87,7 @@ const Pinscreen = ({navigation,route}) => {
           'Content-Type': 'application/json',
         },
       });
-  
+
       if (response) {
         if (response.status == 200) {
           const id = response.data.data.id;

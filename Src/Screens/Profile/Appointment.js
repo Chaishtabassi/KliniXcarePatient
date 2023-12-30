@@ -1,12 +1,17 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import Backbutton from '../../Component/Backbutton'
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, Modal, TextInput } from 'react-native'
+import React, { useEffect, useState, useCallback } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { CheckBox } from 'react-native-elements';
 
 const Appointment = ({ navigation }) => {
 
   const [apiData, setApiData] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [completedChecked, setCompletedChecked] = useState(false);
+  const [pendingChecked, setPendingChecked] = useState(false);
+  const [declinedChecked, setDeclinedChecked] = useState(false);
+
   useEffect(() => {
     callApi();
   }, []);
@@ -63,7 +68,7 @@ const Appointment = ({ navigation }) => {
   };
 
   const details = (id) => {
-    navigation.navigate('appointmentdetails', { id: id ,})
+    navigation.navigate('appointmentdetails', { id: id, })
   }
 
   const getStatusDescription = status => {
@@ -82,60 +87,118 @@ const Appointment = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={{marginBottom:10}}>
- <View style={{backgroundColor: 'white', elevation: 3}}>
-      <View style={{alignItems:'center',backgroundColor:'#add4fd'}}>
-      <Text style={{fontSize: 18, fontWeight: '600',color:'black',padding:7}}>
-          {getStatusDescription(item.status)}
-        </Text>
+    <View style={{ marginBottom: 10 }}>
+      <View style={{ backgroundColor: 'white', elevation: 3 }}>
+        <View style={{ alignItems: 'center', backgroundColor: '#add4fd' }}>
+          <Text style={{ fontSize: 18, fontWeight: '600', color: 'black', padding: 7 }}>
+            {getStatusDescription(item.status)}
+          </Text>
 
 
-      </View>
-         <View style={{ flexDirection: 'row', top: 10 }}>
-        <Image style={{ height: 80, width: 80 }} source={require('../../Assets/profileimage.png')} />
-        <View style={{ flexDirection: 'column', marginLeft: 10, flex: 1 }}>
-          <Text style={{ fontSize: 18, fontFamily: 'Domine-Bold',fontWeight:'700',color:'black' }}>{item.doctor.name}</Text>
-          <Text style={{ fontFamily: 'Domine-Regular' }}> {item.doctor.designation}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', top: 5 }}>
-            <Image style={{ height: 12, width: 12 }} source={require('../../Assets/clock.png')} />
-            <Text style={{ fontFamily: 'Domine-Regular' }}> {item.time_range}</Text>
+        </View>
+        <View style={{ flexDirection: 'row', top: 10 }}>
+          <Image style={{ height: 80, width: 80 }} source={require('../../Assets/doctor.jpg')} />
+          <View style={{ flexDirection: 'column', marginLeft: 10 }}>
+            <Text style={{ fontSize: 16, fontFamily: 'NunitoSans_7pt-Bold', color: 'black', textTransform: 'uppercase' }}>
+              DR {item.doctor.name} , {item.doctor.degrees}
+            </Text>
+
+            <Text style={{ fontFamily: 'Domine-Regular' }}>{item.doctor.designation}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', top: 5 }}>
+              <Image style={{ height: 12, width: 12 }} source={require('../../Assets/calendar.png')} />
+              {/* <Text style={{ fontFamily: 'Domine-Regular',marginLeft:10 }}>{item.date}</Text> */}
+
+              <Text style={{ fontFamily: 'Domine-Regular', marginLeft: 10 }}>
+                {new Date(item.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })}
+              </Text>
+
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 7, paddingTop: 7 }}>
+              <Image style={{ height: 12, width: 12 }} source={require('../../Assets/clock.png')} />
+              <Text style={{ fontFamily: 'Domine-Regular' }}> {item.time_range}</Text>
+            </View>
+
+          </View>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {/* <Icon name="rupee" size={15} /> */}
+            <Image style={{ height: 15, width: 15 }} source={require('../../Assets/peso.png')} />
+            <Text
+              style={{
+                fontSize: 13,
+                fontFamily: 'NunitoSans_7pt-Bold',
+                color: 'black',
+              }}>
+              {item.doctor.consultation_fee}
+            </Text>
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center' ,margin:10}}>
-          {/* <Icon name="rupee" size={15} /> */}
-          <Image style={{height:15,width:15}} source={require('../../Assets/peso.png')}/>
-          <Text
-            style={{
-              fontSize: 13,
-              fontFamily: 'NunitoSans_7pt-Bold',
-              color: 'black',
-            }}>
-            {item.doctor.consultation_fee}
-          </Text>
-        </View>
-      </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-        {/* <TouchableOpacity style={styles.button1}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          {/* <TouchableOpacity style={styles.button1}>
         <View style={{flexDirection:'row',alignItems:'center'}}>
         <Image  style={{height:12,width:12}}source={require('../../Assets/loader.png')}/>
         <Text style={styles.buttonText}> In Process</Text>
         </View>
     </TouchableOpacity> */}
-        <TouchableOpacity style={styles.button2} onPress={() => details(item.id)}>
-          <Text style={styles.buttonText}> View Details</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button2} onPress={() => details(item.id)}>
+            <Text style={styles.buttonText}> View Details</Text>
+          </TouchableOpacity>
 
+        </View>
       </View>
     </View>
-    </View>
-   
+
   );
 
   const handleBackButtonPress = () => {
     navigation.goBack();
   };
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const [selectedStatus, setSelectedStatus] = useState({
+    completed: true,
+    pending: true,
+    declined: true,
+  });
+  const [filteredApiData, setFilteredApiData] = useState([]);
+
+  const filter = useCallback(() => {
+    const filteredData = apiData.filter((item) => {
+      if (
+        (completedChecked && item.status === 2) ||
+        (pendingChecked && item.status === 0) ||
+        (declinedChecked && item.status === 3)
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    setFilteredApiData(filteredData);
+    toggleModal(); // Close the modal after applying the filter
+  }, [completedChecked, pendingChecked, declinedChecked, apiData]);
+  
+
+  const handleCompletedPress = useCallback(() => {
+    setCompletedChecked((prev) => !prev);
+  }, []);
+
+  const handlePendingPress = useCallback(() => {
+    setPendingChecked((prev) => !prev);
+  }, []);
+
+  const handleDeclinedPress = useCallback(() => {
+    setDeclinedChecked((prev) => !prev);
+  }, []);
 
 
   return (
@@ -158,56 +221,72 @@ const Appointment = ({ navigation }) => {
             My Appointment
           </Text>
         </View>
+        <TouchableOpacity onPress={toggleModal}>
+          <Image style={{ height: 25, width: 25 }} source={require('../../Assets/sort.png')} />
+        </TouchableOpacity>
       </View>
 
-      {/* <View style={{margin:15}}>
-        <Text style={styles.title1}>Upcoming</Text>
-       <View style={{flexDirection:'row',top:10}}>
-          <View style={styles.box}></View>
-       
-       <View style={{flexDirection:'column'}}>
-       <View style={{flexDirection:'row',marginLeft:10}}>
-            <Image style={{height:70,width:70}} source={require('../../Assets/doctorsimage.png')}/>
-            <View style={{flexDirection:'column',marginLeft:10}}>
-            <Text style={{fontSize:18,fontFamily:'Domine-Bold'}}>Lumbar puncture</Text>
-            <View style={{flexDirection:'row',alignItems:'center'}}>
-                <Image style={{height:12,width:12}} source={require('../../Assets/clock.png')}/>
-               <Text style={{fontFamily:'Domine-Regular'}}> at 4:30 pm</Text>
-            </View>
-            </View>
-          </View>
-
-          <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginLeft:20}}>
-        <View style={{flexDirection:'row',alignItems:'center'}}>
-          <Text>Confirmed</Text>
-          <Image source={require('../../Assets/checks.png')}/>
-        </View>
-        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center',height:35,width:90,backgroundColor:'#888888'}}> 
-          <Image source={require('../../Assets/chat.png')}/>
-          <Text style={{color:'white'}}> 
-          Chat</Text>
-        </View>
-       </View>
-       </View>
-
-       </View>
-
-    <View style={styles.separator}></View>
-
-    </View> */}
 
       <View style={{ margin: 15 }}>
-        {/* <Text style={styles.title1}>Past Appointment</Text> */}
-
         <View>
           <FlatList
-            data={apiData}
+            data={filteredApiData.length > 0 ? filteredApiData : apiData}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
           />
         </View>
 
       </View>
+
+
+      <Modal
+        // animationType="slide" // Slide animation from bottom to top
+        transparent={true}
+        visible={isModalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={styles.title1}>Filter</Text>
+              <TouchableOpacity onPress={toggleModal} style={{ padding: 5 }}>
+                <Image resizeMode="contain" style={{ height: 15, width: 15 }} source={require('../../Assets/CloseIcon.png')} />
+              </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: 'column' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <CheckBox
+                  checked={completedChecked}
+                  onPress={handleCompletedPress}
+                  checkedColor="#49b2e9"
+                />
+                <Text style={{ marginLeft: 10 }}>Completed</Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <CheckBox
+                  checked={pendingChecked}
+                  onPress={handlePendingPress}
+                  checkedColor="#49b2e9"
+                />
+                <Text style={{ marginLeft: 10 }}>Pending</Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <CheckBox
+                  checked={declinedChecked}
+                  onPress={handleDeclinedPress}
+                  checkedColor="#49b2e9"
+                />
+                <Text style={{ marginLeft: 10 }}>Declined</Text>
+              </View>
+            </View>
+
+
+            <TouchableOpacity style={styles.buttons} onPress={filter}>
+              <Text style={styles.buttonText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
     </View>
   )
@@ -227,6 +306,31 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     backgroundColor: '#49B2E9',
     height: '8%'
+  },
+  buttons: {
+    backgroundColor: '#4d91e2',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    height: 50,
+  },
+  modalContainer: {
+    flex: 1,
+    // height: height * 0.1,
+    width: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    // bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  modalContent: {
+    height: '44%',
+    width: '100%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
   },
   title: {
     flex: 1,
@@ -267,7 +371,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '34%',
     alignItems: 'center',
-    margin:10
+    margin: 10,
+    // top:8
   },
   buttonText: {
     color: 'white',

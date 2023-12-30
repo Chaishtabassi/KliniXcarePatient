@@ -89,6 +89,8 @@ const Siigninscreen = ({navigation}) => {
 
    
   const handlePhoneNumberVerification = async () => {
+    const storedDeviceToken = await AsyncStorage.getItem('deviceToken');
+    console.log(storedDeviceToken)
 
     
     if (username === '') {
@@ -118,8 +120,7 @@ const Siigninscreen = ({navigation}) => {
 
       // Define the request data
       const requestData = {
-        device_token:
-          'feaDCx7fTWSbRt7CqPiu6L:APA91bEHM2MKUVh433GRkpI8E15qsCIvKFWObomjq7rZpnhjJoDqXUr-LZe5TxdcVRaAF3eSISvis9pNkomdJyyiI_8PlfOtMjN4ZzS-VfbRay2u0NLG4hkaFKeigJy4gCfwsXROYxhd',
+        device_token: storedDeviceToken,
         identity: username,
       };
 
