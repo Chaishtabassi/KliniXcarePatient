@@ -195,24 +195,24 @@ const Signupscreen = ({ navigation, route }) => {
         formData.append('last_name', name);
         formData.append('country_code', '91');
         formData.append('gender', Number(selectedGender['label']));
-        formData.append('dob',`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
-
+        // formData.append('dob',`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+        formData.append('dob','');
         formData.append('age', age);
         formData.append('landline_number', width);
         formData.append('is_notification', 1);
         formData.append('marital_status', Selectmarital['label']);
         formData.append('patient_address', reason);
         formData.append('city', city.name);
-        formData.append('insurance', '1');
+        formData.append('insurance', '');
 
-        if (isInsured) {
-          formData.append('insurance', isInsured);
-        }
-        formData.append('post_medical_history', 'covid-19');
+        // if (isInsured) {
+        //   formData.append('insurance', isInsured);
+        // }
+        formData.append('post_medical_history', '');
         formData.append('other_medical_history', otherMedicalHistory);
-        formData.append('emergency_contact_name', 'sunita');
-        formData.append('emergency_contact_phone', '1234567898');
-        formData.append('emergency_contact_relation', 'brother');
+        formData.append('emergency_contact_name', '');
+        formData.append('emergency_contact_phone', '');
+        formData.append('emergency_contact_relation', '');
 
         console.log('hello', formData);
 

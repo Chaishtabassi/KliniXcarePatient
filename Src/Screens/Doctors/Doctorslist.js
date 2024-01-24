@@ -32,19 +32,24 @@ const Doctorslist = ({ navigation, route }) => {
   useEffect(() => {
     const fetchDoctorData = async () => {
       try {
-        // Retrieve the access_token from AsyncStorage
         const access_token = await AsyncStorage.getItem('access_token');
+        const storeuserid = await AsyncStorage.getItem('userid');
+       
+      const formData = new FormData();
+      formData.append('department_id', id);
+      formData.append('patient_id', storeuserid);
 
-        console.log(id)
+      console.log(formData);
 
         if (access_token) {
           const response = await fetch(
-            `http://teleforceglobal.com/doctor/api/v1/user/fetch-doctory-by-department?department_id=${id}`,
+            `http://teleforceglobal.com/doctor/api/v1/user/fetch-doctory-by-department`,
             {
               method: 'POST',
               headers: {
                 Authorization: `Bearer ${access_token}`,
               },
+              body: formData,
             },
           );
 

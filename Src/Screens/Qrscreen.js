@@ -136,7 +136,7 @@ const Qrscreen = ({ route, navigation }) => {
   <View style={{ flexDirection: 'column' }}>
     <Text style={styles.heading}>Type</Text>
     <Text style={styles.description}>
-      {appointmdata.slot.type === 0 ? 'On Clinic' : 'Online'}
+      {appointmdata.type == 0 ? 'At Clinic' : 'Online'}
     </Text>
   </View>
 </View>

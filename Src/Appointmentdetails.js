@@ -26,6 +26,7 @@ const Appointmentdetails = ({ navigation, route }) => {
   const callApi = async () => {
     try {
       const access_token = await AsyncStorage.getItem('access_token');
+      console.log(access_token)
       const bearerToken = access_token;
 
       const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchAppointmentDetails';
@@ -49,7 +50,6 @@ const Appointmentdetails = ({ navigation, route }) => {
         const responseText = await response.text();
         const parsed_res = JSON.parse(responseText);
 
-        console.log(parsed_res.data);
         setdoctorid(parsed_res.data.doctor.id)
         setAppointmdata(parsed_res.data);
         setIsLoading(false);

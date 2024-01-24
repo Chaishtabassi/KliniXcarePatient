@@ -20,6 +20,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Personalinfoscreen = ({ navigation, route }) => {
   const { phoneNumber, storedPin } = route.params;
+  console.log(phoneNumber);
 
   const [name, setname] = useState();
   const [lastname, setlastname] = useState();
@@ -204,7 +205,17 @@ const Personalinfoscreen = ({ navigation, route }) => {
     const storedDeviceToken = await AsyncStorage.getItem('deviceToken');
 
     try {
-      if (name == undefined || lastname == undefined || selectedGender == '' || day == undefined || month == undefined || year == undefined || age == undefined || width == undefined || Selectmarital == '' || reason == undefined || city == '') {
+      if (name == undefined || 
+        lastname == undefined ||
+         selectedGender == '' || 
+         day == undefined ||
+          month == undefined ||
+           year == undefined || 
+           age == undefined ||
+            width == undefined ||
+             Selectmarital == '' || 
+             reason == undefined || 
+             city == '') {
         Toast.show({
           type: 'error',
           text1: 'Validation Error',
@@ -214,7 +225,8 @@ const Personalinfoscreen = ({ navigation, route }) => {
       }
       else {
         const api =
-        `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=${storedDeviceToken}&identity=${phoneNumber}&is_verify=1&password=${storedPin}`;
+        `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?
+        device_token=${storedDeviceToken}&identity=${phoneNumber}&is_verify=1&password=${storedPin}`;
 
         const authToken = access_token
 

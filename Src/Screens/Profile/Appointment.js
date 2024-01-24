@@ -122,18 +122,16 @@ const Appointment = ({ navigation }) => {
               <Image style={{ height: 12, width: 12 }} source={require('../../Assets/clock.png')} />
               <Text style={{ fontFamily: 'Domine-Regular' }}> {item.time_range}</Text>
             </View>
-
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {/* <Icon name="rupee" size={15} /> */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
             <Image style={{ height: 15, width: 15 }} source={require('../../Assets/peso.png')} />
-            <Text
-              style={{
-                fontSize: 13,
-                fontFamily: 'NunitoSans_7pt-Bold',
-                color: 'black',
-              }}>
+            <Text style={{
+              fontSize: 13,
+              fontFamily: 'NunitoSans_7pt-Bold',
+              color: 'black',
+              marginLeft: 5,
+            }}>
               {item.doctor.consultation_fee}
             </Text>
           </View>
@@ -186,7 +184,7 @@ const Appointment = ({ navigation }) => {
     setFilteredApiData(filteredData);
     toggleModal(); // Close the modal after applying the filter
   }, [completedChecked, pendingChecked, declinedChecked, apiData]);
-  
+
 
   const handleCompletedPress = useCallback(() => {
     setCompletedChecked((prev) => !prev);

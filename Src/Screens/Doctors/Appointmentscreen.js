@@ -50,6 +50,8 @@ const Appointmentscreen = ({ route, navigation }) => {
 
   const fetchslot = async selectedDate => {
     const access_token = await AsyncStorage.getItem('access_token');
+    const storeuserid = await AsyncStorage.getItem('userid');
+
     const bearerToken = access_token;
     const storedoctorid = selectedDoctor.id;
     try {
@@ -61,6 +63,7 @@ const Appointmentscreen = ({ route, navigation }) => {
 
       formData.append('doctor_id', storedoctorid);
       formData.append('month', selectedDateFormatted);
+      formData.append('patient_id', storeuserid);
       console.log(formData)
 
       const authToken = bearerToken;
@@ -96,6 +99,9 @@ const Appointmentscreen = ({ route, navigation }) => {
 
   const slotapi = async (selectedDate) => {
     const access_token = await AsyncStorage.getItem('access_token');
+    console.log(access_token)
+    const storeuserid = await AsyncStorage.getItem('userid');
+    console.log(storeuserid)
     const bearerToken = access_token;
     const storedoctorid = selectedDoctor.id;
     console.log(storedoctorid)
@@ -105,16 +111,24 @@ const Appointmentscreen = ({ route, navigation }) => {
       ).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
       console.log(selectedDateFormatted)
 
-      const api = `http://teleforceglobal.com/doctor/api/v1/user/fetchDoctorSlotsByDate?doctor_id=${storedoctorid}&date=${selectedDateFormatted}`;
+      const api = `http://teleforceglobal.com/doctor/api/v1/user/fetchDoctorSlotsByDate`;
 
       console.log(selectedDateFormatted)
+
+      const formData = new FormData();
+
+      formData.append('doctor_id', storedoctorid);
+      formData.append('date', selectedDateFormatted);
+      formData.append('patient_id', storeuserid);
+      console.log(formData)
+
       const authToken = bearerToken;
       const response = await fetch(api, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-        body: {},
+        body: formData,
       });
 
       if (response) {
@@ -178,13 +192,10 @@ const Appointmentscreen = ({ route, navigation }) => {
         const serviceAmount = selectedDoctor.consultation_fee;
         const discountAmount = 0;
 
-        // Calculate subtotal
         const subtotal = serviceAmount - discountAmount;
 
-        // Assuming total tax amount is 0 for now
         const totalTaxAmount = 0.0;
 
-        // Calculate payable amount
         const payableAmount = subtotal + totalTaxAmount;
         
         var payment = ''
@@ -192,12 +203,11 @@ const Appointmentscreen = ({ route, navigation }) => {
           payment = 'payNow'
         }
         else payment = 'payAtClinic'
-        // Append values to formData
         formData.append('user_id', storeuserid);
         formData.append('doctor_id', storedoctorid);
         formData.append('date', selectedDateFormatted);
         formData.append('time', selectedTime.time_range);
-        formData.append('type', selectedType);
+        formData.append('type', selectedType === 'At Clinic' ? '0' : '1');
         formData.append('order_summary', 'hello');
         formData.append('is_coupon_applied', 0);
         formData.append('service_amount', serviceAmount);
@@ -210,9 +220,7 @@ const Appointmentscreen = ({ route, navigation }) => {
         formData.append('slot_id', slottime);
         formData.append('status', 0);
 
-
         console.log(formData)
-
 
         const response = await fetch(api, {
           method: 'POST',
@@ -398,15 +406,16 @@ const Appointmentscreen = ({ route, navigation }) => {
   };
 
   const get_number_slots = (date) => {
-    const e = currentYear + '-' + currentMonth + '-' + (date < 10 ? '0' + date : date);
-
-    if (nslots[e] && nslots[e].length > 0) {
-      const numberOfSlots = nslots[e].length;
+    const formattedDate = currentYear + '-' + (currentMonth < 10 ? '0' + currentMonth : currentMonth) + '-' + (date < 10 ? '0' + date : date);
+  
+    if (nslots[formattedDate] && nslots[formattedDate].length > 0) {
+      const numberOfSlots = nslots[formattedDate].length;
       return numberOfSlots === 1 ? '1 Slot Available' : `${numberOfSlots} Slots Available`;
     } else {
       return 'No Slots Available';
     }
   }
+  
 
   const [slottime, setslottime] = useState('')
 
@@ -554,6 +563,7 @@ const Appointmentscreen = ({ route, navigation }) => {
                       onPress={() => {
                         console.log(item.id);
                         setslottime(item.id);
+                        console.log('id',item.id)
                         setSelectedTime(item);
                       }}
                       style={[

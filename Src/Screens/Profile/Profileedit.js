@@ -20,7 +20,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Profileedit = ({navigation,route}) => {
 
-    // const { phoneNumber, storedPin } = route.params;
+    const { phoneNumber, storedPin } = route.params;
 
     const [name, setname] = useState();
     const [lastname, setlastname] = useState();
@@ -93,8 +93,11 @@ const Profileedit = ({navigation,route}) => {
             setSelectedGender(JSON.parse(responseData).data.gender)
             setSelectmarital(JSON.parse(responseData).data.marital_status)
             setreason(JSON.parse(responseData).data.patient_address)
-            setIsInsured(JSON.parse(responseData).data.insurance);
-  
+
+            var insurnc = JSON.parse(responseData).data.insurance;
+            if (insurnc == "0") setIsInsured(false);
+            else setIsInsured(true)
+
             const medicalHistory = JSON.parse(responseData).data.post_medical_history;
             setSelectedOptions(Array.isArray(medicalHistory) ? medicalHistory : []);
             // setSelectedOptions(JSON.parse(responseData).data.post_medical_history)
@@ -192,12 +195,10 @@ const Profileedit = ({navigation,route}) => {
   
     const handleInsuranceYes = () => {
       setIsInsured(true);
-      setIsNotInsured(false);
     };
   
     const handleInsuranceNo = () => {
       setIsInsured(false);
-      setIsNotInsured(true);
     };
   
     const callApi = async () => {
@@ -233,18 +234,18 @@ const Profileedit = ({navigation,route}) => {
           formData.append('last_name', name);
           formData.append('country_code', '91');
           formData.append('gender', Number(selectedGender['placeholder']));
-          formData.append('dob', `${month}-${day}-${year}`);
+          formData.append('dob', `${year}-${month}-${day}`);
           formData.append('age', age);
           formData.append('landline_number', width);
           formData.append('is_notification', 1);
           formData.append('marital_status', Selectmarital['placeholder']);
           formData.append('patient_address', reason);
           formData.append('city', city['name']);
-          formData.append('insurance', isInsured);
+          formData.append('insurance',isInsured ? 1 : 0 );
   
-          if (isInsured) {
-            formData.append('insurance', isInsured);
-          }
+          // if (isInsured) {
+          //   formData.append('insurance', isInsured);
+          // }
           formData.append('post_medical_history', selectedOptions);
           formData.append('other_medical_history', otherMedicalHistory);
           formData.append('emergency_contact_name', emergencyname);
@@ -253,7 +254,8 @@ const Profileedit = ({navigation,route}) => {
           formData.append('phone_number', height);
   
           console.log('hello', formData);
-  
+
+
           const response = await fetch(api, {
             method: 'POST',
             headers: {
@@ -271,7 +273,6 @@ const Profileedit = ({navigation,route}) => {
   
               const LoggedUser = JSON.parse(responseText).data;
               await AsyncStorage.setItem('updateddetails', JSON.stringify(LoggedUser));
-  
               return responseText;
             } else {
               console.error('Non-200 status code:', response.status);
@@ -388,7 +389,7 @@ const Profileedit = ({navigation,route}) => {
     };
   
     const calculateAge = (selectedYear, selectedMonth, selectedDay) => {
-      if (selectedDay && selectedMonth && selectedYear) {
+      if (selectedYear && selectedMonth && selectedDay) {
         // Convert the month to be zero-based
         const monthIndex = parseInt(selectedMonth) - 1;
         const dob = new Date(selectedYear, monthIndex, selectedDay);
@@ -551,7 +552,8 @@ const Profileedit = ({navigation,route}) => {
                   mode="date"
                   display="calendar"
                   onChange={handleDateChange}
-                  maximumDate={new Date()}
+                  maximumDate={new Date()} 
+                  minimumDate={new Date(1900, 0, 1)} 
                 />
               )}
               <TouchableOpacity
@@ -712,7 +714,7 @@ const Profileedit = ({navigation,route}) => {
                   No
                 </Text>
                 <Checkbox.Android
-                  status={isNotInsured ? 'checked' : 'unchecked'}
+                  status={isInsured ? 'unchecked' : 'checked'}
                   onPress={handleInsuranceNo}
                   color="#478ffd"
                 />

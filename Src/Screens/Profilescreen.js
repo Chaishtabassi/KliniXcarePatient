@@ -103,7 +103,7 @@ const Profilescreen = ({navigation}) => {
 
 
       <View style={styles.profileContainer}>
-        <Image source={require('../Assets/personalinfo.png')} style={styles.profileImage} />
+        <Image source={require('../Assets/profile.png')} style={styles.profileImage} />
         <View style={styles.profileInfo}>
           <Text style={styles.profileName}>{userName.fullname}</Text>
         </View>
