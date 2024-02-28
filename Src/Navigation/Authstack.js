@@ -36,6 +36,7 @@ import Qrscreen from '../Screens/Qrscreen';
 import Message from '../Screens/Profile/Message';
 import Scanscreen from '../Screens/Profile/Scanscreen';
 import Medicalprescription from '../Screens/Profile/Medicalprescription';
+import Labrequest from '../Screens/Labrequest';
 
 const Auth=createStackNavigator();
 
@@ -349,6 +350,15 @@ const Authstack = () => {
 <Auth.Screen
             name='medical'
             component={Medicalprescription}
+            options={{
+                headerShown:false,
+                ...TransitionPresets.RevealFromBottomAndroid
+            }}
+            />
+
+<Auth.Screen
+            name='lab'
+            component={Labrequest}
             options={{
                 headerShown:false,
                 ...TransitionPresets.RevealFromBottomAndroid

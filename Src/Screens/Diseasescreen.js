@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View ,FlatList,TouchableOpacity,Image} from 'react-native'
 import React,{useState,useEffect} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/EvilIcons';
 
 const Diseasescreen = ({navigation}) => {
     const [apiData, setApiData] = useState([]);
@@ -60,11 +61,27 @@ const Diseasescreen = ({navigation}) => {
     );
   
     const numColumns = 2;
+
+    const handleBackButtonPress = () => {
+      navigation.goBack();
+    };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white' }}>
-    <View style={{ backgroundColor: '#4a87d7',alignItems:'center' }}>
-<Text style={styles.bottomText}>DISEASES</Text>
-</View>
+<View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: '#4989d9',
+          height: '7%',
+        }}>
+        <TouchableOpacity onPress={handleBackButtonPress} style={{ marginLeft: 10 }}>
+          <Icon name="chevron-left" size={30} color="white" />
+        </TouchableOpacity>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>DISEASES</Text>
+        </View>
+      </View>
 <View style={{width: '100%'}}>
       <FlatList
         data={apiData}

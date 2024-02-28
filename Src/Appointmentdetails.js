@@ -76,9 +76,16 @@ const Appointmentdetails = ({ navigation, route }) => {
   }
 
   const medical = patien => {
-    navigation.navigate('medical', { appointmdata: patien , id: id, });
+    navigation.navigate('medical', { appointmdata: patien, id: id, });
     console.log(patien);
   };
+
+  
+  const Lab = patien => {
+    navigation.navigate('lab', { appointmdata: patien, id: id, });
+    console.log(patien);
+  };
+
 
 
   return (
@@ -98,9 +105,9 @@ const Appointmentdetails = ({ navigation, route }) => {
             Appointment Details
           </Text>
         </View>
-        <TouchableOpacity style={{ marginRight: 10 }} onPress={() => qr()}>
+        {/* <TouchableOpacity style={{ marginRight: 10 }} onPress={() => qr()}>
           <Image style={{ height: 30, width: 30 }} source={require('./Assets/qr.png')} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {isLoading ? (
@@ -127,24 +134,24 @@ const Appointmentdetails = ({ navigation, route }) => {
                 <Text style={{ fontSize: 15, fontFamily: 'NunitoSans_7pt-Bold', color: 'black' }}>{appointmdata.doctor.experience_year} year experience</Text>
               </View>
             </View>
-{ appointmdata && appointmdata.length > 0 &&
-            <View style={styles.itemContainer1}>
-              <View style={{ flexDirection: 'column' }}>
-                <Text style={styles.heading}>Date</Text>
-                <Text style={styles.description}>{appointmdata.date}</Text>
+            {appointmdata && appointmdata.length > 0 &&
+              <View style={styles.itemContainer1}>
+                <View style={{ flexDirection: 'column' }}>
+                  <Text style={styles.heading}>Date</Text>
+                  <Text style={styles.description}>{appointmdata.date}</Text>
+                </View>
+                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                  <Text style={styles.heading}>Time</Text>
+                  <Text style={styles.description}>{appointmdata.slot.time_range}</Text>
+                </View>
+                <View style={{ flexDirection: 'column' }}>
+                  <Text style={styles.heading}>Type</Text>
+                  <Text style={styles.description}>
+                    {appointmdata.slot.type == 0 ? 'On Clinic' : 'Online'}
+                  </Text>
+                </View>
               </View>
-              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Text style={styles.heading}>Time</Text>
-                <Text style={styles.description}>{appointmdata.slot.time_range}</Text>
-              </View>
-              <View style={{ flexDirection: 'column' }}>
-                <Text style={styles.heading}>Type</Text>
-                <Text style={styles.description}>
-                  {appointmdata.slot.type == 0 ? 'On Clinic' : 'Online'}
-                </Text>
-              </View>
-            </View>
-}
+            }
 
 
             <View style={styles.itemContainer1}>
@@ -210,9 +217,21 @@ const Appointmentdetails = ({ navigation, route }) => {
               </>
             )}
 
-{appointmdata.status === 3 && (
+            {appointmdata.status === 2 && (
               <>
-              <Text style={{ fontSize: 18, fontWeight: '600', color: 'black' }}>Reason:</Text>
+                <View style={styles.itemContainer1}>
+                  <Text style={styles.heading}>Lab Request</Text>
+                  <TouchableOpacity onPress={() => Lab(appointmdata)}>
+                    <Icon name='chevron-right' size={35} />
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+
+
+            {appointmdata.status === 3 && (
+              <>
+                <Text style={{ fontSize: 18, fontWeight: '600', color: 'black' }}>Reason:</Text>
                 <View style={styles.itemContainer1}>
                   <Text style={styles.heading}>{appointmdata.reason}</Text>
                 </View>

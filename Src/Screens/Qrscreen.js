@@ -87,12 +87,12 @@ const Qrscreen = ({ route, navigation }) => {
             Your Appointment booked successfully. Please wait for the doctor to accept
           </Text>
         </View>
-        <View style={{ top: 20 }}>
+        {/* <View style={{ top: 20 }}>
           <QRCode
             value={qrCodeData}
             size={200}
           />
-        </View>
+        </View> */}
 
       </View>
 

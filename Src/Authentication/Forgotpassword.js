@@ -48,8 +48,8 @@ const Forgotpassword = ({navigation}) => {
 
   const [visible, setVisible] = useState(false);
   const [country, setCountry] = useState({
-    cca2: 'IN',
-    callingCode: '91',
+    cca2: 'PH',
+    callingCode: '63',
   });
   const [username, setUsername] = useState('');
   const [verificationId, setVerificationId] = useState('');
@@ -144,7 +144,7 @@ const Forgotpassword = ({navigation}) => {
               top: 0,
               left: 0,
               zIndex: 1,
-              paddingHorizontal: 15,
+              // paddingHorizontal: 10,
               paddingTop: 25,
             }}>
             <Text style={{fontSize: 14, fontWeight: '500'}}>
@@ -168,7 +168,7 @@ const Forgotpassword = ({navigation}) => {
               height: 60,
               backgroundColor: '#e4efff',
               zIndex: 0,
-              paddingLeft: 30,
+              // paddingLeft: ,
               width: Dimensions.get('window').width * 0.8,
             }}
             theme={{colors: {primary: '#478ffd'}}}
@@ -179,8 +179,10 @@ const Forgotpassword = ({navigation}) => {
                   borderRightWidth: 1,
                   borderRadius: 0,
                   alignSelf: 'center',
+                  marginLeft:20
                 }}
                 icon="chevron-down"
+                size={23}
                 onPress={openCountryPicker}
               />
             }
@@ -212,9 +214,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomEndRadius:20,
-    borderBottomLeftRadius:20,
-    backgroundColor:'#49B2E9',
+    backgroundColor:'#4a87d7',
     height:'8%'
   },
   title: {
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#49b2e9',
+    backgroundColor:'#4a87d7',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,

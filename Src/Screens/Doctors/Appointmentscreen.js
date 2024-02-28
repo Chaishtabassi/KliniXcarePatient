@@ -468,7 +468,7 @@ const Appointmentscreen = ({ route, navigation }) => {
           <Text style={{ fontSize: 18, color: 'black', fontFamily: 'NunitoSans_7pt-Light' }}>
             Select Date
           </Text>
-
+{/* 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
             {showDatePicker && (
               <DateTimePicker
@@ -487,7 +487,7 @@ const Appointmentscreen = ({ route, navigation }) => {
             <Text style={{ fontSize: 15, fontFamily: 'NunitoSans_7pt-Light' }}>
               {monthNames[currentMonth - 1]} {currentYear}
             </Text>
-          </View>
+          </View> */}
 
         </View>
 

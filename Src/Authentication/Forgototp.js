@@ -142,9 +142,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomEndRadius:20,
-    borderBottomLeftRadius:20,
-    backgroundColor:'#49B2E9',
+    backgroundColor:'#4a87d7',
     height:'8%'
   },
   title: {
@@ -192,7 +190,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#49b2e9',
+    backgroundColor:'#4a87d7',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,

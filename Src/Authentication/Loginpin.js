@@ -100,8 +100,7 @@ const Loginpin = ({navigation}) => {
             
             const access_token = responseData.data.access_token;
             console.log(responseData.data.access_token);
-            await AsyncStorage.setItem('Login_access', access_token);
-          // await AsyncStorage.setItem('access_token', access_token);
+          await AsyncStorage.setItem('access_token', access_token);
 
 
             const get_token=responseData.data.access_token;

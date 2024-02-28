@@ -29,6 +29,14 @@ const Resetpassword = ({navigation,route}) => {
 
   const Reset = async () => {
 
+    if (text !== text1) {
+      Toast.show({
+        type: 'error',
+        text1: 'Entered pins do not match. Please try again.',
+      });
+      return; 
+    }
+
     const storedPhoneNumber = await AsyncStorage.getItem('phoneNumber');
     console.log (storedPhoneNumber)
 
@@ -121,9 +129,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomEndRadius:20,
-    borderBottomLeftRadius:20,
-    backgroundColor:'#49B2E9',
+    backgroundColor:'#4a87d7',
     height:'8%'
   },
   title: {
@@ -154,7 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#49b2e9',
+    backgroundColor: '#4a87d7',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,

@@ -81,6 +81,8 @@ const Appointment = ({ navigation }) => {
         return 'Completed';
       case 3:
         return 'Declined';
+        case 5:
+          return 'reschedule';
       default:
         return 'Unknown Status';
     }
@@ -166,6 +168,7 @@ const Appointment = ({ navigation }) => {
     completed: true,
     pending: true,
     declined: true,
+    reschedule:true
   });
   const [filteredApiData, setFilteredApiData] = useState([]);
 

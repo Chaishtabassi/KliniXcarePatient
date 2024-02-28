@@ -7,17 +7,42 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  BackHandler ,
+  Alert
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Dashboardheader from '../Component/Dashboardheader';
 import Dashboardbanner from './Dashboardbanner';
+import { useFocusEffect,useIsFocused } from '@react-navigation/native';
 
 const Dashboard = ({ navigation }) => {
 
   const [apiData, setApiData] = useState([]);
   const [apidisease, setdiseaseData] = useState([]);
 
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, [isFocused]);
   useEffect(() => {
     const news = async () => {
       try {
