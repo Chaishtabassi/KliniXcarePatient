@@ -74,7 +74,7 @@ const Loginpin = ({navigation}) => {
     
       try {
         // Construct the request URL with query parameters
-        const apiUrl = `http://teleforceglobal.com/doctor/api/v1/user/registerUser?` +
+        const apiUrl = `https://espinarealty.com/doctor/api/v1/user/registerUser?` +
           `device_token=${storedDeviceToken}` +
           `&identity=${storedPhoneNumber}` +
           `&is_verify=1` +

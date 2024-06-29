@@ -33,7 +33,7 @@ const Drawernavigation = ({navigation, visible, onClose }) => {
         return; // Handle this error case as needed
       }
   
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchMyUserDetails';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/fetchMyUserDetails';
   
       const response = await fetch(api, {
         method: 'POST',

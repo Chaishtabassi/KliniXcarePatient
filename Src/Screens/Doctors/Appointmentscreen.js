@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
+  Linking
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Backbutton from '../../Component/Backbutton';
@@ -20,11 +21,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Appointmentscreen = ({ route, navigation }) => {
   const selectedDoctor = route.params ? route.params.selectedDoctor : null;
-  console.log('selectd', selectedDoctor.consultation_fee)
-
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1;
+  var currentMonth = currentDate.getMonth() + 1;
 
   var dates = [];
   const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
@@ -45,8 +44,9 @@ const Appointmentscreen = ({ route, navigation }) => {
   const [problemDescription, setProblemDescription] = useState('');
   const [slots, setSlots] = useState([]);
   const [slotavail, setslotavail] = useState('')
-
+const[dateshow,setdateshow]=useState([])
   const [nslots, setNslots] = useState({})
+  const [showtime,setshowtime]=useState({})
 
   const fetchslot = async selectedDate => {
     const access_token = await AsyncStorage.getItem('access_token');
@@ -57,14 +57,13 @@ const Appointmentscreen = ({ route, navigation }) => {
     try {
       const selectedDateFormatted = monthNames[currentMonth - 1];
 
-      const api = `http://teleforceglobal.com/doctor/api/v1/user/fetchDoctorSlotsPerDate`;
+      const api = `https://espinarealty.com/doctor/api/v1/user/fetchSlotsPerDate`;
 
       const formData = new FormData();
 
       formData.append('doctor_id', storedoctorid);
       formData.append('month', selectedDateFormatted);
       formData.append('patient_id', storeuserid);
-      console.log(formData)
 
       const authToken = bearerToken;
       const response = await fetch(api, {
@@ -80,10 +79,8 @@ const Appointmentscreen = ({ route, navigation }) => {
         if (response.status == 200) {
           const responseText = await response.text();
           const parsed_res = JSON.parse(responseText);
-
+          console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', parsed_res)
           setNslots(parsed_res.data);
-
-          console.log('slot', parsed_res.data)
 
           setslotavail(JSON.stringify(parsed_res, null, 2));
         } else {
@@ -97,28 +94,139 @@ const Appointmentscreen = ({ route, navigation }) => {
     }
   };
 
-  const slotapi = async (selectedDate) => {
+  const slotapi2 = async (location_id) => {
+    const storeuserid = await AsyncStorage.getItem('userid');
     const access_token = await AsyncStorage.getItem('access_token');
     console.log(access_token)
-    const storeuserid = await AsyncStorage.getItem('userid');
-    console.log(storeuserid)
     const bearerToken = access_token;
     const storedoctorid = selectedDoctor.id;
-    console.log(storedoctorid)
     try {
-      const selectedDateFormatted = `${currentYear}-${String(
-        currentMonth,
-      ).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
-      console.log(selectedDateFormatted)
+      const api = `https://espinarealty.com/doctor/api/v1/user/fetchSlotByLocation`;
+      const formData = new FormData();
+      formData.append('doctor_id', storedoctorid);
+      formData.append('patient_id', storeuserid);
+      formData.append('location_id', location_id);
+      formData.append('start', '0');
+      formData.append('limit', '20');
 
-      const api = `http://teleforceglobal.com/doctor/api/v1/user/fetchDoctorSlotsByDate`;
+      console.log(formData)
+      const authToken = bearerToken;
+      const response = await fetch(api, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: formData,
+      });
 
-      console.log(selectedDateFormatted)
+      if (response && response.status === 200) {
+        const responseText = await response.text();
+        const parsed_res = JSON.parse(responseText);
+        console.log('dateeeeeeeeeeeeeeee', parsed_res.data)
+        setdateshow(Object.keys(parsed_res.data));
+        setshowtime(parsed_res.data)
+        // if (parsed_res.data && parsed_res.data.length > 0) {
+        //   setdateshow(Object.keys(parsed_res.data));
+        // } else {
+        //   if (parsed_res.message == "fetch slots successfully") setmsg("No Slots Available");
+        //   else setmsg("No Slots Available");
+        // }
+        // console.log(Object.keys(parsed_res.data))
+      } else {
+        console.error('Response is undefined');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+
+  const [gettime, setgettime] = useState('')
+
+  const slotime = async (date, Month) => {
+    const access_token = await AsyncStorage.getItem('access_token');
+    const storeuserid = await AsyncStorage.getItem('userid');
+    const bearerToken = access_token;
+    const storedoctorid = selectedDoctor.id;
+    console.log(Month != null);
+    if (Month != null) {
+      currentMonth = Month;
+    };
+    try {
+      // const selectedDateFormatted = `${currentYear}-${String(
+      //   currentMonth).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
+      // console.log(selectedDateFormatted)
+
+      const api = `https://espinarealty.com/doctor/api/v1/user/fetchSlotByDateAndLocation`;
+
 
       const formData = new FormData();
 
       formData.append('doctor_id', storedoctorid);
-      formData.append('date', selectedDateFormatted);
+      formData.append('patient_id', storeuserid);
+      formData.append('date', date);
+      formData.append('location_id', Locationid);
+      console.log(formData)
+
+      const authToken = bearerToken;
+      const response = await fetch(api, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: formData,
+      });
+
+      if (response) {
+        if (response.status === 200) {
+          const responseText = await response.text();
+          const parsed_res = JSON.parse(responseText);
+          console.log("================================");
+          console.log('timeeeeeeeeeeeeeeeeeeeeeee', parsed_res);
+          if (parsed_res.data && parsed_res.data.length > 0) {
+            const firstSlotId = parsed_res.data.id;
+            setgettime(parsed_res.data);
+
+            // await AsyncStorage.setItem('firstSlotId', String(firstSlotId)); 
+          } else {
+            setmsg("No Slots Available");
+            // console.error('No slots found in the response');
+          }
+        } else {
+          console.error('Non-200 status codeeeeeee:', response.status);
+        }
+      } else {
+        console.error('Response is undefined');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const slotapi = async (date) => {
+    const access_token = await AsyncStorage.getItem('access_token');
+    console.log(access_token)
+    const storeuserid = await AsyncStorage.getItem('userid');
+    const bearerToken = access_token;
+    const storedoctorid = selectedDoctor.id;
+    // console.log(Month != null);
+    // if (Month != null) {
+    //   currentMonth = Month;
+    // };
+    try {
+      // const selectedDateFormatted = `${currentYear}-${String(
+      //   currentMonth).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
+      // console.log(selectedDateFormatted)
+
+      const api = `https://espinarealty.com/doctor/api/v1/user/fetchSlotByLocation`;
+
+      const formData = new FormData();
+
+      formData.append('doctor_id', storedoctorid);
+      formData.append('date', date);
+      formData.append('location_id', Locationid);
+      formData.append('start', '0');
+      formData.append('limit', '10');
       formData.append('patient_id', storeuserid);
       console.log(formData)
 
@@ -136,15 +244,14 @@ const Appointmentscreen = ({ route, navigation }) => {
           const responseText = await response.text();
           const parsed_res = JSON.parse(responseText);
           console.log("================================");
-          console.log(parsed_res);
+          console.log('paaaaaaaaaaaaaa', responseText);
           if (parsed_res.data && parsed_res.data.length > 0) {
             const firstSlotId = parsed_res.data.id;
             setSlots(parsed_res.data);
 
             // await AsyncStorage.setItem('firstSlotId', String(firstSlotId)); 
           } else {
-            if(parsed_res.message == "fetch slots successfully") setmsg("No Slots Available");
-            else setmsg(parsed_res.message);
+            setmsg("No Slots Available");
             // console.error('No slots found in the response');
           }
           console.log(parsed_res.data)
@@ -159,7 +266,10 @@ const Appointmentscreen = ({ route, navigation }) => {
     }
   };
 
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const callApi = async () => {
+    setIsDisabled(true);
     const access_token = await AsyncStorage.getItem('access_token');
     const bearerToken = access_token;
 
@@ -179,13 +289,13 @@ const Appointmentscreen = ({ route, navigation }) => {
       }
 
       else {
-        const api = `http://teleforceglobal.com/doctor/api/v1/user/addNewAppointment`;
-
+        const api = `https://espinarealty.com/doctor/api/v1/user/addNewAppointment`;
+        const time_range = `${selectedTime.start_time}-${selectedTime.end_time}`;
         const authToken = bearerToken;
-
-        const selectedDateFormatted = `${currentYear}-${String(
-          currentMonth,
-        ).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
+        // const selectedDateFormatted = `${currentYear}-${String(
+        //   currentMonth,
+        // ).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
+             const selectedDateFormatted = `${String(selectedDate).padStart(2, '0')}`;
 
         const formData = new FormData();
 
@@ -197,16 +307,16 @@ const Appointmentscreen = ({ route, navigation }) => {
         const totalTaxAmount = 0.0;
 
         const payableAmount = subtotal + totalTaxAmount;
-        
-        var payment = ''
-        if(selectedType == 'Online'){
-          payment = 'payNow'
-        }
-        else payment = 'payAtClinic'
+
+        var payment = 'payNow'
+        // if (selectedType == 'Online') {
+        //   payment = 'payNow'
+        // }
+        // else payment = 'payAtClinic'
         formData.append('user_id', storeuserid);
         formData.append('doctor_id', storedoctorid);
         formData.append('date', selectedDateFormatted);
-        formData.append('time', selectedTime.time_range);
+        formData.append('time', time_range);
         formData.append('type', selectedType === 'At Clinic' ? '0' : '1');
         formData.append('order_summary', 'hello');
         formData.append('is_coupon_applied', 0);
@@ -221,31 +331,88 @@ const Appointmentscreen = ({ route, navigation }) => {
         formData.append('status', 0);
 
         console.log(formData)
+        console.log(payment)
 
         const response = await fetch(api, {
           method: 'POST',
           headers: {
-            // 'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${authToken}`,
           },
-          // body: JSON.stringify(),
           body: formData,
         });
 
         if (response) {
           if (response.status === 200) {
             const responseText = await response.text();
-
+            setIsDisabled(false); 
+            if (payment == "payNow") {
+              console.log('onlineeeeeeee')
+              const appointmentId = JSON.parse(responseText).data.id;
+              await makePayment(appointmentId);
+            }
             return responseText;
           } else {
+            setIsDisabled(false); 
             console.error('Non-200 status code:', response.status);
           }
         } else {
+          setIsDisabled(false); 
           console.error('Response is undefined');
         }
       }
     } catch (error) {
+      setIsDisabled(false); 
       console.error('erorrr', error);
+    }
+  };
+
+  const makePayment = async (appointmentId) => {
+    const access_token = await AsyncStorage.getItem('access_token');
+    var payment = ''
+    payment = 'payNow'
+    // var payment = ''
+    // if (selectedType == 'Online') {
+    //   payment = 'payNow'
+    // }
+    // else payment = 'payAtClinic'
+    const bearerToken = access_token;
+    try {
+      const api = `https://espinarealty.com/doctor/api/v1/user/makePayment`;
+
+      const formData = new FormData();
+
+      formData.append('appointment_id', appointmentId);
+      formData.append('payment_type', payment);
+      console.log(formData)
+
+      const authToken = bearerToken;
+      const response = await fetch(api, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: formData,
+      });
+
+
+      if (response) {
+        if (response.status == 200) {
+          const responseText = await response.text();
+          const parsed_res = JSON.parse(responseText);
+
+          console.log('payment', parsed_res.data)
+          if (parsed_res.status === true && parsed_res.return_url) {
+            Linking.openURL(parsed_res.return_url);
+          }
+
+        } else {
+          console.error('Non-200 status code:', response.status);
+        }
+      } else {
+        console.error('Response is undefined');
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
 
@@ -310,12 +477,13 @@ const Appointmentscreen = ({ route, navigation }) => {
   const [showTimeSelection, setShowTimeSelection] = useState(false);
 
   const getslots = (date) => {
-    setSelectedDate(date);
-    slotapi(date);
-    setShowTimeSelection(true); // Pass the selected date to slotapi
-  };
+    setSlots(showtime[date])
 
-  const [selectedDocuments, setSelectedDocuments] = useState([]);
+    setSelectedDate(date);
+    slotime(date);
+    slotapi(date, null);
+    setShowTimeSelection(true); 
+  };
 
   const handleBackButtonPress = () => {
     navigation.goBack();
@@ -348,17 +516,6 @@ const Appointmentscreen = ({ route, navigation }) => {
     setSelectedImageUri(null);
   };
 
-  const callPhoneNumber = phoneNumber => {
-    if (phoneNumber) {
-      phonecall(phoneNumber, true);
-    }
-  };
-
-
-  const chat = () => {
-    navigation.navigate('message');
-  };
-
   const [selectedDatee, setSelectedDatee] = useState(new Date());
   const [msg, setmsg] = useState('');
 
@@ -376,22 +533,18 @@ const Appointmentscreen = ({ route, navigation }) => {
       const selectedMonth = date.getMonth() + 1;
       const selectedDay = date.getDate();
 
-      // Format the date as "YYYY-MM-DD"
       const formattedDate = `${String(selectedDay).padStart(2, '0')}`;
+      const formattedMonth = selectedMonth;
 
-      // Set selectedDate state
       setSelectedDate(formattedDate);
 
-      // Call the slotapi with the formatted date
-      await slotapi(formattedDate);
+      await slotapi(formattedDate, formattedMonth);
 
-      // Now, you need to set the selectedTime state as well
-      // For example, you can set it to the first slot in the slots array
+      setShowTimeSelection(true);
       if (slots.length > 0) {
         setSelectedTime(slots[0]);
       }
 
-      // Set year, month, and day states
       setYear(selectedYear.toString());
       setMonth(selectedMonth.toString().padStart(2, '0'));
       setDay(selectedDay.toString().padStart(2, '0'));
@@ -401,23 +554,24 @@ const Appointmentscreen = ({ route, navigation }) => {
 
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const showDatepicker = () => {
-    setShowDatePicker(true);
-  };
 
   const get_number_slots = (date) => {
-    const formattedDate = currentYear + '-' + (currentMonth < 10 ? '0' + currentMonth : currentMonth) + '-' + (date < 10 ? '0' + date : date);
-  
-    if (nslots[formattedDate] && nslots[formattedDate].length > 0) {
-      const numberOfSlots = nslots[formattedDate].length;
-      return numberOfSlots === 1 ? '1 Slot Available' : `${numberOfSlots} Slots Available`;
-    } else {
-      return 'No Slots Available';
-    }
+    const slotse = showtime[date] || [];
+    // setSlots(showtime[date])
+    return `${slotse.length} Slot Available`;
+    // const formattedDate = currentYear + '-' + (currentMonth < 10 ? '0' + currentMonth : currentMonth) + '-' + (date < 10 ? '0' + date : date);
+    // if (nslots[formattedDate] && nslots[formattedDate].length > 0) {
+    //   const numberOfSlots = nslots[formattedDate].length;
+    //   return numberOfSlots === 1 ? '1 Slot Available' : `${numberOfSlots} Slots Available`;
+    // } else {
+    //   return 'No Slots Available';
+    // }
   }
-  
+
 
   const [slottime, setslottime] = useState('')
+  const [Locationid, setlocationid] = useState('')
+  const [locationselect, setlocationselect] = useState('')
 
   return (
     <View style={styles.container}>
@@ -428,11 +582,7 @@ const Appointmentscreen = ({ route, navigation }) => {
           backgroundColor: '#4989d9',
           height: '7%',
         }}>
-        <TouchableOpacity
-          onPress={handleBackButtonPress}
-          style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+       <Backbutton/>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
             Select Date & Time
@@ -457,43 +607,58 @@ const Appointmentscreen = ({ route, navigation }) => {
         </View>
       )}
       <View style={styles.separator}></View>
+      <View style={{ padding: 10 }}>
+        <Text style={{ fontSize: 18, color: 'black', fontFamily: 'NunitoSans_7pt-Light' }}>
+          Select Location
+        </Text>
+      </View>
+      <View style={{ padding: 10 }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {selectedDoctor && (
+            selectedDoctor.service_locations.map((location, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  setlocationselect(index);
+                  setlocationid(location.id);
+                  slotapi2(location.id);
+                }}
+                style={[
+                  styles.appoContainer,
+                  locationselect === index
+                    ? { backgroundColor: '#49b2e9' }
+                    : { backgroundColor: '#e3e1da' },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.dateText,
+                    locationselect === index ? { color: 'white' } : { color: 'black' },
+                  ]}
+                >
+                  {location.hospital_title}
+                </Text>
+                <Text
+                  style={[
+                    styles.dateText,
+                    locationselect === index ? { color: 'white' } : { color: 'black' },
+                  ]}
+                >
+                  {location.hospital_address}
+                </Text>
+              </TouchableOpacity>
+            ))
+          )}
+        </ScrollView>
+      </View>
+
 
       <ScrollView style={styles.scrollViewContainer}>
-        <View
-          style={{
-            margin: 10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <Text style={{ fontSize: 18, color: 'black', fontFamily: 'NunitoSans_7pt-Light' }}>
-            Select Date
-          </Text>
-{/* 
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            {showDatePicker && (
-              <DateTimePicker
-                value={selectedDatee}
-                mode="date"
-                display="calendar"
-                onChange={handleDateChange}
-                minimumDate={new Date()}
-              />
-            )}
-            <TouchableOpacity
-              style={{ marginRight: 7 }}
-              onPress={() => setShowDatePicker(true)}>
-              <Icon name="calendar" size={30} color="black" />
-            </TouchableOpacity>
-            <Text style={{ fontSize: 15, fontFamily: 'NunitoSans_7pt-Light' }}>
-              {monthNames[currentMonth - 1]} {currentYear}
-            </Text>
-          </View> */}
-
-        </View>
 
         <View style={{ padding: 10 }}>
           <FlatList
-            data={dates}
+            // data={dates}
+            data={dateshow}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(date, index) => index.toString()}
@@ -515,16 +680,17 @@ const Appointmentscreen = ({ route, navigation }) => {
                       selectedDate === date ? { color: 'white' } : { color: 'black' },
                     ]}
                   >
-                    {currentDate.getDate() === date ? 'Today' : getDayName(currentYear, currentDate.getMonth(), date)}
+                    {date}
+                    {/* {currentDate.getDate() === date ? 'Today' : getDayName(currentYear, currentDate.getMonth(), date)} */}
                   </Text>
-                  <Text
+                  {/* <Text
                     style={[
                       styles.dateText,
                       selectedDate === date ? { color: 'white' } : { color: 'black' },
                     ]}
                   >
                     {date}
-                  </Text>
+                  </Text> */}
                 </View>
 
 
@@ -554,16 +720,15 @@ const Appointmentscreen = ({ route, navigation }) => {
               <View style={{ marginLeft: 10 }}>
 
                 <FlatList
-                  data={slots}
+                  data={gettime}
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       onPress={() => {
-                        console.log(item.id);
                         setslottime(item.id);
-                        console.log('id',item.id)
+                        console.log('id', item.id)
                         setSelectedTime(item);
                       }}
                       style={[
@@ -598,6 +763,7 @@ const Appointmentscreen = ({ route, navigation }) => {
             )}
           </View>
         )}
+
 
         <View style={{ margin: 10 }}>
           <Text style={{ fontSize: 18, color: 'black', fontFamily: 'NunitoSans_7pt-Light', top: 10 }}>
@@ -704,7 +870,7 @@ const Appointmentscreen = ({ route, navigation }) => {
         <View>
 
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <TouchableOpacity style={styles.button} onPress={Payment}>
+            <TouchableOpacity  disabled={isDisabled} style={[styles.button, isDisabled && styles.buttonDisabled]} onPress={Payment}>
               <Text style={styles.buttonText}>Book Appointment</Text>
             </TouchableOpacity>
           </View>
@@ -742,6 +908,9 @@ function getDayName(year, month, day) {
 export default Appointmentscreen;
 
 const styles = StyleSheet.create({
+  buttonDisabled: {
+    backgroundColor: 'gray', // Disabled state color
+  },
   scrollViewContainer: {
     flex: 1, // Fill the available space
     backgroundColor: 'white',
@@ -793,7 +962,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 20,
     borderRadius: 10,
-    width: 100,
+    // width: 100,
+    padding:10,
     height: 58,
   },
   problemInput: {

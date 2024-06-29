@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
+import Backbutton from './Component/Backbutton';
 
 const Appointmentdetails = ({ navigation, route }) => {
   const { id } = route.params;
@@ -29,7 +30,7 @@ const Appointmentdetails = ({ navigation, route }) => {
       console.log(access_token)
       const bearerToken = access_token;
 
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchAppointmentDetails';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/fetchAppointmentDetails';
 
       const authToken = bearerToken;
 
@@ -97,9 +98,7 @@ const Appointmentdetails = ({ navigation, route }) => {
           backgroundColor: '#4989d9',
           height: '7%',
         }}>
-        <TouchableOpacity onPress={handleBackButtonPress} style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+       <Backbutton/>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
             Appointment Details

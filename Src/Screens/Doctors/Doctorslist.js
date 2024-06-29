@@ -12,6 +12,7 @@ import React, { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Rating } from 'react-native-ratings';
+import Backbutton from '../../Component/Backbutton';
 
 const Doctorslist = ({ navigation, route }) => {
   const { title, id } = route.params;
@@ -43,7 +44,7 @@ const Doctorslist = ({ navigation, route }) => {
 
         if (access_token) {
           const response = await fetch(
-            `http://teleforceglobal.com/doctor/api/v1/user/fetch-doctory-by-department`,
+            `https://espinarealty.com/doctor/api/v1/user/fetch-doctory-by-department`,
             {
               method: 'POST',
               headers: {
@@ -153,7 +154,7 @@ const Doctorslist = ({ navigation, route }) => {
             {item.today_slots.length > 0 ? (
               item.today_slots.map((slot, index) => (
                 <View key={index} style={{ marginRight: 10, marginBottom: 10, borderWidth: 1, width: 'auto', borderColor: '#e3e1da', padding: 6, marginTop: 8 }}>
-                  <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>{slot.time_range}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>{slot.start_time}-{slot.end_time}</Text>
                 </View>
               ))
             ) : (
@@ -171,7 +172,7 @@ const Doctorslist = ({ navigation, route }) => {
             {item.tomorrow_slots.length > 0 ? (
               item.tomorrow_slots.map((slot, index) => (
                 <View key={index} style={{ marginRight: 10, marginBottom: 10, borderWidth: 1, width: 'auto', borderColor: '#e3e1da', padding: 6, marginTop: 8 }}>
-                  <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>{slot.time_range}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: '500', color: '#757876' }}>{slot.start_time}-{slot.end_time}</Text>
                 </View>
               ))
             ) : (
@@ -209,11 +210,7 @@ const Doctorslist = ({ navigation, route }) => {
           backgroundColor: '#4989d9',
           height: '7%',
         }}>
-        <TouchableOpacity
-          onPress={handleBackButtonPress}
-          style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={15} color="white" />
-        </TouchableOpacity>
+      <Backbutton/>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
             {title}

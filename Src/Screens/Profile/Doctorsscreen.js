@@ -25,7 +25,7 @@ const Doctorsscreen = ({navigation}) => {
 
     try {
         const api = 
-        `http://teleforceglobal.com/doctor/api/v1/user/fetchPatientAppointmentWithDoctor`;
+        `https://espinarealty.com/doctor/api/v1/user/fetchPatientAppointmentWithDoctor`;
 
       const authToken = bearerToken
         
@@ -134,11 +134,7 @@ const Doctorsscreen = ({navigation}) => {
           padding: 10
           // height: '5%',
         }}>
-        <TouchableOpacity
-          onPress={handleBackButtonPress}
-          style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+      <Backbutton/>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
           My Doctors

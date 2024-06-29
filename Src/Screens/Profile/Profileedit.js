@@ -73,7 +73,7 @@ const Profileedit = ({navigation,route}) => {
           return; // Handle this error case as needed
         }
   
-        const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchMyUserDetails';
+        const api = 'https://espinarealty.com/doctor/api/v1/user/fetchMyUserDetails';
   
         const response = await fetch(api, {
           method: 'POST',
@@ -127,7 +127,7 @@ const Profileedit = ({navigation,route}) => {
       const access_token = await AsyncStorage.getItem('access_token');
   
   
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/getCities';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/getCities';
       const authToken = access_token
   
       const formData = new FormData();
@@ -159,7 +159,7 @@ const Profileedit = ({navigation,route}) => {
     const countriesdata = async () => {
       const access_token = await AsyncStorage.getItem('access_token');
   
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/getAllCountries';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/getAllCountries';
       const bearerToken = access_token;
   
       try {
@@ -217,7 +217,7 @@ const Profileedit = ({navigation,route}) => {
         }
         else {
           const api =
-          `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=${storedDeviceToken}&identity=${phoneNumber}&is_verify=1&password=${storedPin}`;
+          `https://espinarealty.com/doctor/api/v1/user/updateUserDetails?device_token=${storedDeviceToken}&identity=${phoneNumber}&is_verify=1&password=${storedPin}`;
   
           const authToken = access_token
   
@@ -885,7 +885,7 @@ const styles = StyleSheet.create({
       borderRadius: 8,
     },
     button: {
-      backgroundColor: '#49b2e9',
+      backgroundColor: '#4a87d7',
       paddingHorizontal: 20,
       paddingVertical: 12,
       borderRadius: 8,

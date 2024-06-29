@@ -116,7 +116,7 @@ const Siigninscreen = ({navigation}) => {
     try {
       // Construct the request URL
       const apiUrl =
-        'http://teleforceglobal.com/doctor/api/v1/user/registerUser';
+        'https://espinarealty.com/doctor/api/v1/user/registerUser';
 
       // Define the request data
       const requestData = {
@@ -195,7 +195,8 @@ const Siigninscreen = ({navigation}) => {
       }}>
 
 <View style={{ justifyContent: 'center',alignItems:'center' }}>
-          <Image source={require('../Assets/Logo.png')} style={styles.logo1}/>
+          {/* <Image source={require('../Assets/Logo.png')} style={styles.logo1}/> */}
+          <Image source={require('../Assets/newlogo.png')} resizeMode="contain" style={styles.logo1}/>
           <Text style={{fontSize:20,fontWeight:'700',bottom:20,color:'black'}}>Patient App</Text>
         </View>
 
@@ -291,6 +292,7 @@ const Siigninscreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <Text style={{color:'black',position:'absolute',bottom:0}}>Powered by KliniXKare</Text>
       </View>
     </View>
   </KeyboardAvoidingView>

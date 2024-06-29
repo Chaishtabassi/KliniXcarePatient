@@ -2,6 +2,7 @@ import { StyleSheet, Text, View ,FlatList,TouchableOpacity,Image} from 'react-na
 import React,{useState,useEffect} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import Backbutton from './Component/Backbutton';
 
 const Specialistscreen = ({navigation}) => {
   const [apiData, setApiData] = useState([]);
@@ -14,7 +15,7 @@ const Specialistscreen = ({navigation}) => {
         console.log(bearerToken);
 
         const response = await fetch(
-          'http://teleforceglobal.com/doctor/api/v1/user/fetch-department',
+          'https://espinarealty.com/doctor/api/v1/user/fetch-department',
           {
             method: 'POST',
             headers: {
@@ -69,9 +70,7 @@ const Specialistscreen = ({navigation}) => {
           backgroundColor: '#4989d9',
           height: '7%',
         }}>
-        <TouchableOpacity onPress={handleBackButtonPress} style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+      <Backbutton/>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>SPECIALIST</Text>
         </View>
@@ -82,6 +81,7 @@ const Specialistscreen = ({navigation}) => {
               renderItem={renderItem}
               keyExtractor={item => item.id.toString()}
               numColumns={2}
+              contentContainerStyle={{paddingBottom: 50}}
               // horizontal={true}
               // showsHorizontalScrollIndicator={false}
             />

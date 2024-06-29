@@ -18,7 +18,7 @@ const Inboxscreen = ({navigation}) => {
       const storeuserid = await AsyncStorage.getItem('userid');
       const bearerToken = access_token;
   
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchDoctorsWithLastChat';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/fetchDoctorsWithLastChat';
   
       const authToken = bearerToken;
   

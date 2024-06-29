@@ -2,6 +2,7 @@ import { StyleSheet, Text, View ,FlatList,TouchableOpacity,Image} from 'react-na
 import React,{useState,useEffect} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import Backbutton from '../Component/Backbutton';
 
 const Diseasescreen = ({navigation}) => {
     const [apiData, setApiData] = useState([]);
@@ -18,7 +19,7 @@ const Diseasescreen = ({navigation}) => {
     
     
             const response = await fetch(
-              'http://teleforceglobal.com/doctor/api/fetchDisease',
+              'https://espinarealty.com/doctor/api/fetchDisease',
               {
                 method: 'POST',
                 headers: {
@@ -46,7 +47,7 @@ const Diseasescreen = ({navigation}) => {
   
     const doctorslist = item => {
       console.log('heloo', item);
-      navigation.navigate('doctors', { title:item.category.title, id: item.id });
+      navigation.navigate('doctors', { title:item.category.title, id:item.category.id });
     };
   
     const renderItem = ({item}) => (
@@ -75,9 +76,7 @@ const Diseasescreen = ({navigation}) => {
           backgroundColor: '#4989d9',
           height: '7%',
         }}>
-        <TouchableOpacity onPress={handleBackButtonPress} style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+       <Backbutton/>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>DISEASES</Text>
         </View>

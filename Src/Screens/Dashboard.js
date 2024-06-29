@@ -31,18 +31,21 @@ const Dashboard = ({ navigation }) => {
           onPress: () => null,
           style: 'cancel',
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        { text: 'YES', onPress: () => BackHandler.exitApp() },
       ]);
       return true;
     };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
+    if (isFocused) {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
 
-    return () => backHandler.remove();
+      return () => backHandler.remove();
+    }
   }, [isFocused]);
+  
   useEffect(() => {
     const news = async () => {
       try {
@@ -51,7 +54,7 @@ const Dashboard = ({ navigation }) => {
         console.log('heloooooooooooooooooo', bearerToken);
 
         const response = await fetch(
-          'http://teleforceglobal.com/doctor/api/v1/user/getLetestNews',
+          'https://espinarealty.com/doctor/api/v1/user/getLetestNews',
           {
             method: 'POST',
             headers: {
@@ -84,7 +87,7 @@ const Dashboard = ({ navigation }) => {
         console.log('heloooooooooooooooooo', bearerToken);
 
         const response = await fetch(
-          'http://teleforceglobal.com/doctor/api/v1/user/fetch-department',
+          'https://espinarealty.com/doctor/api/v1/user/fetch-department',
           {
             method: 'POST',
             headers: {
@@ -119,7 +122,7 @@ const Dashboard = ({ navigation }) => {
 
 
         const response = await fetch(
-          'http://teleforceglobal.com/doctor/api/fetchDisease',
+          'https://espinarealty.com/doctor/api/fetchDisease',
           {
             method: 'POST',
             headers: {
@@ -172,7 +175,7 @@ const Dashboard = ({ navigation }) => {
   };
 
   const doctorslis = item => {
-    navigation.navigate('doctors', { title: item.category.title, id: item.id });
+    navigation.navigate('doctors', { title: item.category.title, id:item.category.id});
   };
 
   const [slicedApiData, setSlicedApiData] = useState([]);

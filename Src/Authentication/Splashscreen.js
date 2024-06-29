@@ -12,7 +12,8 @@ const Splashscreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../Assets/Logo.png')}   style={styles.logo} />
+      {/* <Image source={require('../Assets/Logo.png')}   style={styles.logo} /> */}
+      <Image source={require('../Assets/newlogo.png')} resizeMode="contain"  style={styles.logo} />
     </View>
   );
 };

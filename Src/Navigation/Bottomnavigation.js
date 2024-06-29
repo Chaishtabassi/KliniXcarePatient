@@ -2,13 +2,8 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Dashboard from '../Screens/Dashboard';
-import Searchscreen from '../Screens/Searchscreen';
-import Notificationscreen from '../Screens/Notificationscreen';
 import Inboxscreen from '../Screens/Inboxscreen';
-import Specialistscreen from '../Specialistscreen';
-import Profilescreen from '../Screens/Profilescreen';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import Bookappointment from '../Screens/Bookappointment';
 import Appointment from '../Screens/Profile/Appointment';
 
 
@@ -18,10 +13,10 @@ const Bottomnavigation = () => {
     return(
         <Clienttab.Navigator
         screenOptions={({ route }) => ({
-            tabBarStyle: { backgroundColor: '#4a87d7',height:60 },
+            tabBarStyle: { backgroundColor: '#4a87d7',height:55 },
             tabBarInactiveTintColor: 'white',
             tabBarActiveTintColor:'white',
-            tabBarLabelStyle: { fontSize: 13 },
+            tabBarLabelStyle: { fontSize: 13,bottom:4},
           })}
         >
             <Clienttab.Screen
@@ -35,18 +30,6 @@ const Bottomnavigation = () => {
                 )
             }}
             />
-              {/* <Clienttab.Screen
-            name='bookappointment'
-            component={Bookappointment}
-            options={{
-                headerShown:false,
-                tabBarLabel:'Book Appointment',
-                tabBarIcon:({color,size})=>(
-                   <Icon name='calendar' color='white' size={22}/>
-
-                )
-            }}
-            /> */}
                  <Clienttab.Screen
             name='appoitmentprofile'
             component={Appointment}
@@ -71,19 +54,6 @@ const Bottomnavigation = () => {
                 )
             }}
             />
-                 {/* <Clienttab.Screen
-            name='profile'
-            component={Profilescreen}
-            options={{
-                headerShown:false,
-                tabBarLabel:'Profile',
-                tabBarIcon:({color,size})=>(
-                    <Image style={{height:27,width:27}} source={require('../Assets/bottomprofile.png')}/>
-
-                )
-            }}
-            /> */}
-            
         </Clienttab.Navigator>
     )
 }

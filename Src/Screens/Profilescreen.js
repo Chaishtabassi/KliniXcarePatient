@@ -24,7 +24,7 @@ const Profilescreen = ({navigation}) => {
         return; // Handle this error case as needed
       }
   
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchMyUserDetails';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/fetchMyUserDetails';
   
       const response = await fetch(api, {
         method: 'POST',
@@ -103,7 +103,7 @@ const Profilescreen = ({navigation}) => {
 
 
       <View style={styles.profileContainer}>
-        <Image source={require('../Assets/profile.png')} style={styles.profileImage} />
+        {/* <Image source={require('../Assets/profile.png')} style={styles.profileImage} /> */}
         <View style={styles.profileInfo}>
           <Text style={styles.profileName}>{userName.fullname}</Text>
         </View>

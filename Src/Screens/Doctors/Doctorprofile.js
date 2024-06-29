@@ -12,6 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Rating } from 'react-native-ratings';
+import Backbutton from '../../Component/Backbutton';
 
 const Doctorprofile = ({ navigation, route }) => {
   const selectedDoctor = route.params ? route.params.selectedDoctor : null;
@@ -35,7 +36,7 @@ const Doctorprofile = ({ navigation, route }) => {
       const storedoctorid = selectedDoctor.id;
 
       try {
-        const api = `http://teleforceglobal.com/doctor/api/v1/user/fetchDoctorProfile`;
+        const api = `https://espinarealty.com/doctor/api/v1/user/fetchDoctorProfile`;
 
         const authToken = bearerToken;
 
@@ -83,11 +84,7 @@ const Doctorprofile = ({ navigation, route }) => {
           backgroundColor: '#4a87d7',
           height: '7%',
         }}>
-        <TouchableOpacity
-          onPress={handleBackButtonPress}
-          style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+     <Backbutton/>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
             Doctor's Profile

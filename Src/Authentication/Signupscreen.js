@@ -60,7 +60,7 @@ const Signupscreen = ({ navigation, route }) => {
     const access_token = await AsyncStorage.getItem('access_token');
 
 
-    const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/getCities';
+    const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/getCities';
     const authToken = access_token
 
     const formData = new FormData();
@@ -91,7 +91,7 @@ const Signupscreen = ({ navigation, route }) => {
   const countriesdata = async () => {
     const access_token = await AsyncStorage.getItem('access_token');
 
-    const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/getAllCountries';
+    const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/getAllCountries';
     const bearerToken = access_token;
 
     try {
@@ -175,7 +175,7 @@ const Signupscreen = ({ navigation, route }) => {
       // }
       // else {
         const api =
-          `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?device_token=${storedDeviceToken}` +
+          `https://espinarealty.com/doctor/api/v1/user/updateUserDetails?device_token=${storedDeviceToken}` +
           `${phoneNumber}` +
           '&is_verify=1&password=' +
           `${pin}`;

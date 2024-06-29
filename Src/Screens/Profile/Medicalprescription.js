@@ -5,9 +5,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import Backbutton from '../../Component/Backbutton';
 
 const Medicalprescription = ({ route, navigation }) => {
   const { id } = route.params;
+  console.log(id)
   const [certificateUrl, setCertificateUrl] = useState('');
   const [prescriptionUrl, setPrescriptionUrl] = useState('');
   const [instructionsUrl, setInstructionsUrl] = useState('');
@@ -24,7 +26,7 @@ const Medicalprescription = ({ route, navigation }) => {
 
   const certificateview = async () => {
     try {
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/printMedicalCertificate';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/printMedicalCertificate';
       const access_token = await AsyncStorage.getItem('access_token');
       const authToken = access_token;
       const formData = new FormData();
@@ -55,7 +57,7 @@ const Medicalprescription = ({ route, navigation }) => {
 
   const prescriptionview = async () => {
     try {
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/printPrescription';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/printPrescription';
       const access_token = await AsyncStorage.getItem('access_token');
       const authToken = access_token;
       const formData = new FormData();
@@ -88,7 +90,7 @@ const Medicalprescription = ({ route, navigation }) => {
 
   const instructionview = async () => {
     try {
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/printInstruction';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/printInstruction';
       const access_token = await AsyncStorage.getItem('access_token');
       const authToken = access_token;
       const formData = new FormData();
@@ -157,7 +159,7 @@ const Medicalprescription = ({ route, navigation }) => {
 
   const medicalcertificate = async () => {
     try {
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/printMedicalCertificate';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/printMedicalCertificate';
       const access_token = await AsyncStorage.getItem('access_token');
       const authToken = access_token;
       const formData = new FormData();
@@ -209,7 +211,7 @@ const Medicalprescription = ({ route, navigation }) => {
 
   const Prescriptionapi = async () => {
     try {
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/printPrescription';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/printPrescription';
       const access_token = await AsyncStorage.getItem('access_token');
       const authToken = access_token;
       const formData = new FormData();
@@ -263,7 +265,7 @@ const Medicalprescription = ({ route, navigation }) => {
 
   const Instructionapi = async () => {
     try {
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/printInstruction';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/printInstruction';
       const access_token = await AsyncStorage.getItem('access_token');
       const authToken = access_token;
       const formData = new FormData();
@@ -328,7 +330,7 @@ const Medicalprescription = ({ route, navigation }) => {
       const access_token = await AsyncStorage.getItem('access_token');
       const bearerToken = access_token;
 
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchAppointmentPrescription';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/fetchAppointmentPrescription';
 
       const authToken = bearerToken;
 
@@ -347,7 +349,7 @@ const Medicalprescription = ({ route, navigation }) => {
       if (response && response.status === 200) {
         const responseText = await response.text();
         const parsed_res = JSON.parse(responseText);
-        console.log(parsed_res.data)
+        console.log('heloooooooooooooooooooooooooooooooooooo',parsed_res.data)
         setMedicine(parsed_res.data);
         setprescriptionid(parsed_res.data.id)
       } else {
@@ -371,9 +373,7 @@ const Medicalprescription = ({ route, navigation }) => {
           backgroundColor: '#4989d9',
           height: '7%',
         }}>
-        <TouchableOpacity onPress={handleBackButtonPress} style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+       <Backbutton/>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>Medical Prescription</Text>
         </View>

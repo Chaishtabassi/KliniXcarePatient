@@ -88,7 +88,7 @@ const Forgotpassword = ({navigation}) => {
     try {
       // Construct the request URL
 
-      const api='http://teleforceglobal.com/doctor/api/v1/user/forgotUserPassword';
+      const api='https://espinarealty.com/doctor/api/v1/user/forgotUserPassword';
 
       const formData = new FormData();
 

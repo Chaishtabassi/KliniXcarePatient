@@ -1,10 +1,10 @@
 import { FlatList, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React,{useState,useEffect} from 'react';
 import Backbutton from '../../Component/Backbutton'
-import Icon from 'react-native-vector-icons/EvilIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Faqscreen = () => {
+const Faqscreen = ({navigation}) => {
 
   const [apiData, setApiData] = useState([]);
   
@@ -14,7 +14,7 @@ const Faqscreen = () => {
         const access_token = await AsyncStorage.getItem('access_token');
         const bearerToken = access_token;
 
-        const response = await fetch('http://teleforceglobal.com/doctor/api/v1/user/fetchFaqCats', {
+        const response = await fetch('https://espinarealty.com/doctor/api/v1/user/fetchFaqCats', {
           method: 'POST',
           headers: {
             'Authorization':`Bearer ${bearerToken}`,
@@ -75,11 +75,7 @@ const Faqscreen = () => {
           padding:10
           // height: '5%',
         }}>
-        <TouchableOpacity
-          onPress={handleBackButtonPress}
-          style={{marginLeft: 10}}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+       <Backbutton/>
         <View style={{flex: 1, alignItems: 'center'}}>
           <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
            FAQ

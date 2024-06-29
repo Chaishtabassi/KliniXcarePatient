@@ -25,7 +25,7 @@ const Labrequest = ({ navigation, route }) => {
       const access_token = await AsyncStorage.getItem('access_token');
       const bearerToken = access_token;
 
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/getLabRequest';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/getLabRequest';
 
       const authToken = bearerToken;
 
@@ -57,7 +57,7 @@ const Labrequest = ({ navigation, route }) => {
 
   const Printlabrequest = async () => {
     try {
-      const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/printLabRequest';
+      const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/printLabRequest';
       const access_token = await AsyncStorage.getItem('access_token');
       console.log(access_token)
       const authToken = access_token;
@@ -132,26 +132,31 @@ const Labrequest = ({ navigation, route }) => {
       </View>
 
       {labRequestData ? (
-        <View style={styles.labRequestContainer}>
-          <Text style={styles.sectionTitle}>Hematology:</Text>
-          {Object.values(labRequestData.hematology).map((test, index) => (
-            <Text key={index}>{test}</Text>
-          ))}
-          <Text style={styles.sectionTitle}>Serology:</Text>
-          {Object.values(labRequestData.serology).map((test, index) => (
-            <Text key={index}>{test}</Text>
-          ))}
-          <Text style={styles.sectionTitle}>Other Clinical:</Text>
-          <Text>{labRequestData.other}</Text>
-          <Text style={styles.sectionTitle}>X-Ray:</Text>
-          {Object.values(labRequestData.x_Ray).map((test, index) => (
-            <Text key={index}>{test}</Text>
-          ))}
-          <Text style={styles.sectionTitle}>Clinical Chemistry:</Text>
-          {Object.values(labRequestData.clinicalChemistry).map((test, index) => (
-            <Text key={index}>{test}</Text>
-          ))}
-        </View>
+       <View style={styles.labRequestContainer}>
+       <Text style={styles.sectionTitle}>Hematology:</Text>
+       {Object.values(labRequestData.hematology ?? {}).map((test, index) => (
+         <Text key={index}>{test}</Text>
+       ))}
+     
+       <Text style={styles.sectionTitle}>Serology:</Text>
+       {Object.values(labRequestData.serology ?? {}).map((test, index) => (
+         <Text key={index}>{test}</Text>
+       ))}
+     
+       <Text style={styles.sectionTitle}>Other Clinical:</Text>
+       <Text>{labRequestData.other ?? 'Not specified'}</Text>
+     
+       <Text style={styles.sectionTitle}>X-Ray:</Text>
+       {Object.values(labRequestData.x_Ray ?? {}).map((test, index) => (
+         <Text key={index}>{test}</Text>
+       ))}
+     
+       <Text style={styles.sectionTitle}>Clinical Chemistry:</Text>
+       {Object.values(labRequestData.clinicalChemistry ?? {}).map((test, index) => (
+         <Text key={index}>{test}</Text>
+       ))}
+     </View>
+     
       ) : (
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Image

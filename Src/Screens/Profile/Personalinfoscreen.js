@@ -17,6 +17,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Backbutton from '../../Component/Backbutton';
 
 const Personalinfoscreen = ({ navigation, route }) => {
   const { phoneNumber, storedPin } = route.params;
@@ -73,7 +74,7 @@ const Personalinfoscreen = ({ navigation, route }) => {
         return; // Handle this error case as needed
       }
 
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchMyUserDetails';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/fetchMyUserDetails';
 
       const response = await fetch(api, {
         method: 'POST',
@@ -124,7 +125,7 @@ const Personalinfoscreen = ({ navigation, route }) => {
     const access_token = await AsyncStorage.getItem('access_token');
 
 
-    const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/getCities';
+    const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/getCities';
     const authToken = access_token
 
     const formData = new FormData();
@@ -156,7 +157,7 @@ const Personalinfoscreen = ({ navigation, route }) => {
   const countriesdata = async () => {
     const access_token = await AsyncStorage.getItem('access_token');
 
-    const apiUrl = 'http://teleforceglobal.com/doctor/api/v1/user/getAllCountries';
+    const apiUrl = 'https://espinarealty.com/doctor/api/v1/user/getAllCountries';
     const bearerToken = access_token;
 
     try {
@@ -225,7 +226,7 @@ const Personalinfoscreen = ({ navigation, route }) => {
       }
       else {
         const api =
-        `http://teleforceglobal.com/doctor/api/v1/user/updateUserDetails?
+        `https://espinarealty.com/doctor/api/v1/user/updateUserDetails?
         device_token=${storedDeviceToken}&identity=${phoneNumber}&is_verify=1&password=${storedPin}`;
 
         const authToken = access_token
@@ -431,11 +432,7 @@ const Personalinfoscreen = ({ navigation, route }) => {
           backgroundColor: '#4989d9',
           height: '7%',
         }}>
-        <TouchableOpacity
-          onPress={handleBackButtonPress}
-          style={{ marginLeft: 10 }}>
-          <Icon name="chevron-left" size={30} color="white" />
-        </TouchableOpacity>
+       <Backbutton/>
         <View style={{ alignItems: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>
             My Profile

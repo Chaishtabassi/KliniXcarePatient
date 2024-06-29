@@ -34,14 +34,12 @@ const Messagesscreen = ({navigation,route}) => {
       const access_token = await AsyncStorage.getItem('access_token');
       const bearerToken = access_token;
 
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchAppointmentDetails';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/fetchAppointmentDetails';
 
       const authToken = bearerToken;
 
       const formData = new FormData();
       formData.append('appointment_id', appointmentId);
-
-      console.log(formData);
 
       const response = await fetch(api, {
         method: 'POST',
@@ -55,6 +53,7 @@ const Messagesscreen = ({navigation,route}) => {
         const responseText = await response.text();
         const parsed_res = JSON.parse(responseText);
 
+        console.log('dataaaaaaaaaa',parsed_res)
         setAppointmdata([parsed_res.data]);
         setLoading(true);
       } else {
@@ -90,7 +89,7 @@ const Messagesscreen = ({navigation,route}) => {
       const storedoctorid = await AsyncStorage.getItem('doctorid');
       const bearerToken = access_token;
 
-      const api = 'http://teleforceglobal.com/doctor/api/storeChat';
+      const api = 'https://espinarealty.com/doctor/api/storeChat';
 
       const authToken = bearerToken;
 
@@ -137,7 +136,7 @@ const Messagesscreen = ({navigation,route}) => {
       console.log(storedoctorid)
       const bearerToken = access_token;
   
-      const api = 'http://teleforceglobal.com/doctor/api/getChats';
+      const api = 'https://espinarealty.com/doctor/api/getChats';
   
       const authToken = bearerToken;
   

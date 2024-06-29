@@ -23,7 +23,7 @@ const Qrscreen = ({ route, navigation }) => {
       const access_token = await AsyncStorage.getItem('access_token');
       const bearerToken = access_token;
 
-      const api = 'http://teleforceglobal.com/doctor/api/v1/user/fetchAppointmentDetails';
+      const api = 'https://espinarealty.com/doctor/api/v1/user/fetchAppointmentDetails';
 
       const authToken = bearerToken;
 
@@ -61,11 +61,11 @@ const Qrscreen = ({ route, navigation }) => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#478ffd" /> // You can replace this with a loading spinner or any loading indicator
+    return <ActivityIndicator size="large" color="#478ffd" /> 
   }
 
   if (error) {
-    return <Text>Error: {error}</Text>; // You can replace this with a more user-friendly error message
+    return <Text>Error: {error}</Text>; 
   }
 
   console.log(qrCodeData)
@@ -131,7 +131,7 @@ const Qrscreen = ({ route, navigation }) => {
   </View>
   <View style={{ flexDirection: 'column', alignItems: 'center' }}>
     <Text style={styles.heading}>Time</Text>
-    <Text style={styles.description}>{appointmdata.slot.time_range}</Text>
+    <Text style={styles.description}>{appointmdata.time_range}</Text>
   </View>
   <View style={{ flexDirection: 'column' }}>
     <Text style={styles.heading}>Type</Text>

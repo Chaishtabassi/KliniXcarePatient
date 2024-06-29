@@ -22,7 +22,7 @@ const Bookappointment = ({navigation}) => {
       const access_token = await AsyncStorage.getItem('access_token');
 
       try {
-        const api = `http://teleforceglobal.com/doctor/api/v1/user/searchDoctor`;
+        const api = `https://espinarealty.com/doctor/api/v1/user/searchDoctor`;
   
         const formData = new FormData();
   
